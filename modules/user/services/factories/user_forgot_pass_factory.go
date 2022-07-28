@@ -31,7 +31,7 @@ func (service UserForgotPassServiceFactory) CreateUserForgotPass(user *stores.Us
 	if err := service.UserActivationRepository.CreateUserActivation(&userActivate).Error; err != nil {
 		return &stores.UserActivation{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "Failed to create forgot password, please try again",
+			Message:    err.Error(),
 		}
 	}
 

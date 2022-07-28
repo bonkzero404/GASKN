@@ -1,21 +1,6 @@
 [
   {
     "locale": "id",
-    "key": "role:err:create:body-parser",
-    "trans": "Gagal membuat body parser"
-  },
-  {
-    "locale": "id",
-    "key": "role:err:create:validate",
-    "trans": "Terjadi kesalahan input"
-  },
-  {
-    "locale": "id",
-    "key": "role:err:create:validate-cause",
-    "trans": "Beberapa input field harus divalidasi"
-  },
-  {
-    "locale": "id",
     "key": "role:err:create:failed",
     "trans": "Gagal membuat role"
   },

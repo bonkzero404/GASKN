@@ -1,0 +1,67 @@
+[
+  {
+    "locale": "id",
+    "key": "user:err:create:failed",
+    "trans": "Gagal mendaftarkan pengguna"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:create:activation:failed",
+    "trans": "Gagal mengaktifkan pengguna"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:create:re-activation:failed",
+    "trans": "Failed to re create activation code"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:create:forgot-pass:failed",
+    "trans": "Gagal membuat ulang kode sandi yang lupa"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:update:password:failed",
+    "trans": "Gagal memperbarui kata sandi"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:register:failed",
+    "trans": "Pengguna sudah terdaftar"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:create:register:failed",
+    "trans": "Gagal mengaktifkan pengguna"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:create:user-not-found",
+    "trans": "Pengguna tidak ditemukan"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:activate:already-active",
+    "trans": "Pengguna telah diaktifkan"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:create:activation-not-found",
+    "trans": "Kode aktifasi tidak ditemukan"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:create:activation-expired",
+    "trans": "Kode aktifasi telah kadaluarsa"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:pass-match",
+    "trans": "Password tidak cocok"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:pass-code-used",
+    "trans": "Kode reset kata sandi telah digunakan"
+  }
+]

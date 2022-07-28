@@ -3,5 +3,20 @@
     "locale": "en",
     "key": "global:err:failed-unknown",
     "trans": "An error has occurred on the server"
+  },
+  {
+    "locale": "en",
+    "key": "global:err:create:body-parser",
+    "trans": "Failed to create body parser"
+  },
+  {
+    "locale": "en",
+    "key": "global:err:create:validate",
+    "trans": "An input error occurred"
+  },
+  {
+    "locale": "en",
+    "key": "global:err:create:validate-cause",
+    "trans": "Some fields must be validated"
   }
 ]

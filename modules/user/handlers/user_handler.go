@@ -25,7 +25,7 @@ func (handler *UserHandler) RegisterUser(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, respModel.Errors{
-			Message: "Failed to register user",
+			Message: utils.Lang(c, "global:err:create:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -34,18 +34,18 @@ func (handler *UserHandler) RegisterUser(c *fiber.Ctx) error {
 	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
-			Message: "Failed to register user",
-			Cause:   "Some fields must be validated",
+			Message: utils.Lang(c, "global:err:create:validate"),
+			Cause:   utils.Lang(c, "global:err:create:validate-cause"),
 			Inputs:  errors,
 		})
 	}
 
-	response, err := handler.UserService.CreateUser(&request)
+	response, err := handler.UserService.CreateUser(c, &request)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: "Failed to register user",
+			Message: utils.Lang(c, "user:err:create:failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -59,7 +59,7 @@ func (handler *UserHandler) UserActivation(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, respModel.Errors{
-			Message: "Failed to activate user",
+			Message: utils.Lang(c, "global:err:create:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -68,18 +68,18 @@ func (handler *UserHandler) UserActivation(c *fiber.Ctx) error {
 	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
-			Message: "Failed to register user",
-			Cause:   "Some fields must be validated",
+			Message: utils.Lang(c, "global:err:create:validate"),
+			Cause:   utils.Lang(c, "global:err:create:validate-cause"),
 			Inputs:  errors,
 		})
 	}
 
-	response, err := handler.UserService.UserActivation(request.Email, request.Code)
+	response, err := handler.UserService.UserActivation(c, request.Email, request.Code)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: "Failed to activate user",
+			Message: utils.Lang(c, "user:err:create:activation:failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -93,7 +93,7 @@ func (handler *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, respModel.Errors{
-			Message: "Failed to re create activate user",
+			Message: utils.Lang(c, "global:err:create:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -102,18 +102,18 @@ func (handler *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
-			Message: "Failed to activate user",
-			Cause:   "Some fields must be validated",
+			Message: utils.Lang(c, "global:err:create:validate"),
+			Cause:   utils.Lang(c, "global:err:create:validate-cause"),
 			Inputs:  errors,
 		})
 	}
 
-	response, err := handler.UserService.CreateUserActivation(request.Email, stores.ACTIVATION_CODE)
+	response, err := handler.UserService.CreateUserActivation(c, request.Email, stores.ACTIVATION_CODE)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: "Failed to re create activate user",
+			Message: utils.Lang(c, "user:err:create:re-activation:failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -127,7 +127,7 @@ func (handler *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, respModel.Errors{
-			Message: "Failed to re create activate forgot password",
+			Message: utils.Lang(c, "global:err:create:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -136,18 +136,18 @@ func (handler *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
-			Message: "Failed to re create activate forgot password",
-			Cause:   "Some fields must be validated",
+			Message: utils.Lang(c, "global:err:create:validate"),
+			Cause:   utils.Lang(c, "global:err:create:validate-cause"),
 			Inputs:  errors,
 		})
 	}
 
-	response, err := handler.UserService.CreateUserActivation(request.Email, stores.FORGOT_PASSWORD)
+	response, err := handler.UserService.CreateUserActivation(c, request.Email, stores.FORGOT_PASSWORD)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: "Failed to re create activate user",
+			Message: utils.Lang(c, "user:err:create:forgot-pass:failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -161,7 +161,7 @@ func (handler *UserHandler) UpdatePassword(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, respModel.Errors{
-			Message: "Failed to re update password",
+			Message: utils.Lang(c, "global:err:create:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -170,18 +170,18 @@ func (handler *UserHandler) UpdatePassword(c *fiber.Ctx) error {
 	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
-			Message: "Failed to re create activate forgot password",
-			Cause:   "Some fields must be validated",
+			Message: utils.Lang(c, "global:err:create:validate"),
+			Cause:   utils.Lang(c, "global:err:create:validate-cause"),
 			Inputs:  errors,
 		})
 	}
 
-	response, err := handler.UserService.UpdatePassword(&request)
+	response, err := handler.UserService.UpdatePassword(c, &request)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: "Failed to re update password",
+			Message: utils.Lang(c, "user:err:update:password:failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

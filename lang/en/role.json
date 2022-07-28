@@ -1,21 +1,6 @@
 [
   {
     "locale": "en",
-    "key": "role:err:create:body-parser",
-    "trans": "Failed to create body parser"
-  },
-  {
-    "locale": "en",
-    "key": "role:err:create:validate",
-    "trans": "An input error occurred"
-  },
-  {
-    "locale": "en",
-    "key": "role:err:create:validate-cause",
-    "trans": "Some fields must be validated"
-  },
-  {
-    "locale": "en",
     "key": "role:err:create:failed",
     "trans": "Failed to create role"
   },

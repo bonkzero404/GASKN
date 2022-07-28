@@ -3,5 +3,20 @@
     "locale": "id",
     "key": "global:err:failed-unknown",
     "trans": "Telah terjadi kesalahan pada server"
+  },
+  {
+    "locale": "id",
+    "key": "global:err:create:body-parser",
+    "trans": "Gagal membuat body parser"
+  },
+  {
+    "locale": "id",
+    "key": "global:err:create:validate",
+    "trans": "Terjadi kesalahan input"
+  },
+  {
+    "locale": "id",
+    "key": "global:err:create:validate-cause",
+    "trans": "Beberapa input field harus divalidasi"
   }
 ]
