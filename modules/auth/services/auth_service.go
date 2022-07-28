@@ -27,7 +27,7 @@ func NewAuthService(userRepository userInterface.UserRepositoryInterface) interf
 /**
 This function is used to handle authentication
 */
-func (service AuthService) Authenticate(auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error) {
+func (service AuthService) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error) {
 	var user stores.User
 
 	// Get user by email
@@ -38,7 +38,7 @@ func (service AuthService) Authenticate(auth *dto.UserAuthRequest) (*dto.UserAut
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
-			Message:    "Invalid email or password",
+			Message:    utils.Lang(c, "auth:err:invalid-auth"),
 		}
 	}
 
@@ -46,7 +46,7 @@ func (service AuthService) Authenticate(auth *dto.UserAuthRequest) (*dto.UserAut
 	if errUser != nil {
 		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "Something went wrong",
+			Message:    utils.Lang(c, "global:err:failed-unknown"),
 		}
 	}
 
@@ -54,7 +54,7 @@ func (service AuthService) Authenticate(auth *dto.UserAuthRequest) (*dto.UserAut
 	if !user.IsActive {
 		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
-			Message:    "User is not active, please activate the user first",
+			Message:    utils.Lang(c, "auth:err:user-not-active"),
 		}
 	}
 
@@ -65,7 +65,7 @@ func (service AuthService) Authenticate(auth *dto.UserAuthRequest) (*dto.UserAut
 	if !match {
 		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
-			Message:    "Invalid email or password",
+			Message:    utils.Lang(c, "auth:err:invalid-auth"),
 		}
 	}
 
@@ -74,7 +74,7 @@ func (service AuthService) Authenticate(auth *dto.UserAuthRequest) (*dto.UserAut
 	if errToken != nil {
 		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "Error token",
+			Message:    utils.Lang(c, "auth:err:err-token"),
 		}
 	}
 
@@ -95,7 +95,7 @@ func (service AuthService) Authenticate(auth *dto.UserAuthRequest) (*dto.UserAut
 /**
 This function is used to authorize users and display logged in user data
 */
-func (service AuthService) GetProfile(id string) (*dto.UserAuthProfileResponse, error) {
+func (service AuthService) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileResponse, error) {
 	var user stores.User
 
 	// Get user from database
@@ -105,7 +105,7 @@ func (service AuthService) GetProfile(id string) (*dto.UserAuthProfileResponse, 
 	if errUser != nil {
 		return &dto.UserAuthProfileResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "Something went wrong",
+			Message:    utils.Lang(c, "global:err:failed-unknown"),
 		}
 	}
 
@@ -124,7 +124,7 @@ func (service AuthService) GetProfile(id string) (*dto.UserAuthProfileResponse, 
 /**
 This function is used to refresh token
 */
-func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*dto.UserAuthResponse, error) {
+func (service AuthService) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserAuthResponse, error) {
 	var user stores.User
 
 	// Get data from token then convert to string
@@ -138,7 +138,7 @@ func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*dto.UserAuthResp
 	if errUser != nil {
 		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "Something went wrong",
+			Message:    utils.Lang(c, "global:err:failed-unknown"),
 		}
 	}
 
@@ -146,7 +146,7 @@ func (service AuthService) RefreshToken(tokenUser *jwt.Token) (*dto.UserAuthResp
 	if errToken != nil {
 		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "Error token",
+			Message:    utils.Lang(c, "auth:err:err-token"),
 		}
 	}
 
