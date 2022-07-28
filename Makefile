@@ -4,9 +4,9 @@ export
 build:
 	go build -o dist/server main.go
 	cp -r templates dist/
-	cp -r storages dist/
-	cp -r $$CASBIN_MODEL dist/
+	mkdir dist/storages
 	cp .env dist/
+	cp -r lang dist/lang
 
 run: build
 	./server
