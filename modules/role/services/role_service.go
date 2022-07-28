@@ -75,3 +75,74 @@ func (service RoleService) GetRoleList(c *fiber.Ctx) (*utils.Pagination, error) 
 
 	return res, nil
 }
+
+func (service RoleService) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleRequest) (*dto.RoleResponse, error) {
+	// Check role if exists
+	var roleStore stores.Role
+
+	errCheckRole := service.RoleRepository.GetRoleById(&roleStore, id).Error
+
+	if errCheckRole != nil {
+		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, "role:err:read:exists"),
+		}
+	}
+
+	roleData := stores.Role{
+		ID:              roleStore.ID,
+		RoleName:        role.RoleName,
+		RoleDescription: role.RoleDescription,
+		IsActive:        true,
+	}
+
+	err := service.RoleRepository.UpdateRoleById(&roleData).Error
+
+	if err != nil {
+		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, "global:err:failed-unknown"),
+		}
+	}
+
+	roleResponse := dto.RoleResponse{
+		ID:              roleData.ID.String(),
+		RoleName:        role.RoleName,
+		RoleDescription: role.RoleDescription,
+		IsActive:        roleData.IsActive,
+	}
+
+	return &roleResponse, nil
+}
+
+func (service RoleService) DeleteRoleById(c *fiber.Ctx, id string) (*dto.RoleResponse, error) {
+	// Check role if exists
+	var roleStore stores.Role
+
+	errCheckRole := service.RoleRepository.GetRoleById(&roleStore, id).Error
+
+	if errCheckRole != nil {
+		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, "role:err:read:exists"),
+		}
+	}
+
+	err := service.RoleRepository.DeleteRoleById(&roleStore).Error
+
+	if err != nil {
+		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, "global:err:failed-unknown"),
+		}
+	}
+
+	roleResponse := dto.RoleResponse{
+		ID:              roleStore.ID.String(),
+		RoleName:        roleStore.RoleName,
+		RoleDescription: roleStore.RoleDescription,
+		IsActive:        roleStore.IsActive,
+	}
+
+	return &roleResponse, nil
+}

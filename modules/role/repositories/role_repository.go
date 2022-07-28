@@ -24,12 +24,12 @@ func (repository RoleRepository) CreateRole(role *stores.Role) *gorm.DB {
 }
 
 func (repository RoleRepository) UpdateRoleById(role *stores.Role) *gorm.DB {
-	return repository.DB.Updates(&role)
+	return repository.DB.Save(&role)
 	// return repository.DB.Save(&role)
 }
 
-func (repository RoleRepository) DeleteRoleById(role *stores.Role, id string) *gorm.DB {
-	return repository.DB.First(&role, "id = ?", id)
+func (repository RoleRepository) DeleteRoleById(role *stores.Role) *gorm.DB {
+	return repository.DB.Delete(&role)
 }
 
 func (repository RoleRepository) GetRoleById(role *stores.Role, id string) *gorm.DB {

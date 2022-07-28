@@ -13,7 +13,7 @@ type RoleRepositoryInterface interface {
 
 	UpdateRoleById(role *stores.Role) *gorm.DB
 
-	DeleteRoleById(role *stores.Role, id string) *gorm.DB
+	DeleteRoleById(role *stores.Role) *gorm.DB
 
 	GetRoleById(role *stores.Role, id string) *gorm.DB
 

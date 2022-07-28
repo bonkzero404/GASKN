@@ -12,7 +12,7 @@ type RoleServiceInterface interface {
 
 	GetRoleList(c *fiber.Ctx) (*utils.Pagination, error)
 
-	// UpdateRole(role *dto.RoleRequest) (*dto.RoleResponse, error)
+	UpdateRole(c *fiber.Ctx, id string, role *dto.RoleRequest) (*dto.RoleResponse, error)
 
-	// DeleteRoleById(id string) (map[string]interface{}, error)
+	DeleteRoleById(c *fiber.Ctx, id string) (*dto.RoleResponse, error)
 }

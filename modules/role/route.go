@@ -21,4 +21,8 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 
 	role.Get("/", middleware.Authenticate(), middleware.RateLimiter(5, 30), handler.RoleHandler.GetRoleList)
 
+	role.Put("/:id", middleware.Authenticate(), middleware.RateLimiter(5, 30), handler.RoleHandler.UpdateRole)
+
+	role.Delete("/:id", middleware.Authenticate(), middleware.RateLimiter(5, 30), handler.RoleHandler.DeleteRole)
+
 }

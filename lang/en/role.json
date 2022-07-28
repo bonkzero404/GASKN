@@ -8,5 +8,20 @@
     "locale": "en",
     "key": "role:err:read:failed",
     "trans": "Failed to load role data"
+  },
+  {
+    "locale": "en",
+    "key": "role:err:read:exists",
+    "trans": "Role does not exists"
+  },
+  {
+    "locale": "en",
+    "key": "role:err:update:failed",
+    "trans": "Failed to update role"
+  },
+  {
+    "locale": "en",
+    "key": "role:err:delete:failed",
+    "trans": "Failed to delete role"
   }
 ]
