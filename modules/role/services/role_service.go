@@ -89,14 +89,11 @@ func (service RoleService) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleReq
 		}
 	}
 
-	roleData := stores.Role{
-		ID:              roleStore.ID,
-		RoleName:        role.RoleName,
-		RoleDescription: role.RoleDescription,
-		IsActive:        true,
-	}
+	roleStore.RoleName = role.RoleName
+	roleStore.RoleDescription = role.RoleDescription
+	roleStore.IsActive = true
 
-	err := service.RoleRepository.UpdateRoleById(&roleData).Error
+	err := service.RoleRepository.UpdateRoleById(&roleStore).Error
 
 	if err != nil {
 		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
@@ -106,10 +103,10 @@ func (service RoleService) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleReq
 	}
 
 	roleResponse := dto.RoleResponse{
-		ID:              roleData.ID.String(),
-		RoleName:        role.RoleName,
-		RoleDescription: role.RoleDescription,
-		IsActive:        roleData.IsActive,
+		ID:              roleStore.ID.String(),
+		RoleName:        roleStore.RoleName,
+		RoleDescription: roleStore.RoleDescription,
+		IsActive:        roleStore.IsActive,
 	}
 
 	return &roleResponse, nil
