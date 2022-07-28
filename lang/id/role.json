@@ -8,5 +8,20 @@
     "locale": "id",
     "key": "role:err:read:failed",
     "trans": "Gagal memuat data role"
+  },
+  {
+    "locale": "id",
+    "key": "role:err:read:exists",
+    "trans": "Role tidak ditemukan"
+  },
+  {
+    "locale": "id",
+    "key": "role:err:update:failed",
+    "trans": "Gagal melakukan perubahan role"
+  },
+  {
+    "locale": "id",
+    "key": "role:err:delete:failed",
+    "trans": "Gagal menghapus role"
   }
 ]
