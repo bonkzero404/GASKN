@@ -19,4 +19,6 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 
 	role.Post("/", middleware.Authenticate(), middleware.RateLimiter(5, 30), handler.ClientHandler.CreateClient)
 
+	role.Put("/:id", middleware.Authenticate(), middleware.RateLimiter(5, 30), handler.ClientHandler.UpdateClient)
+
 }
