@@ -3,6 +3,7 @@ package app
 import (
 	"go-starterkit-project/config"
 	"go-starterkit-project/modules/auth"
+	cl "go-starterkit-project/modules/client"
 	"go-starterkit-project/modules/role"
 	"go-starterkit-project/modules/user"
 	"go-starterkit-project/utils"
@@ -11,7 +12,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 )
 
-/**
+/*
+*
 This function is used to register all modules,
 this registration is the last process to register
 all modules
@@ -28,6 +30,9 @@ func Bootstrap(app *fiber.App) {
 
 	// Register module role
 	role.RegisterModule(app)
+
+	// Register Client
+	cl.RegisterModule(app)
 }
 
 func SetupLogs() {
