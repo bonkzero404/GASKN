@@ -49,11 +49,47 @@ func (handler *ClientHandler) CreateClient(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: utils.Lang(c, "role:err:create:failed"),
+			Message: utils.Lang(c, "client:err:create:failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
 	return utils.ApiCreated(c, response)
+}
+
+func (handler *ClientHandler) UpdateClient(c *fiber.Ctx) error {
+	var request dto.ClientRequest
+
+	if err := c.BodyParser(&request); err != nil {
+		return utils.ApiUnprocessableEntity(c, respModel.Errors{
+			Message: utils.Lang(c, "global:err:create:body-parser"),
+			Cause:   err.Error(),
+			Inputs:  nil,
+		})
+	}
+
+	errors := utils.ValidateStruct(request, c)
+	if errors != nil {
+		return utils.ApiErrorValidation(c, respModel.Errors{
+			Message: utils.Lang(c, "global:err:create:validate"),
+			Cause:   utils.Lang(c, "global:err:create:validate-cause"),
+			Inputs:  errors,
+		})
+	}
+
+	clientId := c.Params("id")
+
+	response, err := handler.ClientService.UpdateClient(c, clientId, &request)
+
+	if err != nil {
+		re := err.(*respModel.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
+			Message: utils.Lang(c, "client:err:update:failed"),
+			Cause:   err.Error(),
+			Inputs:  nil,
+		})
+	}
+
+	return utils.ApiOk(c, response)
 }

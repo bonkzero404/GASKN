@@ -1,0 +1,27 @@
+[
+  {
+    "locale": "id",
+    "key": "client:err:create:failed",
+    "trans": "Gagal membuat client"
+  },
+  {
+    "locale": "id",
+    "key": "client:err:read:failed",
+    "trans": "Gagal memuat data client"
+  },
+  {
+    "locale": "id",
+    "key": "client:err:read:exists",
+    "trans": "Client tidak ditemukan"
+  },
+  {
+    "locale": "id",
+    "key": "client:err:update:failed",
+    "trans": "Gagal melakukan perubahan client"
+  },
+  {
+    "locale": "id",
+    "key": "client:err:delete:failed",
+    "trans": "Gagal menghapus client"
+  }
+]
