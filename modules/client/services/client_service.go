@@ -39,7 +39,7 @@ func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientReques
 	if err != nil {
 		return &dto.ClientResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, err.Error()),
 		}
 	}
 
