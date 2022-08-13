@@ -56,10 +56,10 @@ func (service UserService) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest)
 	result, err := service.RepositoryAggregate.CreateUser(&userData, &userAvtivate)
 
 	if err != nil {
-		if strings.Contains(err.Error(), "Duplicate") {
+		if strings.Contains(err.Error(), "duplicate key") {
 			return &dto.UserCreateResponse{}, &respModel.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, "user:err:create:register:failed"),
+				Message:    utils.Lang(c, "user:err:register:failed"),
 			}
 		}
 

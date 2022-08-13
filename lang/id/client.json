@@ -6,6 +6,11 @@
   },
   {
     "locale": "id",
+    "key": "client:err:duplicate",
+    "trans": "Client sudah ada"
+  },
+  {
+    "locale": "id",
     "key": "client:err:read:failed",
     "trans": "Gagal memuat data client"
   },

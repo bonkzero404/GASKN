@@ -82,6 +82,10 @@ func (repository ClientRepository) GetClientById(client *stores.Client, id strin
 	return repository.DB.First(&client, "id = ?", id)
 }
 
+func (repository ClientRepository) GetClientBySlug(client *stores.Client, slug string) *gorm.DB {
+	return repository.DB.First(&client, "client_slug = ?", slug)
+}
+
 func (repository ClientRepository) GetClientList(client *[]stores.Client, c *fiber.Ctx) (*utils.Pagination, error) {
 	var pagination utils.Pagination
 

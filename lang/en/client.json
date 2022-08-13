@@ -6,6 +6,11 @@
   },
   {
     "locale": "en",
+    "key": "client:err:duplicate",
+    "trans": "Client already exists"
+  },
+  {
+    "locale": "en",
     "key": "client:err:read:failed",
     "trans": "Failed to load client data"
   },
