@@ -19,7 +19,7 @@ func NewClientRepository(db *gorm.DB) interfaces.ClientRepositoryInterface {
 	}
 }
 
-func (repository ClientRepository) CreateClient(client *stores.Client) error {
+func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.Role, error) {
 
 	tx := repository.DB.Begin()
 
@@ -30,44 +30,32 @@ func (repository ClientRepository) CreateClient(client *stores.Client) error {
 	}()
 
 	if err := tx.Error; err != nil {
-		return err
+		return &stores.Role{}, err
 	}
 
 	// Create CLient
 	if err := tx.Create(&client).Error; err != nil {
 		tx.Rollback()
-		return err
+		return &stores.Role{}, err
 	}
 
 	// Set Role
 	// Set role data
 	role := stores.Role{
+		ClientId:        client.ID,
 		RoleName:        "Owner",
 		RoleDescription: "Role owner tenant",
 		IsActive:        true,
-		CanDelete:       true,
+		CanDelete:       false,
 	}
 
 	// Create Role
 	if err := tx.Create(&role).Error; err != nil {
 		tx.Rollback()
-		return err
+		return &stores.Role{}, err
 	}
 
-	// Set role assignments
-	roleAssignment := stores.RoleUser{
-		ClientId: client.ID,
-		UserId:   client.UserId,
-		RoleId:   role.ID,
-		IsActive: true,
-	}
-
-	if err := tx.Create(&roleAssignment).Error; err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	return tx.Commit().Error
+	return &role, tx.Commit().Error
 }
 
 func (repository ClientRepository) UpdateClientById(client *stores.Client) *gorm.DB {

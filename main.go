@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
+	appRoute "go-starterkit-project/app"
 	"go-starterkit-project/config"
 	"go-starterkit-project/database"
 	"go-starterkit-project/database/driver"
 	"go-starterkit-project/utils"
-
-	appRoute "go-starterkit-project/app"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -25,6 +24,9 @@ func main() {
 
 	// Call database connection
 	driver.ConnectDB()
+
+	// Init Casbin
+	driver.InitCasbin()
 
 	// Auto migration table
 	database.MigrateDB()

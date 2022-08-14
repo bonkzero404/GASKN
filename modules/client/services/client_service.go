@@ -1,6 +1,8 @@
 package services
 
 import (
+	"go-starterkit-project/config"
+	"go-starterkit-project/database/driver"
 	respModel "go-starterkit-project/domain/dto"
 	"go-starterkit-project/domain/stores"
 	"go-starterkit-project/modules/client/domain/dto"
@@ -37,7 +39,7 @@ func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientReques
 	}
 
 	// Create client
-	err := service.ClientRepository.CreateClient(&clientStore)
+	role, err := service.ClientRepository.CreateClient(&clientStore)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key") {
@@ -47,6 +49,22 @@ func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientReques
 			}
 		}
 
+		return &dto.ClientResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, err.Error()),
+		}
+	}
+
+	enforcer := driver.Enforcer
+
+	if g, err := enforcer.AddGroupingPolicy(pUuid.String(), role.ID.String(), clientStore.ID.String()); !g {
+		return &dto.ClientResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, err.Error()),
+		}
+	}
+
+	if p, err := enforcer.AddPolicy(role.ID.String(), clientStore.ID.String(), "/"+config.Config("API_CLIENT")+"/*", "GET|POST|PUT|DELETE"); !p {
 		return &dto.ClientResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, err.Error()),

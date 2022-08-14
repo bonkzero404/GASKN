@@ -9,7 +9,7 @@ import (
 )
 
 type ClientRepositoryInterface interface {
-	CreateClient(client *stores.Client) error
+	CreateClient(client *stores.Client) (*stores.Role, error)
 
 	UpdateClientById(client *stores.Client) *gorm.DB
 
