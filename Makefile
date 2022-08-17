@@ -7,6 +7,7 @@ build:
 	mkdir dist/storages
 	cp .env dist/
 	cp -r lang dist/lang
+	cp casbin_rbac_model dist/
 
 run: build
 	./server
