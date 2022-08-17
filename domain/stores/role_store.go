@@ -1,22 +1,38 @@
 package stores
 
 import (
+	"database/sql/driver"
+
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
+type roleType string
+
+const (
+	SA roleType = "sa"
+	CL roleType = "cl"
+)
+
+func (rt *roleType) Scan(value interface{}) error {
+	*rt = roleType(value.([]byte))
+	return nil
+}
+
+func (rt roleType) Value() (driver.Value, error) {
+	return string(rt), nil
+}
+
 /*
-*
-Table model
-*/
+ *
+ * Table model
+ */
 type Role struct {
 	gorm.Model
 	ID              uuid.UUID `gorm:"type:char(36);primary_key"`
-	ClientId        uuid.UUID `gorm:"type:char(36):index"`
-	Client          Client    `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	RoleName        string    `gorm:"type:varchar(100);index;not null"`
 	RoleDescription string    `gorm:"type:text"`
-	CanDelete       bool
+	RoleType        roleType  `sql:"role_type"`
 	IsActive        bool
 }
 

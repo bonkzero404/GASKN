@@ -42,15 +42,28 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 	// Set Role
 	// Set role data
 	role := stores.Role{
-		ClientId:        client.ID,
 		RoleName:        "Owner",
 		RoleDescription: "Role owner tenant",
 		IsActive:        true,
-		CanDelete:       false,
+		RoleType:        "cl",
 	}
 
 	// Create Role
 	if err := tx.Create(&role).Error; err != nil {
+		tx.Rollback()
+		return &stores.Role{}, err
+	}
+
+	// Set Role Client
+	roleClient := stores.RoleClient{
+		ClientId:  client.ID,
+		RoleId:    role.ID,
+		CanDelete: false,
+		IsActive:  true,
+	}
+
+	// Create Role Client
+	if err := tx.Create(&roleClient).Error; err != nil {
 		tx.Rollback()
 		return &stores.Role{}, err
 	}
