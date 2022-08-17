@@ -20,6 +20,11 @@ func NewClientRepository(db *gorm.DB) interfaces.ClientRepositoryInterface {
 }
 
 func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.Role, error) {
+	var role stores.Role
+
+	if err := repository.DB.First(&role, "role_name = 'Owner' AND role_type = 'cl'").Error; err != nil {
+		return &stores.Role{}, err
+	}
 
 	tx := repository.DB.Begin()
 
@@ -40,16 +45,16 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 	}
 
 	// Set Role
-	// Set role data
-	role := stores.Role{
-		RoleName:        "Owner",
-		RoleDescription: "Role owner tenant",
-		IsActive:        true,
-		RoleType:        "cl",
+	// Set role User
+	roleUser := stores.RoleUser{
+		ClientId: client.ID,
+		RoleId:   role.ID,
+		UserId:   client.UserId,
+		IsActive: true,
 	}
 
 	// Create Role
-	if err := tx.Create(&role).Error; err != nil {
+	if err := tx.Create(&roleUser).Error; err != nil {
 		tx.Rollback()
 		return &stores.Role{}, err
 	}
