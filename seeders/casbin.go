@@ -2,6 +2,7 @@ package seeders
 
 import (
 	"errors"
+	"go-starterkit-project/config"
 	"go-starterkit-project/database/driver"
 	"go-starterkit-project/domain/stores"
 
@@ -14,17 +15,13 @@ func CreateCasbinPermission(db *gorm.DB) error {
 	var user stores.User
 	var role stores.Role
 
-	var email string = "bonkzero404@gmail.com"
-
-	errUser := db.Take(&user, "email = ?", email).Error
+	errUser := db.Take(&user, "email = ?", config.Config("ADMIN_EMAIL")).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return errUser
 	}
 
-	var roleName string = "Super Administrator"
-
-	errRole := db.Take(&role, "role_name = ? AND role_type = ?", roleName, stores.SA).Error
+	errRole := db.Take(&role, "role_name = ? AND role_type = ?", config.Config("ADMIN_ROLENAME"), stores.SA).Error
 
 	if errors.Is(errRole, gorm.ErrRecordNotFound) {
 		return errRole
@@ -34,7 +31,7 @@ func CreateCasbinPermission(db *gorm.DB) error {
 		return err
 	}
 
-	if p, err := enforcer.AddPolicy(role.ID.String(), "*", "*", "POST|GET|UPDATE|DELETE"); !p {
+	if p, err := enforcer.AddPolicy(role.ID.String(), "*", "*", "GET|POST|PUT|DELETE"); !p {
 		return err
 	}
 

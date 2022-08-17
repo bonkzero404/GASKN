@@ -2,6 +2,7 @@ package seeders
 
 import (
 	"errors"
+	"go-starterkit-project/config"
 	"go-starterkit-project/domain/stores"
 	"go-starterkit-project/utils"
 
@@ -10,18 +11,16 @@ import (
 
 func CreateUser(db *gorm.DB) error {
 	var user stores.User
-	var email string = "bonkzero404@gmail.com"
-	var password string = "janitrapanji"
 
-	err := db.Take(&user, "email = ?", email).Error
+	err := db.Take(&user, "email = ?", config.Config("ADMIN_EMAIL")).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		hashPassword, _ := utils.HashPassword(password)
+		hashPassword, _ := utils.HashPassword(config.Config("ADMIN_PASSWORD"))
 
 		user = stores.User{
-			FullName: "Janitra Panji",
-			Email:    email,
-			Phone:    "+6281299579761",
+			FullName: config.Config("ADMIN_FULLNAME"),
+			Email:    config.Config("ADMIN_EMAIL"),
+			Phone:    config.Config("ADMIN_PASSWORD"),
 			Password: hashPassword,
 			IsActive: true,
 		}
