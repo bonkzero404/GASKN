@@ -1,7 +1,7 @@
 [
   {
     "locale": "en",
-    "key": "client:err:create:failed",
+    "key": "client:err:create-failed",
     "trans": "Failed to create client"
   },
   {
@@ -11,22 +11,22 @@
   },
   {
     "locale": "en",
-    "key": "client:err:read:failed",
+    "key": "client:err:read-failed",
     "trans": "Failed to load client data"
   },
   {
     "locale": "en",
-    "key": "client:err:read:exists",
+    "key": "client:err:read-exists",
     "trans": "Client does not exists"
   },
   {
     "locale": "en",
-    "key": "client:err:update:failed",
+    "key": "client:err:update:-failed",
     "trans": "Failed to update client"
   },
   {
     "locale": "en",
-    "key": "client:err:delete:failed",
+    "key": "client:err:delete-failed",
     "trans": "Failed to delete client"
   }
 ]

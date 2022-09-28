@@ -6,7 +6,8 @@ import (
 	"strconv"
 )
 
-/**
+/*
+*
 DSN MySQL Connection string
 */
 func DsnMySqlDB() string {

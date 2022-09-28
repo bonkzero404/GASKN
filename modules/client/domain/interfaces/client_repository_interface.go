@@ -20,4 +20,6 @@ type ClientRepositoryInterface interface {
 	GetClientBySlug(client *stores.Client, slug string) *gorm.DB
 
 	GetClientList(client *[]stores.Client, c *fiber.Ctx) (*utils.Pagination, error)
+
+	GetClientListByUser(client *[]stores.ClientAssignment, c *fiber.Ctx, userId string) (*utils.Pagination, error)
 }

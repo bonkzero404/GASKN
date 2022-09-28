@@ -6,7 +6,7 @@ import (
 )
 
 type RepositoryAggregate struct {
-	UserRepository interfaces.UserRepositoryInterface
+	UserRepository           interfaces.UserRepositoryInterface
 	UserActivationRepository interfaces.UserActivationRepositoryInterface
 }
 
@@ -15,7 +15,7 @@ func NewRepositoryAggregate(
 	userActivationRepository interfaces.UserActivationRepositoryInterface,
 ) interfaces.RepositoryAggregateInterface {
 	return &RepositoryAggregate{
-		UserRepository: userRepository,
+		UserRepository:           userRepository,
 		UserActivationRepository: userActivationRepository,
 	}
 }

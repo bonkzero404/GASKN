@@ -20,7 +20,7 @@ all modules
 */
 func Bootstrap(app *fiber.App) {
 	// Monitor app
-	app.Get("/monitor", monitor.New())
+	app.Get("/monitor", monitor.New()).Name("GetAppMonitor")
 
 	// Register module user
 	user.RegisterModule(app)

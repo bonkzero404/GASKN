@@ -25,7 +25,6 @@ func (repository RoleRepository) CreateRole(role *stores.Role) *gorm.DB {
 
 func (repository RoleRepository) UpdateRoleById(role *stores.Role) *gorm.DB {
 	return repository.DB.Save(&role)
-	// return repository.DB.Save(&role)
 }
 
 func (repository RoleRepository) DeleteRoleById(role *stores.Role) *gorm.DB {
@@ -42,4 +41,14 @@ func (repository RoleRepository) GetRoleList(role *[]stores.Role, c *fiber.Ctx) 
 	err := repository.DB.Scopes(utils.Paginate(role, &pagination, repository.DB, c)).Find(&role).Error
 
 	return &pagination, err
+}
+
+func (repository RoleRepository) GetClientsByUser(roleClient *[]stores.RoleUser, userId string) *gorm.DB {
+	return repository.DB.
+		Select("client_id", "role_id").
+		Where("user_id = ?", userId).
+		Group("client_id, role_id").
+		Preload("Client").
+		Preload("Role").
+		Find(&roleClient)
 }

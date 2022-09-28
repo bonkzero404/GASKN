@@ -16,7 +16,8 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-/**
+/*
+*
 this variable is a global variable to reuse database connection
 */
 var DB *gorm.DB
@@ -57,7 +58,8 @@ func setupSqlLog() *gorm.Config {
 	return &gormConfig
 }
 
-/**
+/*
+*
 This function as a factory to connect to MySQL or PostgreSQL
 */
 func ConnectDB() *gorm.DB {
@@ -89,7 +91,8 @@ func ConnectDB() *gorm.DB {
 	return DB
 }
 
-/**
+/*
+*
 This function is for database pooling
 */
 func dbPooling(sqlDb *gorm.DB) error {

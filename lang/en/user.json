@@ -1,57 +1,52 @@
 [
   {
     "locale": "en",
-    "key": "user:err:create:failed",
+    "key": "user:err:create-failed",
     "trans": "Failed to register a user"
   },
   {
     "locale": "en",
-    "key": "user:err:create:activation:failed",
+    "key": "user:err:activation-failed",
     "trans": "Failed to activate a user"
   },
   {
     "locale": "en",
-    "key": "user:err:create:re-activation:failed",
+    "key": "user:err:re-activation-failed",
     "trans": "Failed to re create activation code"
   },
   {
     "locale": "en",
-    "key": "user:err:create:forgot-pass:failed",
+    "key": "user:err:forgot-pass-failed",
     "trans": "Failed to re create forgot password code"
   },
   {
     "locale": "en",
-    "key": "user:err:update:password:failed",
+    "key": "user:err:update-pass-failed",
     "trans": "Failed to update password"
   },
   {
     "locale": "en",
-    "key": "user:err:register:failed",
+    "key": "user:err:register-failed",
     "trans": "User already registered"
   },
   {
     "locale": "en",
-    "key": "user:err:create:register:failed",
-    "trans": "Failed to activate a user"
-  },
-  {
-    "locale": "en",
-    "key": "user:err:create:user-not-found",
+    "key": "user:err:user-not-found",
     "trans": "User not found"
   },
   {
     "locale": "en",
-    "key": "user:err:activate:already-active",
+    "key": "user:err:activate-already-active",
     "trans": "User already active"
   },
   {
     "locale": "en",
-    "key": "user:err:create:activation-not-found",
+    "key": "user:err:activation-not-found",
     "trans": "Activation code not found"
   },
   {
     "locale": "en",
-    "key": "user:err:create:activation-expired",
+    "key": "user:err:activation-expired",
     "trans": "The activation code has expired"
   },
   {

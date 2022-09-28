@@ -42,6 +42,9 @@ func main() {
 	// Call bootstrap all module
 	appRoute.Bootstrap(app)
 
+	// data, _ := json.Marshal(app.Stack())
+	// fmt.Println(string(data))
+
 	// Run Seeder
 	for _, seed := range seeders.All() {
 		if err := seed.Run(driver.DB); err != nil {

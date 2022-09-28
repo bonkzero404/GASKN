@@ -85,7 +85,7 @@ func (service RoleService) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleReq
 	if errCheckRole != nil {
 		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role:err:read:exists"),
+			Message:    utils.Lang(c, "role:err:read-exists"),
 		}
 	}
 
@@ -121,7 +121,7 @@ func (service RoleService) DeleteRoleById(c *fiber.Ctx, id string) (*dto.RoleRes
 	if errCheckRole != nil {
 		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role:err:read:exists"),
+			Message:    utils.Lang(c, "role:err:read-exists"),
 		}
 	}
 

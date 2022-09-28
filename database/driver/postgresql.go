@@ -6,7 +6,8 @@ import (
 	"strconv"
 )
 
-/**
+/*
+*
 DSN PostgreSQL Connection string
 */
 func DsnPostgreSqlDB() string {

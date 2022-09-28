@@ -9,7 +9,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-/**
+/*
+*
 This function is for registering repository - service - handler
 */
 func RegisterModule(app *fiber.App) {
@@ -18,8 +19,13 @@ func RegisterModule(app *fiber.App) {
 	roleService := services.NewRoleService(roleRepository)
 	RoleHandler := handlers.NewRoleHandler(roleService)
 
+	roleClientRepository := repositories.NewRoleClientRepository(driver.DB)
+	roleClientService := services.NewRoleClientService(roleClientRepository, roleRepository)
+	RoleClientHandler := handlers.NewRoleClientHandler(roleClientService)
+
 	routesInit := ApiRoute{
-		RoleHandler: *RoleHandler,
+		RoleHandler:       *RoleHandler,
+		RoleClientHandler: *RoleClientHandler,
 	}
 
 	routesInit.Route(app)

@@ -6,6 +6,7 @@ import (
 	"go-starterkit-project/domain/stores"
 	"go-starterkit-project/modules/auth/domain/dto"
 	"go-starterkit-project/modules/auth/domain/interfaces"
+	roleRepository "go-starterkit-project/modules/role/domain/interfaces"
 	userInterface "go-starterkit-project/modules/user/domain/interfaces"
 	"go-starterkit-project/utils"
 
@@ -16,15 +17,21 @@ import (
 
 type AuthService struct {
 	UserRepository userInterface.UserRepositoryInterface
+	RoleRepository roleRepository.RoleRepositoryInterface
 }
 
-func NewAuthService(userRepository userInterface.UserRepositoryInterface) interfaces.UserAuthServiceInterface {
+func NewAuthService(
+	userRepository userInterface.UserRepositoryInterface,
+	roleRepository roleRepository.RoleRepositoryInterface,
+) interfaces.UserAuthServiceInterface {
 	return &AuthService{
 		UserRepository: userRepository,
+		RoleRepository: roleRepository,
 	}
 }
 
-/**
+/*
+*
 This function is used to handle authentication
 */
 func (service AuthService) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error) {
@@ -92,11 +99,13 @@ func (service AuthService) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest)
 	return &response, nil
 }
 
-/**
+/*
+*
 This function is used to authorize users and display logged in user data
 */
 func (service AuthService) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileResponse, error) {
 	var user stores.User
+	var roleUser []stores.RoleUser
 
 	// Get user from database
 	errUser := service.UserRepository.FindUserById(&user, id).Error
@@ -109,19 +118,39 @@ func (service AuthService) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthPro
 		}
 	}
 
+	errClient := service.RoleRepository.GetClientsByUser(&roleUser, id).Error
+
+	var dataClients []dto.UserClient
+
+	if errClient != nil {
+		dataClients = []dto.UserClient{}
+	}
+
+	for _, elem := range roleUser {
+
+		dataClients = append(dataClients, dto.UserClient{
+			ClientId:        elem.Client.ID.String(),
+			ClientName:      elem.Client.ClientName,
+			ClientShortName: elem.Client.ClientSlug,
+			RoleName:        elem.Role.RoleName,
+		})
+	}
+
 	// Set response message
 	response := dto.UserAuthProfileResponse{
 		ID:       user.ID.String(),
 		FullName: user.FullName,
 		Email:    user.Email,
 		Phone:    user.Phone,
+		Clients:  dataClients,
 		IsActive: user.IsActive,
 	}
 
 	return &response, nil
 }
 
-/**
+/*
+*
 This function is used to refresh token
 */
 func (service AuthService) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserAuthResponse, error) {

@@ -20,15 +20,16 @@ func NewAuthHandler(authService interfaces.UserAuthServiceInterface) *AuthHandle
 	}
 }
 
-/**
+/*
+*
 Authentication handler
 */
-func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
+func (service *AuthHandler) Authentication(c *fiber.Ctx) error {
 	var request dto.UserAuthRequest
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, respModel.Errors{
-			Message: utils.Lang(c, "global:err:create:body-parser"),
+			Message: utils.Lang(c, "global:err:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -37,13 +38,13 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
 		return utils.ApiErrorValidation(c, respModel.Errors{
-			Message: utils.Lang(c, "global:err:create:validate"),
-			Cause:   utils.Lang(c, "global:err:create:validate-cause"),
+			Message: utils.Lang(c, "global:err:validate"),
+			Cause:   utils.Lang(c, "global:err:validate-cause"),
 			Inputs:  errors,
 		})
 	}
 
-	response, err := handler.AuthService.Authenticate(c, &request)
+	response, err := service.AuthService.Authenticate(c, &request)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
@@ -57,15 +58,16 @@ func (handler *AuthHandler) Authentication(c *fiber.Ctx) error {
 	return utils.ApiOk(c, response)
 }
 
-/**
+/*
+*
 Get user profile
 */
-func (handler *AuthHandler) GetProfile(c *fiber.Ctx) error {
+func (service *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
 	id := claims["id"].(string)
 
-	response, err := handler.AuthService.GetProfile(c, id)
+	response, err := service.AuthService.GetProfile(c, id)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
@@ -79,13 +81,14 @@ func (handler *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	return utils.ApiOk(c, response)
 }
 
-/**
+/*
+*
 Refresh token
 */
-func (handler *AuthHandler) RefreshToken(c *fiber.Ctx) error {
+func (service *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 
-	response, err := handler.AuthService.RefreshToken(c, token)
+	response, err := service.AuthService.RefreshToken(c, token)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)

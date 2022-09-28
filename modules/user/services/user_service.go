@@ -59,7 +59,7 @@ func (service UserService) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest)
 		if strings.Contains(err.Error(), "duplicate key") {
 			return &dto.UserCreateResponse{}, &respModel.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, "user:err:register:failed"),
+				Message:    utils.Lang(c, "user:err:register-failed"),
 			}
 		}
 
@@ -101,14 +101,14 @@ func (service UserService) UserActivation(c *fiber.Ctx, email string, code strin
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return &dto.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:create:user-not-found"),
+			Message:    utils.Lang(c, "user:err:user-not-found"),
 		}
 	}
 
 	if user.IsActive {
 		return &dto.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "user:err:activate:already-active"),
+			Message:    utils.Lang(c, "user:err:activate-already-active"),
 		}
 	}
 
@@ -117,7 +117,7 @@ func (service UserService) UserActivation(c *fiber.Ctx, email string, code strin
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
 		return &dto.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:create:activation-not-found"),
+			Message:    utils.Lang(c, "user:err:activation-not-found"),
 		}
 	}
 
@@ -126,7 +126,7 @@ func (service UserService) UserActivation(c *fiber.Ctx, email string, code strin
 	if userAct.ExpiredAt.Before(t) {
 		return &dto.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
-			Message:    utils.Lang(c, "user:err:create:activation-expired"),
+			Message:    utils.Lang(c, "user:err:activation-expired"),
 		}
 	}
 
@@ -160,14 +160,14 @@ func (service UserService) CreateUserActivation(c *fiber.Ctx, email string, actT
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:create:user-not-found"),
+			Message:    utils.Lang(c, "user:err:user-not-found"),
 		}
 	}
 
 	if user.IsActive && actType == stores.ACTIVATION_CODE {
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "user:err:activate:already-active"),
+			Message:    utils.Lang(c, "user:err:activate-already-active"),
 		}
 	}
 
@@ -196,7 +196,7 @@ func (service UserService) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserF
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:create:user-not-found"),
+			Message:    utils.Lang(c, "user:err:user-not-found"),
 		}
 	}
 
@@ -205,7 +205,7 @@ func (service UserService) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserF
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:create:activation-not-found"),
+			Message:    utils.Lang(c, "user:err:activation-not-found"),
 		}
 	}
 
@@ -221,7 +221,7 @@ func (service UserService) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserF
 	if userAct.ExpiredAt.Before(t) {
 		return nil, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
-			Message:    utils.Lang(c, "user:err:create:activation-expired"),
+			Message:    utils.Lang(c, "user:err:activation-expired"),
 		}
 	}
 

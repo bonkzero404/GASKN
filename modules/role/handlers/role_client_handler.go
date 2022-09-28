@@ -2,30 +2,25 @@ package handlers
 
 import (
 	respModel "go-starterkit-project/domain/dto"
-	"go-starterkit-project/modules/client/domain/dto"
-	"go-starterkit-project/modules/client/domain/interfaces"
+	"go-starterkit-project/modules/role/domain/dto"
+	"go-starterkit-project/modules/role/domain/interfaces"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 )
 
-type ClientHandler struct {
-	ClientService interfaces.ClientServiceInterface
+type RoleClientHandler struct {
+	RoleClientService interfaces.RoleClientServiceInterface
 }
 
-func NewClientHandler(clientService interfaces.ClientServiceInterface) *ClientHandler {
-	return &ClientHandler{
-		ClientService: clientService,
+func NewRoleClientHandler(roleClientService interfaces.RoleClientServiceInterface) *RoleClientHandler {
+	return &RoleClientHandler{
+		RoleClientService: roleClientService,
 	}
 }
 
-func (service *ClientHandler) CreateClient(c *fiber.Ctx) error {
-	token := c.Locals("user").(*jwt.Token)
-	claims := token.Claims.(jwt.MapClaims)
-	userId := claims["id"].(string)
-
-	var request dto.ClientRequest
+func (service *RoleClientHandler) CreateClientRole(c *fiber.Ctx) error {
+	var request dto.RoleRequest
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, respModel.Errors{
@@ -44,12 +39,12 @@ func (service *ClientHandler) CreateClient(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := service.ClientService.CreateClient(c, &request, userId)
+	response, err := service.RoleClientService.CreateRoleClient(c, &request)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: utils.Lang(c, "client:err:create-failed"),
+			Message: utils.Lang(c, "role:err:create-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -58,8 +53,23 @@ func (service *ClientHandler) CreateClient(c *fiber.Ctx) error {
 	return utils.ApiCreated(c, response)
 }
 
-func (service *ClientHandler) UpdateClient(c *fiber.Ctx) error {
-	var request dto.ClientRequest
+func (service *RoleClientHandler) GetRoleClientList(c *fiber.Ctx) error {
+	response, err := service.RoleClientService.GetRoleClientList(c)
+
+	if err != nil {
+		re := err.(*respModel.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
+			Message: utils.Lang(c, "role:err:read-failed"),
+			Cause:   err.Error(),
+			Inputs:  nil,
+		})
+	}
+
+	return utils.ApiOk(c, response)
+}
+
+func (service *RoleClientHandler) UpdateRoleClient(c *fiber.Ctx) error {
+	var request dto.RoleRequest
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, respModel.Errors{
@@ -78,12 +88,14 @@ func (service *ClientHandler) UpdateClient(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := service.ClientService.UpdateClient(c, &request)
+	roleId := c.Params("id")
+
+	response, err := service.RoleClientService.UpdateRoleClient(c, roleId, &request)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: utils.Lang(c, "client:err:update:-failed"),
+			Message: utils.Lang(c, "role:err:update-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -92,17 +104,15 @@ func (service *ClientHandler) UpdateClient(c *fiber.Ctx) error {
 	return utils.ApiOk(c, response)
 }
 
-func (service *ClientHandler) GetClientByUser(c *fiber.Ctx) error {
-	token := c.Locals("user").(*jwt.Token)
-	claims := token.Claims.(jwt.MapClaims)
-	userId := claims["id"].(string)
+func (service *RoleClientHandler) DeleteRoleClient(c *fiber.Ctx) error {
+	roleId := c.Params("id")
 
-	response, err := service.ClientService.GetClientByUser(c, userId)
+	response, err := service.RoleClientService.DeleteRoleClientById(c, roleId)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: utils.Lang(c, "role:err:read-failed"),
+			Message: utils.Lang(c, "role:err:delete-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

@@ -6,17 +6,17 @@
   },
   {
     "locale": "en",
-    "key": "global:err:create:body-parser",
+    "key": "global:err:body-parser",
     "trans": "Failed to create body parser"
   },
   {
     "locale": "en",
-    "key": "global:err:create:validate",
+    "key": "global:err:validate",
     "trans": "An input error occurred"
   },
   {
     "locale": "en",
-    "key": "global:err:create:validate-cause",
+    "key": "global:err:validate-cause",
     "trans": "Some fields must be validated"
   }
 ]

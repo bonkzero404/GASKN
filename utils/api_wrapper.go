@@ -6,7 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-/**
+/*
+*
 This function is used to wrap a json response globally
 */
 func ApiWrapper(ctx *fiber.Ctx, code int, status string, data interface{}, errors interface{}) error {
@@ -63,4 +64,8 @@ func ApiOk(ctx *fiber.Ctx, data interface{}) error {
 
 func ApiResponseError(ctx *fiber.Ctx, code int, errors dto.Errors) error {
 	return ApiWrapper(ctx, code, "error_api", nil, errors)
+}
+
+func ApiForbidden(ctx *fiber.Ctx, errors dto.Errors) error {
+	return ApiWrapper(ctx, fiber.StatusForbidden, "error_forbidden", nil, errors)
 }

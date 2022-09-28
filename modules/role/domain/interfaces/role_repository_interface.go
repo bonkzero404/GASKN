@@ -18,4 +18,6 @@ type RoleRepositoryInterface interface {
 	GetRoleById(role *stores.Role, id string) *gorm.DB
 
 	GetRoleList(role *[]stores.Role, c *fiber.Ctx) (*utils.Pagination, error)
+
+	GetClientsByUser(roleClient *[]stores.RoleUser, userId string) *gorm.DB
 }

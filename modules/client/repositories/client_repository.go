@@ -73,6 +73,18 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 		return &stores.Role{}, err
 	}
 
+	// Set user to client assignment
+	clientAssignment := stores.ClientAssignment{
+		ClientId: client.ID,
+		UserId:   client.UserId,
+		IsActive: true,
+	}
+
+	if err := tx.Create(&clientAssignment).Error; err != nil {
+		tx.Rollback()
+		return &stores.Role{}, err
+	}
+
 	return &role, tx.Commit().Error
 }
 
@@ -96,6 +108,14 @@ func (repository ClientRepository) GetClientList(client *[]stores.Client, c *fib
 	var pagination utils.Pagination
 
 	err := repository.DB.Scopes(utils.Paginate(client, &pagination, repository.DB, c)).Find(&client).Error
+
+	return &pagination, err
+}
+
+func (repository ClientRepository) GetClientListByUser(clientAssignment *[]stores.ClientAssignment, c *fiber.Ctx, userId string) (*utils.Pagination, error) {
+	var pagination utils.Pagination
+
+	err := repository.DB.Scopes(utils.Paginate(clientAssignment, &pagination, repository.DB, c)).Preload("Client").Find(&clientAssignment, "user_id = ?", userId).Error
 
 	return &pagination, err
 }

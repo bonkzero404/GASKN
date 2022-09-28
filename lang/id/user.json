@@ -1,57 +1,52 @@
 [
   {
     "locale": "id",
-    "key": "user:err:create:failed",
+    "key": "user:err:create-failed",
     "trans": "Gagal mendaftarkan pengguna"
   },
   {
     "locale": "id",
-    "key": "user:err:create:activation:failed",
+    "key": "user:err:activation-failed",
     "trans": "Gagal mengaktifkan pengguna"
   },
   {
     "locale": "id",
-    "key": "user:err:create:re-activation:failed",
+    "key": "user:err:re-activation-failed",
     "trans": "Failed to re create activation code"
   },
   {
     "locale": "id",
-    "key": "user:err:create:forgot-pass:failed",
+    "key": "user:err:forgot-pass-failed",
     "trans": "Gagal membuat ulang kode sandi yang lupa"
   },
   {
     "locale": "id",
-    "key": "user:err:update:password:failed",
+    "key": "user:err:update-pass-failed",
     "trans": "Gagal memperbarui kata sandi"
   },
   {
     "locale": "id",
-    "key": "user:err:register:failed",
+    "key": "user:err:register-failed",
     "trans": "Pengguna sudah terdaftar"
   },
   {
     "locale": "id",
-    "key": "user:err:create:register:failed",
-    "trans": "Gagal mengaktifkan pengguna"
-  },
-  {
-    "locale": "id",
-    "key": "user:err:create:user-not-found",
+    "key": "user:err:user-not-found",
     "trans": "Pengguna tidak ditemukan"
   },
   {
     "locale": "id",
-    "key": "user:err:activate:already-active",
+    "key": "user:err:activate-already-active",
     "trans": "Pengguna telah diaktifkan"
   },
   {
     "locale": "id",
-    "key": "user:err:create:activation-not-found",
+    "key": "user:err:activation-not-found",
     "trans": "Kode aktifasi tidak ditemukan"
   },
   {
     "locale": "id",
-    "key": "user:err:create:activation-expired",
+    "key": "user:err:activation-expired",
     "trans": "Kode aktifasi telah kadaluarsa"
   },
   {

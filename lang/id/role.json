@@ -1,27 +1,32 @@
 [
   {
     "locale": "id",
-    "key": "role:err:create:failed",
+    "key": "role:err:create-failed",
     "trans": "Gagal membuat role"
   },
   {
     "locale": "id",
-    "key": "role:err:read:failed",
+    "key": "role:err:read-failed",
     "trans": "Gagal memuat data role"
   },
   {
     "locale": "id",
-    "key": "role:err:read:exists",
+    "key": "role:err:read-exists",
     "trans": "Role tidak ditemukan"
   },
   {
     "locale": "id",
-    "key": "role:err:update:failed",
+    "key": "role:err:read-available",
+    "trans": "Role telah tersedia"
+  },
+  {
+    "locale": "id",
+    "key": "role:err:update-failed",
     "trans": "Gagal melakukan perubahan role"
   },
   {
     "locale": "id",
-    "key": "role:err:delete:failed",
+    "key": "role:err:delete-failed",
     "trans": "Gagal menghapus role"
   }
 ]

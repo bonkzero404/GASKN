@@ -6,17 +6,17 @@
   },
   {
     "locale": "id",
-    "key": "global:err:create:body-parser",
+    "key": "global:err:body-parser",
     "trans": "Gagal membuat body parser"
   },
   {
     "locale": "id",
-    "key": "global:err:create:validate",
+    "key": "global:err:validate",
     "trans": "Terjadi kesalahan input"
   },
   {
     "locale": "id",
-    "key": "global:err:create:validate-cause",
+    "key": "global:err:validate-cause",
     "trans": "Beberapa input field harus divalidasi"
   }
 ]

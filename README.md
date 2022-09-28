@@ -1,4 +1,4 @@
-# GoLang API StarterKit
+# GoLang go-starterkit-project
 
 File structure in this project.
 

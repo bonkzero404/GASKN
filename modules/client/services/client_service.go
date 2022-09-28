@@ -29,6 +29,8 @@ func NewClientService(
 
 func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, userId string) (*dto.ClientResponse, error) {
 	pUuid, _ := uuid.Parse(userId)
+	enforcer := driver.Enforcer
+	clientRoute := config.Config("API_WRAP") + "/" + config.Config("API_VERSION") + "/" + config.Config("API_CLIENT")
 
 	clientStore := stores.Client{
 		ClientName:        client.ClientName,
@@ -55,8 +57,7 @@ func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientReques
 		}
 	}
 
-	enforcer := driver.Enforcer
-
+	// Crete group policy
 	if g, err := enforcer.AddGroupingPolicy(pUuid.String(), role.ID.String(), clientStore.ID.String()); !g {
 		return &dto.ClientResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
@@ -64,7 +65,12 @@ func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientReques
 		}
 	}
 
-	if p, err := enforcer.AddPolicy(role.ID.String(), clientStore.ID.String(), "/"+config.Config("API_CLIENT")+"/*", "GET|POST|PUT|DELETE"); !p {
+	// Create permission user to group
+	if p, err := enforcer.AddPolicy(
+		role.ID.String(),
+		clientStore.ID.String(),
+		"/"+clientRoute+"/"+clientStore.ID.String()+"/*",
+		"GET|POST|PUT|DELETE"); !p {
 		return &dto.ClientResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, err.Error()),
@@ -82,16 +88,18 @@ func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientReques
 	return &roleResponse, nil
 }
 
-func (service ClientService) UpdateClient(c *fiber.Ctx, id string, client *dto.ClientRequest) (*dto.ClientResponse, error) {
+func (service ClientService) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (*dto.ClientResponse, error) {
 	// Check role if exists
 	var clientStore stores.Client
 
-	errCheckClient := service.ClientRepository.GetClientById(&clientStore, id).Error
+	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
+
+	errCheckClient := service.ClientRepository.GetClientById(&clientStore, clientId).Error
 
 	if errCheckClient != nil {
 		return &dto.ClientResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "client:err:read:exists"),
+			Message:    utils.Lang(c, "client:err:read-exists"),
 		}
 	}
 
@@ -118,4 +126,33 @@ func (service ClientService) UpdateClient(c *fiber.Ctx, id string, client *dto.C
 	}
 
 	return &clientResponse, nil
+}
+
+func (service ClientService) GetClientByUser(c *fiber.Ctx, userId string) (*utils.Pagination, error) {
+	var clientAssignment []stores.ClientAssignment
+	var resp []dto.ClientResponse
+
+	res, err := service.ClientRepository.GetClientListByUser(&clientAssignment, c, userId)
+
+	if err != nil {
+		return nil, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    err.Error(),
+		}
+	}
+
+	for _, item := range clientAssignment {
+		resp = append(resp, dto.ClientResponse{
+			ID:                item.Client.ID.String(),
+			ClientName:        item.Client.ClientName,
+			ClientDescription: item.Client.ClientDescription,
+			ClientSlug:        item.Client.ClientSlug,
+			IsActive:          item.IsActive,
+		})
+	}
+
+	res.Rows = resp
+
+	return res, nil
+
 }
