@@ -24,14 +24,20 @@ func Bootstrap(app *fiber.App) {
 	app.Get("/monitor", monitor.New())
 
 	// Get feature lists
-	app.Get(utils.SetupApiGroup()+"/features", middleware.Authenticate(), func(c *fiber.Ctx) error {
-		return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c.App()))
-	})
+	app.Get(
+		utils.SetupApiGroup()+"/features",
+		middleware.Authenticate(),
+		func(c *fiber.Ctx) error {
+			return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c.App()))
+		})
 
 	// Get feature per group
-	app.Get(utils.SetupApiGroup()+"/features/group", middleware.Authenticate(), func(c *fiber.Ctx) error {
-		return utils.ApiOk(c, utils.FeaturesGroupLists(c.App()))
-	})
+	app.Get(
+		utils.SetupApiGroup()+"/features/group",
+		middleware.Authenticate(),
+		func(c *fiber.Ctx) error {
+			return utils.ApiOk(c, utils.FeaturesGroupLists(c.App()))
+		})
 
 	// Register module user
 	user.RegisterModule(app)
