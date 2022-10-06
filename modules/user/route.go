@@ -21,29 +21,29 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		"/register",
 		middleware.RateLimiter(5, 30),
 		handler.UserHandler.RegisterUser,
-	).Name("RegisterUser")
+	)
 
 	user.Post(
 		"/activation",
 		middleware.RateLimiter(5, 30),
 		handler.UserHandler.UserActivation,
-	).Name("UserActivation")
+	)
 
 	user.Post(
 		"/activation/re-send",
 		middleware.RateLimiter(5, 30),
 		handler.UserHandler.ReCreateUserActivation,
-	).Name("ReCreateUserActivation")
+	)
 
 	user.Post(
 		"/request-forgot-password",
 		middleware.RateLimiter(5, 30),
 		handler.UserHandler.CreateActivationForgotPassword,
-	).Name("CreateActivationForgotPassword")
+	)
 
 	user.Post(
 		"/forgot-password",
 		middleware.RateLimiter(5, 30),
 		handler.UserHandler.UpdatePassword,
-	).Name("UpdatePassword")
+	)
 }

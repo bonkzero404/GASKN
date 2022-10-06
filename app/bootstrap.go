@@ -21,7 +21,7 @@ all modules
 */
 func Bootstrap(app *fiber.App) {
 	// Monitor app
-	app.Get("/monitor", monitor.New()).Name("GetAppMonitor")
+	app.Get("/monitor", monitor.New())
 
 	// Get feature lists
 	app.Get(utils.SetupApiGroup()+"/features", middleware.Authenticate(), func(c *fiber.Ctx) error {
