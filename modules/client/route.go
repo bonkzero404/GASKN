@@ -15,29 +15,46 @@ type ApiRoute struct {
 func (handler *ApiRoute) Route(app fiber.Router) {
 	const endpointGroup string = "/client"
 
-	role := app.Group(utils.SetupApiGroup() + endpointGroup)
-	roleClient := app.Group(utils.SetupSubApiGroup())
+	client := app.Group(utils.SetupApiGroup() + endpointGroup)
+	clientAcc := app.Group(utils.SetupSubApiGroup())
+	feature := utils.RouteFeature{}
 
-	role.Post(
+	client.Post(
 		"/",
 		middleware.Authenticate(),
 		middleware.RateLimiter(5, 30),
 		handler.ClientHandler.CreateClient,
-	).Name("CreateClient")
+	).Name(
+		feature.
+			SetGroup("Client").
+			SetName("CreateClient").
+			SetDescription("Users can create client").
+			Exec(),
+	)
 
-	role.Get(
+	client.Get(
 		"/user",
 		middleware.Authenticate(),
 		middleware.RateLimiter(5, 30),
 		handler.ClientHandler.GetClientByUser,
-	).Name("GetClientByUser")
+	).Name(
+		feature.
+			SetGroup("Client").
+			SetName("GetClientByUser").
+			SetDescription("Users can get client by user").
+			Exec(),
+	)
 
-	roleClient.Put(
+	clientAcc.Put(
 		"/update",
 		middleware.Authenticate(),
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.ClientHandler.UpdateClient,
-	).Name("UpdateClient")
+	).Name(feature.
+		SetGroup("Client").
+		SetName("UpdateClient").
+		SetDescription("Users can update client").
+		Exec())
 
 }
