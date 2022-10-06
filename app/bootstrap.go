@@ -1,6 +1,7 @@
 package app
 
 import (
+	"go-starterkit-project/app/middleware"
 	"go-starterkit-project/config"
 	"go-starterkit-project/modules/auth"
 	cl "go-starterkit-project/modules/client"
@@ -21,6 +22,16 @@ all modules
 func Bootstrap(app *fiber.App) {
 	// Monitor app
 	app.Get("/monitor", monitor.New()).Name("GetAppMonitor")
+
+	// Get feature lists
+	app.Get(utils.SetupApiGroup()+"/features", middleware.Authenticate(), func(c *fiber.Ctx) error {
+		return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c.App()))
+	})
+
+	// Get feature per group
+	app.Get(utils.SetupApiGroup()+"/features/group", middleware.Authenticate(), func(c *fiber.Ctx) error {
+		return utils.ApiOk(c, utils.FeaturesGroupLists(c.App()))
+	})
 
 	// Register module user
 	user.RegisterModule(app)
