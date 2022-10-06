@@ -18,6 +18,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 
 	role := app.Group(utils.SetupApiGroup() + endpointGroup)
 	roleClient := app.Group(utils.SetupSubApiGroup() + endpointGroup)
+	feature := utils.RouteFeature{}
 
 	///////////////////
 	// Route Role
@@ -28,7 +29,13 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.RoleHandler.CreateRole,
-	).Name("CreateRole")
+	).Name(
+		feature.
+			SetGroup("Role").
+			SetName("CreateRole").
+			SetDescription("Users can create roles").
+			Exec(),
+	)
 
 	role.Get(
 		"/",
@@ -36,7 +43,13 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.RoleHandler.GetRoleList,
-	).Name("GetRoleList")
+	).Name(
+		feature.
+			SetGroup("Role").
+			SetName("GetRoleLists").
+			SetDescription("Users can get role lists").
+			Exec(),
+	)
 
 	role.Put(
 		"/:id",
@@ -44,7 +57,13 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.RoleHandler.UpdateRole,
-	).Name("UpdateRole")
+	).Name(
+		feature.
+			SetGroup("Role").
+			SetName("UpdateRole").
+			SetDescription("Users can update roles").
+			Exec(),
+	)
 
 	role.Delete(
 		"/:id",
@@ -52,7 +71,13 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.RoleHandler.DeleteRole,
-	).Name("DeletRole")
+	).Name(
+		feature.
+			SetGroup("Role").
+			SetName("UpdateRole").
+			SetDescription("Users can delete roles").
+			Exec(),
+	)
 
 	//////////////////////
 	// Route Role Client
@@ -63,7 +88,13 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.RoleClientHandler.CreateClientRole,
-	).Name("CreateClientRole")
+	).Name(
+		feature.
+			SetGroup("RoleClient").
+			SetName("CreateClientRole").
+			SetDescription("Users (clients) can create roles").
+			Exec(),
+	)
 
 	roleClient.Get(
 		"/",
@@ -71,7 +102,13 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.RoleClientHandler.GetRoleClientList,
-	).Name("GetRoleClientList")
+	).Name(
+		feature.
+			SetGroup("RoleClient").
+			SetName("GetClientRoleList").
+			SetDescription("Users (clients) can get role lists").
+			Exec(),
+	)
 
 	roleClient.Put(
 		"/:id",
@@ -79,7 +116,13 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.RoleClientHandler.UpdateRoleClient,
-	).Name("UpdateRoleCLient")
+	).Name(
+		feature.
+			SetGroup("RoleClient").
+			SetName("UpdateClientRole").
+			SetDescription("Users (clients) can update role").
+			Exec(),
+	)
 
 	roleClient.Delete(
 		"/:id",
@@ -87,6 +130,12 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.RoleClientHandler.DeleteRoleClient,
-	).Name("DeleteRoleClient")
+	).Name(
+		feature.
+			SetGroup("RoleClient").
+			SetName("DeleteClientRole").
+			SetDescription("Users (clients) can delete role").
+			Exec(),
+	)
 
 }
