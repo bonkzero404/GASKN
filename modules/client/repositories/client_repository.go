@@ -47,7 +47,6 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 	// Set Role
 	// Set role User
 	roleUser := stores.RoleUser{
-		ClientId: client.ID,
 		RoleId:   role.ID,
 		UserId:   client.UserId,
 		IsActive: true,
@@ -55,6 +54,19 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 
 	// Create Role
 	if err := tx.Create(&roleUser).Error; err != nil {
+		tx.Rollback()
+		return &stores.Role{}, err
+	}
+
+	// Set Role User with Client
+	roleUserClient := stores.RoleUserClient{
+		ClientId:   client.ID,
+		RoleUserId: roleUser.ID,
+		IsActive:   true,
+	}
+
+	// Create Role
+	if err := tx.Create(&roleUserClient).Error; err != nil {
 		tx.Rollback()
 		return &stores.Role{}, err
 	}

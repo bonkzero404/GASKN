@@ -32,6 +32,12 @@ func All() []Seed {
 			},
 		},
 		{
+			Name: "CreateRoleUser",
+			Run: func(db *gorm.DB) error {
+				return CreateUserRole(db)
+			},
+		},
+		{
 			Name: "CreateCasbinPermission",
 			Run: func(db *gorm.DB) error {
 				return CreateCasbinPermission(db)

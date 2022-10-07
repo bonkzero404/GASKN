@@ -18,6 +18,7 @@ func Permission() func(c *fiber.Ctx) error {
 		enforcer := driver.Enforcer
 
 		var roleUser stores.RoleUser
+		var roleUserClient stores.RoleUserClient
 		// var client stores.Client
 		var permit string
 
@@ -27,12 +28,24 @@ func Permission() func(c *fiber.Ctx) error {
 
 		clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
-		err := driver.DB.Preload("Client").Take(&roleUser, "user_id = ? AND client_id = ?", userId, clientId).Error
+		err := driver.DB.Take(&roleUser, "user_id = ?", userId).Error
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return utils.ApiForbidden(c, dto.Errors{
+				Message: utils.Lang(c, "middleware:err:unauthorized"),
+				Cause:   "Forbidden access",
+				Inputs:  nil,
+			})
+		} else {
+			permit = "*"
+		}
+
+		errUserClient := driver.DB.Take(&roleUserClient, "role_user_id = ? AND client_id", roleUser.ID, clientId).Error
+
+		if errors.Is(errUserClient, gorm.ErrRecordNotFound) {
 			permit = "*"
 		} else {
-			permit = roleUser.ClientId.String()
+			permit = roleUserClient.ClientId.String()
 		}
 
 		if ok, _ := enforcer.Enforce(userId, permit, c.Path(), c.Method()); !ok {

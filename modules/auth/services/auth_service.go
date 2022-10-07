@@ -105,7 +105,7 @@ This function is used to authorize users and display logged in user data
 */
 func (service AuthService) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileResponse, error) {
 	var user stores.User
-	var roleUser []stores.RoleUser
+	// var roleUser []stores.RoleUser
 
 	// Get user from database
 	errUser := service.UserRepository.FindUserById(&user, id).Error
@@ -118,23 +118,23 @@ func (service AuthService) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthPro
 		}
 	}
 
-	errClient := service.RoleRepository.GetClientsByUser(&roleUser, id).Error
+	// errClient := service.RoleRepository.GetClientsByUser(&roleUser, id).Error
 
 	var dataClients []dto.UserClient
 
-	if errClient != nil {
-		dataClients = []dto.UserClient{}
-	}
+	// if errClient != nil {
+	// 	dataClients = []dto.UserClient{}
+	// }
 
-	for _, elem := range roleUser {
+	// for _, elem := range roleUser {
 
-		dataClients = append(dataClients, dto.UserClient{
-			ClientId:        elem.Client.ID.String(),
-			ClientName:      elem.Client.ClientName,
-			ClientShortName: elem.Client.ClientSlug,
-			RoleName:        elem.Role.RoleName,
-		})
-	}
+	// 	dataClients = append(dataClients, dto.UserClient{
+	// 		ClientId:        elem.Client.ID.String(),
+	// 		ClientName:      elem.Client.ClientName,
+	// 		ClientShortName: elem.Client.ClientSlug,
+	// 		RoleName:        elem.Role.RoleName,
+	// 	})
+	// }
 
 	// Set response message
 	response := dto.UserAuthProfileResponse{
