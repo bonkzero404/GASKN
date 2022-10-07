@@ -10,6 +10,7 @@ type RouteFeature struct {
 	route_group string
 	route_name  string
 	description string
+	only_admin  bool
 }
 
 type FeatureLists struct {
@@ -19,6 +20,7 @@ type FeatureLists struct {
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
 	Params      []string `json:"params"`
+	OnlyAdmin   bool     `json:"only_admin"`
 }
 
 type FeatureUnderGroup struct {
@@ -27,6 +29,7 @@ type FeatureUnderGroup struct {
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
 	Params      []string `json:"params"`
+	OnlyAdmin   bool     `json:"only_admin"`
 }
 
 type FeatureGroup struct {
@@ -46,6 +49,11 @@ func (f *RouteFeature) SetName(str string) *RouteFeature {
 
 func (f *RouteFeature) SetDescription(str string) *RouteFeature {
 	f.description = str
+	return f
+}
+
+func (f *RouteFeature) SetOnlyAdmin(a bool) *RouteFeature {
+	f.only_admin = a
 	return f
 }
 
@@ -70,9 +78,34 @@ func (f *RouteFeature) Exec() string {
 		iface["description"] = ""
 	}
 
+	iface["only_admin"] = f.only_admin
+
 	res, _ := json.Marshal(iface)
 
+	f.cleanup()
+
+	iface["only_admin"] = f.only_admin
+
 	return string(res)
+}
+
+func (f *RouteFeature) cleanup() {
+	if f.route_group != "" {
+		f.route_group = ""
+	}
+
+	if f.route_name != "" {
+		f.route_name = ""
+	}
+
+	if f.description != "" {
+		f.description = ""
+	}
+
+	if f.only_admin {
+		f.only_admin = false
+	}
+
 }
 
 func IsJSON(str string) bool {
@@ -98,6 +131,7 @@ func ExtractRouteAsFeatures(app *fiber.App) []FeatureLists {
 					Name:        nameInfo["name"].(string),
 					Description: nameInfo["description"].(string),
 					Params:      item.Params,
+					OnlyAdmin:   nameInfo["only_admin"].(bool),
 				})
 			}
 		}
@@ -132,6 +166,7 @@ func FeaturesGroupLists(app *fiber.App) []FeatureGroup {
 					Name:        item.Name,
 					Description: item.Description,
 					Params:      item.Params,
+					OnlyAdmin:   item.OnlyAdmin,
 				})
 			}
 		}

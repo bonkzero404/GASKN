@@ -34,6 +34,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 			SetGroup("Role").
 			SetName("CreateRole").
 			SetDescription("Users can create roles").
+			SetOnlyAdmin(true).
 			Exec(),
 	)
 
@@ -48,6 +49,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 			SetGroup("Role").
 			SetName("GetRoleLists").
 			SetDescription("Users can get role lists").
+			SetOnlyAdmin(true).
 			Exec(),
 	)
 
@@ -62,6 +64,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 			SetGroup("Role").
 			SetName("UpdateRole").
 			SetDescription("Users can update roles").
+			SetOnlyAdmin(true).
 			Exec(),
 	)
 
@@ -76,6 +79,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 			SetGroup("Role").
 			SetName("UpdateRole").
 			SetDescription("Users can delete roles").
+			SetOnlyAdmin(true).
 			Exec(),
 	)
 
