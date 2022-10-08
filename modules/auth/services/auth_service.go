@@ -118,31 +118,12 @@ func (service AuthService) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthPro
 		}
 	}
 
-	// errClient := service.RoleRepository.GetClientsByUser(&roleUser, id).Error
-
-	var dataClients []dto.UserClient
-
-	// if errClient != nil {
-	// 	dataClients = []dto.UserClient{}
-	// }
-
-	// for _, elem := range roleUser {
-
-	// 	dataClients = append(dataClients, dto.UserClient{
-	// 		ClientId:        elem.Client.ID.String(),
-	// 		ClientName:      elem.Client.ClientName,
-	// 		ClientShortName: elem.Client.ClientSlug,
-	// 		RoleName:        elem.Role.RoleName,
-	// 	})
-	// }
-
 	// Set response message
 	response := dto.UserAuthProfileResponse{
 		ID:       user.ID.String(),
 		FullName: user.FullName,
 		Email:    user.Email,
 		Phone:    user.Phone,
-		Clients:  dataClients,
 		IsActive: user.IsActive,
 	}
 
