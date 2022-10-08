@@ -9,20 +9,22 @@ import (
 )
 
 type ApiRoute struct {
-	RoleHandler       handlers.RoleHandler
+	RoleHandler handlers.RoleHandler
+}
+
+type ApiRouteClient struct {
 	RoleClientHandler handlers.RoleClientHandler
 }
 
+// /////////////////
+// Route Role
+// /////////////////
 func (handler *ApiRoute) Route(app fiber.Router) {
 	const endpointGroup string = "/role"
 
 	role := app.Group(utils.SetupApiGroup() + endpointGroup)
-	roleClient := app.Group(utils.SetupSubApiGroup() + endpointGroup)
 	feature := utils.RouteFeature{}
 
-	///////////////////
-	// Route Role
-	///////////////////
 	role.Post(
 		"/",
 		middleware.Authenticate(),
@@ -83,9 +85,17 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 			Exec(),
 	)
 
-	//////////////////////
-	// Route Role Client
-	//////////////////////
+}
+
+// /////////////////
+// Route Role Client
+// /////////////////
+func (handler *ApiRouteClient) Route(app fiber.Router) {
+	const endpointGroup string = "/role"
+
+	roleClient := app.Group(utils.SetupSubApiGroup() + endpointGroup)
+	feature := utils.RouteFeature{}
+
 	roleClient.Post(
 		"/",
 		middleware.Authenticate(),
