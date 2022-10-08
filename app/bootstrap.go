@@ -42,7 +42,7 @@ func Bootstrap(app *fiber.App) {
 	if config.Config("TENANCY") == "true" {
 		// Get feature lists Tenant
 		app.Get(
-			utils.SetupApiGroup()+"/features/tenant",
+			utils.SetupApiGroup()+"/features/client",
 			middleware.Authenticate(),
 			func(c *fiber.Ctx) error {
 				return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c.App(), true))
@@ -50,7 +50,7 @@ func Bootstrap(app *fiber.App) {
 
 		// Get feature per group tenant
 		app.Get(
-			utils.SetupApiGroup()+"/features/group/tenant",
+			utils.SetupApiGroup()+"/features/group/client",
 			middleware.Authenticate(),
 			func(c *fiber.Ctx) error {
 				return utils.ApiOk(c, utils.FeaturesGroupLists(c.App(), true))
