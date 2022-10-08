@@ -40,7 +40,7 @@ func Permission() func(c *fiber.Ctx) error {
 			permit = "*"
 		}
 
-		errUserClient := driver.DB.Take(&roleUserClient, "role_user_id = ? AND client_id", roleUser.ID, clientId).Error
+		errUserClient := driver.DB.Take(&roleUserClient, "role_user_id = ? AND client_id = ?", roleUser.ID, clientId).Error
 
 		if errors.Is(errUserClient, gorm.ErrRecordNotFound) {
 			permit = "*"
