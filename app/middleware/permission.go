@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"errors"
+	"fmt"
 	"go-starterkit-project/config"
 	"go-starterkit-project/database/driver"
 	"go-starterkit-project/domain/dto"
@@ -47,6 +48,8 @@ func Permission() func(c *fiber.Ctx) error {
 		} else {
 			permit = roleUserClient.ClientId.String()
 		}
+
+		fmt.Print(userId, permit, c.Path(), c.Method())
 
 		if ok, _ := enforcer.Enforce(userId, permit, c.Path(), c.Method()); !ok {
 			return utils.ApiForbidden(c, dto.Errors{

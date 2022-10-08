@@ -104,7 +104,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.RoleClientHandler.CreateClientRole,
 	).Name(
 		feature.
-			SetGroup("RoleClient").
+			SetGroup("Client/Role").
 			SetName("CreateClientRole").
 			SetDescription("Users (clients) can create roles").
 			SetTenant(true).
@@ -119,7 +119,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.RoleClientHandler.GetRoleClientList,
 	).Name(
 		feature.
-			SetGroup("RoleClient").
+			SetGroup("Client/Role").
 			SetName("GetClientRoleList").
 			SetDescription("Users (clients) can get role lists").
 			SetTenant(true).
@@ -134,7 +134,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.RoleClientHandler.UpdateRoleClient,
 	).Name(
 		feature.
-			SetGroup("RoleClient").
+			SetGroup("Client/Role").
 			SetName("UpdateClientRole").
 			SetDescription("Users (clients) can update role").
 			SetTenant(true).
@@ -149,7 +149,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.RoleClientHandler.DeleteRoleClient,
 	).Name(
 		feature.
-			SetGroup("RoleClient").
+			SetGroup("Client/Role").
 			SetName("DeleteClientRole").
 			SetDescription("Users (clients) can delete role").
 			SetTenant(true).
