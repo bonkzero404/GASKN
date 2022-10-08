@@ -42,13 +42,3 @@ func (repository RoleRepository) GetRoleList(role *[]stores.Role, c *fiber.Ctx) 
 
 	return &pagination, err
 }
-
-func (repository RoleRepository) GetClientsByUser(roleClient *[]stores.RoleUser, userId string) *gorm.DB {
-	return repository.DB.
-		Select("role_user_clients.client_id", "role_users.role_id").
-		Joins("join role_user_clients on role_user_clients.role_user_id = role_users.id").
-		Where("role_users.user_id = ?", userId).
-		Group("role_user_clients.client_id, role_users.role_id").
-		Preload("Role").
-		Find(&roleClient)
-}
