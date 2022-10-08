@@ -107,6 +107,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 			SetGroup("RoleClient").
 			SetName("CreateClientRole").
 			SetDescription("Users (clients) can create roles").
+			SetTenant(true).
 			Exec(),
 	)
 
@@ -121,6 +122,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 			SetGroup("RoleClient").
 			SetName("GetClientRoleList").
 			SetDescription("Users (clients) can get role lists").
+			SetTenant(true).
 			Exec(),
 	)
 
@@ -135,6 +137,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 			SetGroup("RoleClient").
 			SetName("UpdateClientRole").
 			SetDescription("Users (clients) can update role").
+			SetTenant(true).
 			Exec(),
 	)
 
@@ -149,6 +152,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 			SetGroup("RoleClient").
 			SetName("DeleteClientRole").
 			SetDescription("Users (clients) can delete role").
+			SetTenant(true).
 			Exec(),
 	)
 

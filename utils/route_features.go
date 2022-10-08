@@ -11,6 +11,7 @@ type RouteFeature struct {
 	route_name  string
 	description string
 	only_admin  bool
+	tenant      bool
 }
 
 type FeatureLists struct {
@@ -21,6 +22,7 @@ type FeatureLists struct {
 	Description string   `json:"description"`
 	Params      []string `json:"params"`
 	OnlyAdmin   bool     `json:"only_admin"`
+	Tenant      bool     `json:"tenant"`
 }
 
 type FeatureUnderGroup struct {
@@ -30,6 +32,7 @@ type FeatureUnderGroup struct {
 	Description string   `json:"description"`
 	Params      []string `json:"params"`
 	OnlyAdmin   bool     `json:"only_admin"`
+	Tenant      bool     `json:"tenant"`
 }
 
 type FeatureGroup struct {
@@ -57,6 +60,11 @@ func (f *RouteFeature) SetOnlyAdmin(a bool) *RouteFeature {
 	return f
 }
 
+func (f *RouteFeature) SetTenant(a bool) *RouteFeature {
+	f.tenant = a
+	return f
+}
+
 func (f *RouteFeature) Exec() string {
 	var iface = make(map[string]interface{})
 
@@ -80,11 +88,15 @@ func (f *RouteFeature) Exec() string {
 
 	iface["only_admin"] = f.only_admin
 
+	iface["tenant"] = f.tenant
+
 	res, _ := json.Marshal(iface)
 
 	f.cleanup()
 
 	iface["only_admin"] = f.only_admin
+
+	iface["tenant"] = f.tenant
 
 	return string(res)
 }
@@ -106,6 +118,10 @@ func (f *RouteFeature) cleanup() {
 		f.only_admin = false
 	}
 
+	if f.tenant {
+		f.tenant = true
+	}
+
 }
 
 func IsJSON(str string) bool {
@@ -113,7 +129,7 @@ func IsJSON(str string) bool {
 	return json.Unmarshal([]byte(str), &js) == nil
 }
 
-func ExtractRouteAsFeatures(app *fiber.App) []FeatureLists {
+func ExtractRouteAsFeatures(app *fiber.App, isTenant bool) []FeatureLists {
 	var resp []FeatureLists
 
 	for _, items := range app.Stack() {
@@ -124,29 +140,32 @@ func ExtractRouteAsFeatures(app *fiber.App) []FeatureLists {
 
 				json.Unmarshal([]byte(item.Name), &nameInfo)
 
-				resp = append(resp, FeatureLists{
-					Group:       nameInfo["group"].(string),
-					Method:      item.Method,
-					Endpoint:    item.Path,
-					Name:        nameInfo["name"].(string),
-					Description: nameInfo["description"].(string),
-					Params:      item.Params,
-					OnlyAdmin:   nameInfo["only_admin"].(bool),
-				})
+				if nameInfo["tenant"].(bool) == isTenant {
+					resp = append(resp, FeatureLists{
+						Group:       nameInfo["group"].(string),
+						Method:      item.Method,
+						Endpoint:    item.Path,
+						Name:        nameInfo["name"].(string),
+						Description: nameInfo["description"].(string),
+						Params:      item.Params,
+						OnlyAdmin:   nameInfo["only_admin"].(bool),
+						Tenant:      nameInfo["tenant"].(bool),
+					})
+				}
 			}
 		}
 	}
 	return resp
 }
 
-func FeaturesGroupLists(app *fiber.App) []FeatureGroup {
-	var list = ExtractRouteAsFeatures(app)
+func FeaturesGroupLists(app *fiber.App, isTenant bool) []FeatureGroup {
+	var list = ExtractRouteAsFeatures(app, isTenant)
 	m := make(map[string]bool)
 	var a = []string{}
 	var resp []FeatureGroup
 
 	for _, item := range list {
-		if !m[item.Group] {
+		if !m[item.Group] && item.Tenant == isTenant {
 			a = append(a, item.Group)
 			m[item.Group] = true
 		}
@@ -159,7 +178,7 @@ func FeaturesGroupLists(app *fiber.App) []FeatureGroup {
 		})
 
 		for _, item := range list {
-			if val == item.Group {
+			if val == item.Group && item.Tenant == isTenant {
 				resp[idx].Items = append(resp[idx].Items, FeatureUnderGroup{
 					Method:      item.Method,
 					Endpoint:    item.Endpoint,
@@ -167,6 +186,7 @@ func FeaturesGroupLists(app *fiber.App) []FeatureGroup {
 					Description: item.Description,
 					Params:      item.Params,
 					OnlyAdmin:   item.OnlyAdmin,
+					Tenant:      item.Tenant,
 				})
 			}
 		}

@@ -28,7 +28,7 @@ func Bootstrap(app *fiber.App) {
 		utils.SetupApiGroup()+"/features",
 		middleware.Authenticate(),
 		func(c *fiber.Ctx) error {
-			return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c.App()))
+			return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c.App(), false))
 		})
 
 	// Get feature per group
@@ -36,8 +36,26 @@ func Bootstrap(app *fiber.App) {
 		utils.SetupApiGroup()+"/features/group",
 		middleware.Authenticate(),
 		func(c *fiber.Ctx) error {
-			return utils.ApiOk(c, utils.FeaturesGroupLists(c.App()))
+			return utils.ApiOk(c, utils.FeaturesGroupLists(c.App(), false))
 		})
+
+	if config.Config("TENANCY") == "true" {
+		// Get feature lists Tenant
+		app.Get(
+			utils.SetupApiGroup()+"/features/tenant",
+			middleware.Authenticate(),
+			func(c *fiber.Ctx) error {
+				return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c.App(), true))
+			})
+
+		// Get feature per group tenant
+		app.Get(
+			utils.SetupApiGroup()+"/features/group/tenant",
+			middleware.Authenticate(),
+			func(c *fiber.Ctx) error {
+				return utils.ApiOk(c, utils.FeaturesGroupLists(c.App(), true))
+			})
+	}
 
 	// Register module user
 	user.RegisterModule(app)
