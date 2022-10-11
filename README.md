@@ -1,4 +1,4 @@
-# GoLang gaskn
+# GASKN
 
 File structure in this project.
 
