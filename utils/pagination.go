@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"go-starterkit-project/config"
+	"gaskn/config"
 	"math"
 	"strconv"
 

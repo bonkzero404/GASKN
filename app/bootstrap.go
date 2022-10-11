@@ -1,13 +1,13 @@
 package app
 
 import (
-	"go-starterkit-project/app/middleware"
-	"go-starterkit-project/config"
-	"go-starterkit-project/modules/auth"
-	cl "go-starterkit-project/modules/client"
-	"go-starterkit-project/modules/role"
-	"go-starterkit-project/modules/user"
-	"go-starterkit-project/utils"
+	"gaskn/app/middleware"
+	"gaskn/config"
+	"gaskn/modules/auth"
+	cl "gaskn/modules/client"
+	"gaskn/modules/role"
+	"gaskn/modules/user"
+	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"

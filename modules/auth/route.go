@@ -1,9 +1,9 @@
 package auth
 
 import (
-	"go-starterkit-project/app/middleware"
-	"go-starterkit-project/modules/auth/handlers"
-	"go-starterkit-project/utils"
+	"gaskn/app/middleware"
+	"gaskn/modules/auth/handlers"
+	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

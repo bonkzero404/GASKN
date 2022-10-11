@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"go-starterkit-project/database/stores"
-	"go-starterkit-project/modules/user/contracts"
+	"gaskn/database/stores"
+	"gaskn/modules/user/contracts"
 )
 
 type RepositoryAggregate struct {

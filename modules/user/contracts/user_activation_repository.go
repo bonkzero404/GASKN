@@ -1,7 +1,7 @@
 package contracts
 
 import (
-	"go-starterkit-project/database/stores"
+	"gaskn/database/stores"
 
 	"gorm.io/gorm"
 )

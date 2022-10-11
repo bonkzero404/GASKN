@@ -3,8 +3,8 @@ package driver
 import (
 	"database/sql"
 	"fmt"
-	"go-starterkit-project/config"
-	"go-starterkit-project/utils"
+	"gaskn/config"
+	"gaskn/utils"
 	"log"
 	"os"
 	"strconv"

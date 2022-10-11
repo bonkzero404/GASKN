@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"go-starterkit-project/config"
+	"gaskn/config"
 )
 
 /*

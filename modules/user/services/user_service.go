@@ -2,12 +2,12 @@ package services
 
 import (
 	"errors"
-	"go-starterkit-project/database/stores"
-	respModel "go-starterkit-project/dto"
-	"go-starterkit-project/modules/user/contracts"
-	"go-starterkit-project/modules/user/dto"
-	"go-starterkit-project/modules/user/services/factories"
-	"go-starterkit-project/utils"
+	"gaskn/database/stores"
+	respModel "gaskn/dto"
+	"gaskn/modules/user/contracts"
+	"gaskn/modules/user/dto"
+	"gaskn/modules/user/services/factories"
+	"gaskn/utils"
 	"strings"
 	"time"
 

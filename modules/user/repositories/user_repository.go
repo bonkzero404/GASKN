@@ -1,9 +1,9 @@
 package repositories
 
 import (
-	"go-starterkit-project/database/driver"
-	"go-starterkit-project/database/stores"
-	"go-starterkit-project/modules/user/contracts"
+	"gaskn/database/driver"
+	"gaskn/database/stores"
+	"gaskn/modules/user/contracts"
 
 	"gorm.io/gorm"
 )

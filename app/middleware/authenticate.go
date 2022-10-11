@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"go-starterkit-project/config"
-	"go-starterkit-project/dto"
-	"go-starterkit-project/utils"
+	"gaskn/config"
+	"gaskn/dto"
+	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v3"

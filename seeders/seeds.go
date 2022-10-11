@@ -1,8 +1,8 @@
 package seeders
 
 import (
-	"go-starterkit-project/config"
-	"go-starterkit-project/database/stores"
+	"gaskn/config"
+	"gaskn/database/stores"
 
 	"gorm.io/gorm"
 )

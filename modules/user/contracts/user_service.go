@@ -1,8 +1,8 @@
 package contracts
 
 import (
-	"go-starterkit-project/database/stores"
-	"go-starterkit-project/modules/user/dto"
+	"gaskn/database/stores"
+	"gaskn/modules/user/dto"
 
 	"github.com/gofiber/fiber/v2"
 )

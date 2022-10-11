@@ -2,9 +2,9 @@ package seeders
 
 import (
 	"errors"
-	"go-starterkit-project/config"
-	"go-starterkit-project/database/driver"
-	"go-starterkit-project/database/stores"
+	"gaskn/config"
+	"gaskn/database/driver"
+	"gaskn/database/stores"
 
 	"gorm.io/gorm"
 )

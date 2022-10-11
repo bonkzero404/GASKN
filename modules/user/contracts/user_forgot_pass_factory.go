@@ -1,6 +1,6 @@
 package contracts
 
-import "go-starterkit-project/database/stores"
+import "gaskn/database/stores"
 
 type UserForgotPassServiceFactory interface {
 	CreateUserForgotPass(user *stores.User) (*stores.UserActivation, error)

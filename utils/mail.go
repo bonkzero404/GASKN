@@ -2,8 +2,8 @@ package utils
 
 import (
 	"bytes"
-	"go-starterkit-project/config"
-	"go-starterkit-project/dto"
+	"gaskn/config"
+	"gaskn/dto"
 	"html/template"
 	"log"
 	"strconv"

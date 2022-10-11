@@ -1,4 +1,4 @@
-module go-starterkit-project
+module gaskn
 
 go 1.18
 

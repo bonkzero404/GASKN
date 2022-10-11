@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"go-starterkit-project/dto"
+	"gaskn/dto"
 
 	"github.com/gofiber/fiber/v2"
 )

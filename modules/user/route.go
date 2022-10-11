@@ -1,9 +1,9 @@
 package user
 
 import (
-	"go-starterkit-project/app/middleware"
-	"go-starterkit-project/modules/user/handlers"
-	"go-starterkit-project/utils"
+	"gaskn/app/middleware"
+	"gaskn/modules/user/handlers"
+	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

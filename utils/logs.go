@@ -3,7 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
-	"go-starterkit-project/config"
+	"gaskn/config"
 	"io"
 	"log"
 	"os"

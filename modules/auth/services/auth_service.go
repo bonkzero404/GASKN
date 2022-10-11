@@ -2,13 +2,13 @@ package services
 
 import (
 	"errors"
-	"go-starterkit-project/database/stores"
-	respModel "go-starterkit-project/dto"
-	"go-starterkit-project/modules/auth/contracts"
-	"go-starterkit-project/modules/auth/dto"
-	roleRepository "go-starterkit-project/modules/role/contracts"
-	userInterface "go-starterkit-project/modules/user/contracts"
-	"go-starterkit-project/utils"
+	"gaskn/database/stores"
+	respModel "gaskn/dto"
+	"gaskn/modules/auth/contracts"
+	"gaskn/modules/auth/dto"
+	roleRepository "gaskn/modules/role/contracts"
+	userInterface "gaskn/modules/user/contracts"
+	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"

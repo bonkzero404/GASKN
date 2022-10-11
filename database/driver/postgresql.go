@@ -2,7 +2,7 @@ package driver
 
 import (
 	"fmt"
-	"go-starterkit-project/config"
+	"gaskn/config"
 	"strconv"
 )
 

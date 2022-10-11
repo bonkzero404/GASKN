@@ -2,12 +2,12 @@ package services
 
 import (
 	"errors"
-	"go-starterkit-project/config"
-	"go-starterkit-project/database/stores"
-	respModel "go-starterkit-project/dto"
-	"go-starterkit-project/modules/role/contracts"
-	"go-starterkit-project/modules/role/dto"
-	"go-starterkit-project/utils"
+	"gaskn/config"
+	"gaskn/database/stores"
+	respModel "gaskn/dto"
+	"gaskn/modules/role/contracts"
+	"gaskn/modules/role/dto"
+	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"

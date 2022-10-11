@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"go-starterkit-project/utils"
+	"gaskn/utils"
 	"time"
 
-	respModel "go-starterkit-project/dto"
+	respModel "gaskn/dto"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"

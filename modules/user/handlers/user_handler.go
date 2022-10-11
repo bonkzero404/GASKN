@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"go-starterkit-project/database/stores"
-	respModel "go-starterkit-project/dto"
-	"go-starterkit-project/modules/user/contracts"
-	"go-starterkit-project/modules/user/dto"
-	"go-starterkit-project/utils"
+	"gaskn/database/stores"
+	respModel "gaskn/dto"
+	"gaskn/modules/user/contracts"
+	"gaskn/modules/user/dto"
+	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

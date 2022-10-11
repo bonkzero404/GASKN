@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	appRoute "go-starterkit-project/app"
-	"go-starterkit-project/config"
-	"go-starterkit-project/database"
-	"go-starterkit-project/database/driver"
-	"go-starterkit-project/seeders"
-	"go-starterkit-project/utils"
+	appRoute "gaskn/app"
+	"gaskn/config"
+	"gaskn/database"
+	"gaskn/database/driver"
+	"gaskn/seeders"
+	"gaskn/utils"
 	"log"
 
 	"github.com/gofiber/fiber/v2"

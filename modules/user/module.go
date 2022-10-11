@@ -1,12 +1,12 @@
 package user
 
 import (
-	"go-starterkit-project/database/driver"
-	"go-starterkit-project/modules/user/contracts"
-	"go-starterkit-project/modules/user/handlers"
-	"go-starterkit-project/modules/user/repositories"
-	"go-starterkit-project/modules/user/services"
-	"go-starterkit-project/modules/user/services/factories"
+	"gaskn/database/driver"
+	"gaskn/modules/user/contracts"
+	"gaskn/modules/user/handlers"
+	"gaskn/modules/user/repositories"
+	"gaskn/modules/user/services"
+	"gaskn/modules/user/services/factories"
 
 	"github.com/gofiber/fiber/v2"
 )

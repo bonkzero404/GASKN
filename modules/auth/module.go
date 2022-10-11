@@ -1,11 +1,11 @@
 package auth
 
 import (
-	"go-starterkit-project/database/driver"
-	"go-starterkit-project/modules/auth/handlers"
-	"go-starterkit-project/modules/auth/services"
-	roleRepo "go-starterkit-project/modules/role/repositories"
-	"go-starterkit-project/modules/user/repositories"
+	"gaskn/database/driver"
+	"gaskn/modules/auth/handlers"
+	"gaskn/modules/auth/services"
+	roleRepo "gaskn/modules/role/repositories"
+	"gaskn/modules/user/repositories"
 
 	"github.com/gofiber/fiber/v2"
 )

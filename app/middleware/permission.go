@@ -3,11 +3,11 @@ package middleware
 import (
 	"errors"
 	"fmt"
-	"go-starterkit-project/config"
-	"go-starterkit-project/database/driver"
-	"go-starterkit-project/database/stores"
-	"go-starterkit-project/dto"
-	"go-starterkit-project/utils"
+	"gaskn/config"
+	"gaskn/database/driver"
+	"gaskn/database/stores"
+	"gaskn/dto"
+	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"

@@ -1,8 +1,8 @@
 package contracts
 
 import (
-	"go-starterkit-project/modules/role/dto"
-	"go-starterkit-project/utils"
+	"gaskn/modules/role/dto"
+	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

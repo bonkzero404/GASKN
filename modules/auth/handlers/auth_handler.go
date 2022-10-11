@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	respModel "go-starterkit-project/dto"
-	"go-starterkit-project/modules/auth/contracts"
-	"go-starterkit-project/modules/auth/dto"
-	"go-starterkit-project/utils"
+	respModel "gaskn/dto"
+	"gaskn/modules/auth/contracts"
+	"gaskn/modules/auth/dto"
+	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"

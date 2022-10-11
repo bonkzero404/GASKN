@@ -1,11 +1,11 @@
 package services
 
 import (
-	"go-starterkit-project/database/stores"
-	respModel "go-starterkit-project/dto"
-	"go-starterkit-project/modules/role/contracts"
-	"go-starterkit-project/modules/role/dto"
-	"go-starterkit-project/utils"
+	"gaskn/database/stores"
+	respModel "gaskn/dto"
+	"gaskn/modules/role/contracts"
+	"gaskn/modules/role/dto"
+	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

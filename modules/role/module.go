@@ -1,11 +1,11 @@
 package role
 
 import (
-	"go-starterkit-project/config"
-	"go-starterkit-project/database/driver"
-	"go-starterkit-project/modules/role/handlers"
-	"go-starterkit-project/modules/role/repositories"
-	"go-starterkit-project/modules/role/services"
+	"gaskn/config"
+	"gaskn/database/driver"
+	"gaskn/modules/role/handlers"
+	"gaskn/modules/role/repositories"
+	"gaskn/modules/role/services"
 
 	"github.com/gofiber/fiber/v2"
 )

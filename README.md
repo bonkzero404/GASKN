@@ -1,9 +1,9 @@
-# GoLang go-starterkit-project
+# GoLang gaskn
 
 File structure in this project.
 
 ```
-go-starterkit-project
+gaskn
 ├── Makefile
 ├── README.md
 ├── app
