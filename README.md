@@ -133,8 +133,6 @@ go-starterkit-project
 │           │   ├── user_activation_factory.go
 │           │   └── user_forgot_pass_factory.go
 │           └── user_service.go
-├── postman
-│   └── NgWork.postman_collection.json
 ├── seeders
 │   ├── casbin.go
 │   ├── roles.go
