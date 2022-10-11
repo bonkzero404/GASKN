@@ -10,62 +10,115 @@ go-starterkit-project
 │   ├── bootstrap.go
 │   └── middleware
 │       ├── authenticate.go
+│       ├── permission.go
 │       └── rate_limiter.go
+├── casbin_rbac_model.conf
 ├── config
 │   └── config.go
 ├── database
 │   ├── driver
+│   │   ├── casbin.go
 │   │   ├── connector.go
 │   │   ├── mysql.go
 │   │   └── postgresql.go
-│   └── migration.go
-├── domain
-│   ├── dto
-│   │   ├── mail_dto.go
-│   │   └── response_dto.go
+│   ├── migration.go
 │   └── stores
-│       ├── user_activation.go
+│       ├── client_assignment_store.go
+│       ├── client_store.go
+│       ├── role_client_store.go
+│       ├── role_store.go
+│       ├── role_user_client_store.go
+│       ├── role_user_store.go
+│       ├── user_activation_store.go
 │       └── user_store.go
+├── dto
+│   ├── mail_dto.go
+│   └── response_dto.go
 ├── go.mod
 ├── go.sum
+├── lang
+│   ├── en
+│   │   ├── auth.json
+│   │   ├── client.json
+│   │   ├── global.json
+│   │   ├── middleware.json
+│   │   ├── role.json
+│   │   └── user.json
+│   └── id
+│       ├── auth.json
+│       ├── client.json
+│       ├── global.json
+│       ├── middleware.json
+│       ├── role.json
+│       └── user.json
+├── logs
+│   ├── access.log
+│   └── sql.error.log
 ├── main.go
 ├── modules
 │   ├── auth
-│   │   ├── domain
-│   │   │   ├── dto
-│   │   │   │   ├── user_auth_profile_dto.go
-│   │   │   │   ├── user_auth_request_dto.go
-│   │   │   │   ├── user_auth_response_dto.go
-│   │   │   │   └── user_auth_validation_dto.go
-│   │   │   └── interfaces
-│   │   │       └── user_auth_service_interface.go
+│   │   ├── contracts
+│   │   │   └── user_auth_service.go
+│   │   ├── dto
+│   │   │   ├── user_auth_profile_dto.go
+│   │   │   ├── user_auth_request_dto.go
+│   │   │   └── user_auth_response_dto.go
 │   │   ├── handlers
 │   │   │   └── auth_handler.go
 │   │   ├── module.go
 │   │   ├── route.go
 │   │   └── services
 │   │       └── auth_service.go
+│   ├── client
+│   │   ├── contracts
+│   │   │   ├── client_repository.go
+│   │   │   └── client_service.go
+│   │   ├── dto
+│   │   │   ├── client_request_dto.go
+│   │   │   └── client_response_dto.go
+│   │   ├── handlers
+│   │   │   └── client_handler.go
+│   │   ├── module.go
+│   │   ├── repositories
+│   │   │   └── client_repository.go
+│   │   ├── route.go
+│   │   └── services
+│   │       └── client_service.go
+│   ├── role
+│   │   ├── contracts
+│   │   │   ├── role_client_repository.go
+│   │   │   ├── role_client_service.go
+│   │   │   ├── role_repository.go
+│   │   │   └── role_service.go
+│   │   ├── dto
+│   │   │   ├── role_request_dto.go
+│   │   │   └── role_response_dto.go
+│   │   ├── handlers
+│   │   │   ├── role_client_handler.go
+│   │   │   └── role_handler.go
+│   │   ├── module.go
+│   │   ├── repositories
+│   │   │   ├── role_client_repository.go
+│   │   │   └── role_repository.go
+│   │   ├── route.go
+│   │   └── services
+│   │       ├── role_client_service.go
+│   │       └── role_service.go
 │   └── user
-│       ├── domain
-│       │   ├── dto
-│       │   │   ├── user_activation_request_dto.go
-│       │   │   ├── user_activation_request_validation_dto.go
-│       │   │   ├── user_create_reponse_dto.go
-│       │   │   ├── user_create_request_dto.go
-│       │   │   ├── user_create_request_validation_dto.go
-│       │   │   ├── user_forgot_pass_act_request_dto.go
-│       │   │   ├── user_forgot_pass_act_validation_dto.go
-│       │   │   ├── user_forgot_pass_request_dto.go
-│       │   │   ├── user_forgot_pass_validation_dto.go
-│       │   │   ├── user_reactivation_request_dto.go
-│       │   │   └── user_reactivation_validation_dto.go
-│       │   └── interfaces
-│       │       ├── repository_aggregate_interface.go
-│       │       ├── user_activation_factory_interface.go
-│       │       ├── user_activation_repository_interface.go
-│       │       ├── user_forgot_pass_factory_interface.go
-│       │       ├── user_repository_interface.go
-│       │       └── user_service_interface.go
+│       ├── contracts
+│       │   ├── repository_aggregate.go
+│       │   ├── user_activation_factory.go
+│       │   ├── user_activation_repository.go
+│       │   ├── user_forgot_pass_factory.go
+│       │   ├── user_repository.go
+│       │   └── user_service.go
+│       ├── dto
+│       │   ├── user_activation_request_dto.go
+│       │   ├── user_create_reponse_dto.go
+│       │   ├── user_create_request_dto.go
+│       │   ├── user_forgot_pass_act_request_dto.go
+│       │   ├── user_forgot_pass_request_dto.go
+│       │   └── user_reactivation_request_dto.go
 │       ├── handlers
 │       │   └── user_handler.go
 │       ├── module.go
@@ -80,60 +133,37 @@ go-starterkit-project
 │           │   ├── user_activation_factory.go
 │           │   └── user_forgot_pass_factory.go
 │           └── user_service.go
-├── rbac_model.conf
+├── postman
+│   └── NgWork.postman_collection.json
+├── seeders
+│   ├── casbin.go
+│   ├── roles.go
+│   ├── seed_abstraction.go
+│   ├── seeds.go
+│   ├── user.go
+│   └── user_role.go
 ├── templates
 │   ├── user_activation.html
 │   └── user_forgot_password.html
 └── utils
     ├── api_group.go
     ├── api_wrapper.go
+    ├── casbin_adapter.go
     ├── create_token.go
+    ├── file.go
     ├── hash.go
+    ├── logs.go
     ├── mail.go
+    ├── pagination.go
     ├── rand_char.go
+    ├── route_features.go
+    ├── translation.go
     └── validation_struct.go
 ```
 
 # How to run this project?
 
-To run this project copy the .env.example file into .env, then do the configuration as you need, here is the env file
-
-```conf
-# Application port
-APP_PORT=3000
-APP_HOST=localhost
-
-# Endpoint
-API_WRAP=api
-API_VERSION=v1
-
-# Database Connection
-# mysql | pgsql
-DB_DRIVER=mysql
-DB_HOST=
-DB_NAME=
-DB_USER=
-DB_PASSWORD=
-DB_PORT=3306
-
-# Database Pool
-DB_MAX_IDLE_CONNS=10
-DB_MAX_OPEN_CONNS=100
-
-#JWT
-JWT_SECRET=supersecret
-
-# Mail
-MAIL_HOST=smtp.mailtrap.io
-MAIL_PORT=2525
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_FROM=admin@example.com
-
-# Storages
-STORAGE_DIR=storages
-
-```
+To run this project copy the .env.example file into .env, then do the configuration as you need
 
 After you create the configuration file, create a database in MySQL or PostgreSQL with the appropriate name in the configuration file above.
 
