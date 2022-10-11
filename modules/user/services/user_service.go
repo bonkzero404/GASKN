@@ -16,18 +16,18 @@ import (
 )
 
 type UserService struct {
-	UserRepository           contracts.UserRepositoryInterface
-	UserActivationRepository contracts.UserActivationRepositoryInterface
-	RepositoryAggregate      contracts.RepositoryAggregateInterface
+	UserRepository           contracts.UserRepository
+	UserActivationRepository contracts.UserActivationRepository
+	RepositoryAggregate      contracts.RepositoryAggregate
 	ActionFactory            factories.ActionFactoryInterface
 }
 
 func NewUserService(
-	userRepository contracts.UserRepositoryInterface,
-	userActivationRepository contracts.UserActivationRepositoryInterface,
-	repositoryAggregate contracts.RepositoryAggregateInterface,
+	userRepository contracts.UserRepository,
+	userActivationRepository contracts.UserActivationRepository,
+	repositoryAggregate contracts.RepositoryAggregate,
 	factory factories.ActionFactoryInterface,
-) contracts.UserServiceInterface {
+) contracts.UserService {
 	return &UserService{
 		UserRepository:           userRepository,
 		UserActivationRepository: userActivationRepository,

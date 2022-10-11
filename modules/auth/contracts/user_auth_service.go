@@ -7,7 +7,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-type UserAuthServiceInterface interface {
+type UserAuthService interface {
 	Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error)
 
 	GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileResponse, error)

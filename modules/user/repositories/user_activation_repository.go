@@ -12,7 +12,7 @@ type UserActivationRepository struct {
 	DB *gorm.DB
 }
 
-func NewUserActivationRepository(db *gorm.DB) contracts.UserActivationRepositoryInterface {
+func NewUserActivationRepository(db *gorm.DB) contracts.UserActivationRepository {
 	return &UserActivationRepository{
 		DB: driver.DB,
 	}

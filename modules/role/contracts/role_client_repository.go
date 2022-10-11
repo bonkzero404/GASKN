@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type RoleClientRepositoryInterface interface {
+type RoleClientRepository interface {
 	CreateRoleClient(role *stores.Role, clientId string) (*stores.Role, error)
 
 	GetRoleClientById(role *stores.RoleClient, id string, clientId string) *gorm.DB

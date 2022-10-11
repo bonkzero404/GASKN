@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserRepositoryInterface interface {
+type UserRepository interface {
 	CreateUser(user *stores.User) *gorm.DB
 
 	UpdateUserIsActive(user *stores.User) *gorm.DB

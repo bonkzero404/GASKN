@@ -15,7 +15,7 @@ import (
 *
 Service factory registration
 */
-func registerActivationFactory(userActivationRepository contracts.UserActivationRepositoryInterface) factories.ActionFactoryInterface {
+func registerActivationFactory(userActivationRepository contracts.UserActivationRepository) factories.ActionFactoryInterface {
 	actFactory := factories.NewUserActivationServiceFactory(userActivationRepository)
 	forgotPassFactory := factories.NewUserForgotPassServiceFactory(userActivationRepository)
 

@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type ClientRepositoryInterface interface {
+type ClientRepository interface {
 	CreateClient(client *stores.Client) (*stores.Role, error)
 
 	UpdateClientById(client *stores.Client) *gorm.DB

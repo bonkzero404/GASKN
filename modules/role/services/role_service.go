@@ -11,12 +11,12 @@ import (
 )
 
 type RoleService struct {
-	RoleRepository contracts.RoleRepositoryInterface
+	RoleRepository contracts.RoleRepository
 }
 
 func NewRoleService(
-	roleRepository contracts.RoleRepositoryInterface,
-) contracts.RoleServiceInterface {
+	roleRepository contracts.RoleRepository,
+) contracts.RoleService {
 	return &RoleService{
 		RoleRepository: roleRepository,
 	}

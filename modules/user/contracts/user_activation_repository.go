@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserActivationRepositoryInterface interface {
+type UserActivationRepository interface {
 	FindUserActivationCode(userActivation *stores.UserActivation, userId string, code string) *gorm.DB
 
 	CreateUserActivation(userActivate *stores.UserActivation) *gorm.DB

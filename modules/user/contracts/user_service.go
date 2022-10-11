@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type UserServiceInterface interface {
+type UserService interface {
 	CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest) (*dto.UserCreateResponse, error)
 
 	UserActivation(c *fiber.Ctx, email string, code string) (*dto.UserCreateResponse, error)

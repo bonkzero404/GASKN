@@ -14,7 +14,7 @@ type RoleClientRepository struct {
 	DB *gorm.DB
 }
 
-func NewRoleClientRepository(db *gorm.DB) contracts.RoleClientRepositoryInterface {
+func NewRoleClientRepository(db *gorm.DB) contracts.RoleClientRepository {
 	return &RoleClientRepository{
 		DB: db,
 	}

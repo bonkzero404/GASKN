@@ -14,14 +14,14 @@ import (
 )
 
 type RoleClientService struct {
-	RoleClientRepository contracts.RoleClientRepositoryInterface
-	RoleRepository       contracts.RoleRepositoryInterface
+	RoleClientRepository contracts.RoleClientRepository
+	RoleRepository       contracts.RoleRepository
 }
 
 func NewRoleClientService(
-	roleClientRepository contracts.RoleClientRepositoryInterface,
-	roleRepository contracts.RoleRepositoryInterface,
-) contracts.RoleClientServiceInterface {
+	roleClientRepository contracts.RoleClientRepository,
+	roleRepository contracts.RoleRepository,
+) contracts.RoleClientService {
 	return &RoleClientService{
 		RoleClientRepository: roleClientRepository,
 		RoleRepository:       roleRepository,

@@ -16,12 +16,12 @@ import (
 )
 
 type ClientService struct {
-	ClientRepository contracts.ClientRepositoryInterface
+	ClientRepository contracts.ClientRepository
 }
 
 func NewClientService(
-	clientRepository contracts.ClientRepositoryInterface,
-) contracts.ClientServiceInterface {
+	clientRepository contracts.ClientRepository,
+) contracts.ClientService {
 	return &ClientService{
 		ClientRepository: clientRepository,
 	}

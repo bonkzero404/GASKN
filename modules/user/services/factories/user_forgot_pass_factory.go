@@ -10,10 +10,10 @@ import (
 )
 
 type UserForgotPassServiceFactory struct {
-	UserActivationRepository contracts.UserActivationRepositoryInterface
+	UserActivationRepository contracts.UserActivationRepository
 }
 
-func NewUserForgotPassServiceFactory(userActivationRepository contracts.UserActivationRepositoryInterface) contracts.UserForgotPassServiceFactoryInterface {
+func NewUserForgotPassServiceFactory(userActivationRepository contracts.UserActivationRepository) contracts.UserForgotPassServiceFactory {
 	return &UserForgotPassServiceFactory{
 		UserActivationRepository: userActivationRepository,
 	}

@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type ClientServiceInterface interface {
+type ClientService interface {
 	CreateClient(c *fiber.Ctx, client *dto.ClientRequest, userId string) (*dto.ClientResponse, error)
 
 	GetClientByUser(c *fiber.Ctx, userId string) (*utils.Pagination, error)

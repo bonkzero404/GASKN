@@ -16,14 +16,14 @@ import (
 )
 
 type AuthService struct {
-	UserRepository userInterface.UserRepositoryInterface
-	RoleRepository roleRepository.RoleRepositoryInterface
+	UserRepository userInterface.UserRepository
+	RoleRepository roleRepository.RoleRepository
 }
 
 func NewAuthService(
-	userRepository userInterface.UserRepositoryInterface,
-	roleRepository roleRepository.RoleRepositoryInterface,
-) contracts.UserAuthServiceInterface {
+	userRepository userInterface.UserRepository,
+	roleRepository roleRepository.RoleRepository,
+) contracts.UserAuthService {
 	return &AuthService{
 		UserRepository: userRepository,
 		RoleRepository: roleRepository,

@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type RoleRepositoryInterface interface {
+type RoleRepository interface {
 	CreateRole(role *stores.Role) *gorm.DB
 
 	UpdateRoleById(role *stores.Role) *gorm.DB

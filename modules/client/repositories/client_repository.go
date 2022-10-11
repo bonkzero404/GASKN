@@ -13,7 +13,7 @@ type ClientRepository struct {
 	DB *gorm.DB
 }
 
-func NewClientRepository(db *gorm.DB) contracts.ClientRepositoryInterface {
+func NewClientRepository(db *gorm.DB) contracts.ClientRepository {
 	return &ClientRepository{
 		DB: db,
 	}

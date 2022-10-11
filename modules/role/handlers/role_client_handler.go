@@ -10,10 +10,10 @@ import (
 )
 
 type RoleClientHandler struct {
-	RoleClientService contracts.RoleClientServiceInterface
+	RoleClientService contracts.RoleClientService
 }
 
-func NewRoleClientHandler(roleClientService contracts.RoleClientServiceInterface) *RoleClientHandler {
+func NewRoleClientHandler(roleClientService contracts.RoleClientService) *RoleClientHandler {
 	return &RoleClientHandler{
 		RoleClientService: roleClientService,
 	}

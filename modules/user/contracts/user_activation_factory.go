@@ -4,6 +4,6 @@ import (
 	"go-starterkit-project/database/stores"
 )
 
-type UserActivationServiceFactoryInterface interface {
+type UserActivationServiceFactory interface {
 	CreateUserActivation(user *stores.User) (*stores.UserActivation, error)
 }

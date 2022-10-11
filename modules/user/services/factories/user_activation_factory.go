@@ -10,12 +10,12 @@ import (
 )
 
 type UserActivationServiceFactory struct {
-	UserActivationRepository contracts.UserActivationRepositoryInterface
+	UserActivationRepository contracts.UserActivationRepository
 }
 
 func NewUserActivationServiceFactory(
-	userActivationRepository contracts.UserActivationRepositoryInterface,
-) contracts.UserActivationServiceFactoryInterface {
+	userActivationRepository contracts.UserActivationRepository,
+) contracts.UserActivationServiceFactory {
 	return &UserActivationServiceFactory{
 		UserActivationRepository: userActivationRepository,
 	}

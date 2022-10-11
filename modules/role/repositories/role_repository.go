@@ -13,7 +13,7 @@ type RoleRepository struct {
 	DB *gorm.DB
 }
 
-func NewRoleRepository(db *gorm.DB) contracts.RoleRepositoryInterface {
+func NewRoleRepository(db *gorm.DB) contracts.RoleRepository {
 	return &RoleRepository{
 		DB: db,
 	}

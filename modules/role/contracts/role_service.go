@@ -7,7 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type RoleServiceInterface interface {
+type RoleService interface {
 	CreateRole(c *fiber.Ctx, role *dto.RoleRequest) (*dto.RoleResponse, error)
 
 	GetRoleList(c *fiber.Ctx) (*utils.Pagination, error)

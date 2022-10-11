@@ -4,7 +4,7 @@ import (
 	"go-starterkit-project/database/stores"
 )
 
-type RepositoryAggregateInterface interface {
+type RepositoryAggregate interface {
 	CreateUser(user *stores.User, userActivate *stores.UserActivation) (*stores.User, error)
 
 	UpdateUserActivation(id string, stat bool) (*stores.User, error)

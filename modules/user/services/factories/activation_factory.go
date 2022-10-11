@@ -6,8 +6,8 @@ import (
 )
 
 type ActionFactory struct {
-	UserActivationServiceFactory contracts.UserActivationServiceFactoryInterface
-	UserForgotPassServiceFactory contracts.UserForgotPassServiceFactoryInterface
+	UserActivationServiceFactory contracts.UserActivationServiceFactory
+	UserForgotPassServiceFactory contracts.UserForgotPassServiceFactory
 }
 
 type ActionFactoryInterface interface {
@@ -15,8 +15,8 @@ type ActionFactoryInterface interface {
 }
 
 func NewActionFactory(
-	userActivationServiceFactory contracts.UserActivationServiceFactoryInterface,
-	userForgotPassServiceFactory contracts.UserForgotPassServiceFactoryInterface,
+	userActivationServiceFactory contracts.UserActivationServiceFactory,
+	userForgotPassServiceFactory contracts.UserForgotPassServiceFactory,
 ) ActionFactoryInterface {
 	return &ActionFactory{
 		UserActivationServiceFactory: userActivationServiceFactory,
