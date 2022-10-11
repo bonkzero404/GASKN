@@ -3,7 +3,7 @@ package utils
 import (
 	"bytes"
 	"go-starterkit-project/config"
-	"go-starterkit-project/domain/dto"
+	"go-starterkit-project/dto"
 	"html/template"
 	"log"
 	"strconv"

@@ -2,7 +2,7 @@ package database
 
 import (
 	"go-starterkit-project/database/driver"
-	"go-starterkit-project/domain/stores"
+	"go-starterkit-project/database/stores"
 )
 
 /*

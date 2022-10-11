@@ -1,7 +1,7 @@
-package interfaces
+package contracts
 
 import (
-	"go-starterkit-project/modules/auth/domain/dto"
+	"go-starterkit-project/modules/auth/dto"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"

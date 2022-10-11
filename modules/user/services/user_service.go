@@ -2,10 +2,10 @@ package services
 
 import (
 	"errors"
-	respModel "go-starterkit-project/domain/dto"
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/user/domain/dto"
-	"go-starterkit-project/modules/user/domain/interfaces"
+	"go-starterkit-project/database/stores"
+	respModel "go-starterkit-project/dto"
+	"go-starterkit-project/modules/user/contracts"
+	"go-starterkit-project/modules/user/dto"
 	"go-starterkit-project/modules/user/services/factories"
 	"go-starterkit-project/utils"
 	"strings"
@@ -16,18 +16,18 @@ import (
 )
 
 type UserService struct {
-	UserRepository           interfaces.UserRepositoryInterface
-	UserActivationRepository interfaces.UserActivationRepositoryInterface
-	RepositoryAggregate      interfaces.RepositoryAggregateInterface
+	UserRepository           contracts.UserRepositoryInterface
+	UserActivationRepository contracts.UserActivationRepositoryInterface
+	RepositoryAggregate      contracts.RepositoryAggregateInterface
 	ActionFactory            factories.ActionFactoryInterface
 }
 
 func NewUserService(
-	userRepository interfaces.UserRepositoryInterface,
-	userActivationRepository interfaces.UserActivationRepositoryInterface,
-	repositoryAggregate interfaces.RepositoryAggregateInterface,
+	userRepository contracts.UserRepositoryInterface,
+	userActivationRepository contracts.UserActivationRepositoryInterface,
+	repositoryAggregate contracts.RepositoryAggregateInterface,
 	factory factories.ActionFactoryInterface,
-) interfaces.UserServiceInterface {
+) contracts.UserServiceInterface {
 	return &UserService{
 		UserRepository:           userRepository,
 		UserActivationRepository: userActivationRepository,

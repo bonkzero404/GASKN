@@ -1,19 +1,19 @@
 package repositories
 
 import (
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/user/domain/interfaces"
+	"go-starterkit-project/database/stores"
+	"go-starterkit-project/modules/user/contracts"
 )
 
 type RepositoryAggregate struct {
-	UserRepository           interfaces.UserRepositoryInterface
-	UserActivationRepository interfaces.UserActivationRepositoryInterface
+	UserRepository           contracts.UserRepositoryInterface
+	UserActivationRepository contracts.UserActivationRepositoryInterface
 }
 
 func NewRepositoryAggregate(
-	userRepository interfaces.UserRepositoryInterface,
-	userActivationRepository interfaces.UserActivationRepositoryInterface,
-) interfaces.RepositoryAggregateInterface {
+	userRepository contracts.UserRepositoryInterface,
+	userActivationRepository contracts.UserActivationRepositoryInterface,
+) contracts.RepositoryAggregateInterface {
 	return &RepositoryAggregate{
 		UserRepository:           userRepository,
 		UserActivationRepository: userActivationRepository,

@@ -2,7 +2,7 @@ package user
 
 import (
 	"go-starterkit-project/database/driver"
-	"go-starterkit-project/modules/user/domain/interfaces"
+	"go-starterkit-project/modules/user/contracts"
 	"go-starterkit-project/modules/user/handlers"
 	"go-starterkit-project/modules/user/repositories"
 	"go-starterkit-project/modules/user/services"
@@ -15,7 +15,7 @@ import (
 *
 Service factory registration
 */
-func registerActivationFactory(userActivationRepository interfaces.UserActivationRepositoryInterface) factories.ActionFactoryInterface {
+func registerActivationFactory(userActivationRepository contracts.UserActivationRepositoryInterface) factories.ActionFactoryInterface {
 	actFactory := factories.NewUserActivationServiceFactory(userActivationRepository)
 	forgotPassFactory := factories.NewUserForgotPassServiceFactory(userActivationRepository)
 

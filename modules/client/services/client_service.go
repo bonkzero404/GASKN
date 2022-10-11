@@ -3,10 +3,10 @@ package services
 import (
 	"go-starterkit-project/config"
 	"go-starterkit-project/database/driver"
-	respModel "go-starterkit-project/domain/dto"
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/client/domain/dto"
-	"go-starterkit-project/modules/client/domain/interfaces"
+	"go-starterkit-project/database/stores"
+	respModel "go-starterkit-project/dto"
+	"go-starterkit-project/modules/client/contracts"
+	"go-starterkit-project/modules/client/dto"
 	"go-starterkit-project/utils"
 	"strings"
 
@@ -16,12 +16,12 @@ import (
 )
 
 type ClientService struct {
-	ClientRepository interfaces.ClientRepositoryInterface
+	ClientRepository contracts.ClientRepositoryInterface
 }
 
 func NewClientService(
-	clientRepository interfaces.ClientRepositoryInterface,
-) interfaces.ClientServiceInterface {
+	clientRepository contracts.ClientRepositoryInterface,
+) contracts.ClientServiceInterface {
 	return &ClientService{
 		ClientRepository: clientRepository,
 	}

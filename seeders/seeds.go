@@ -2,7 +2,7 @@ package seeders
 
 import (
 	"go-starterkit-project/config"
-	"go-starterkit-project/domain/stores"
+	"go-starterkit-project/database/stores"
 
 	"gorm.io/gorm"
 )

@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	respModel "go-starterkit-project/domain/dto"
-	"go-starterkit-project/modules/client/domain/dto"
-	"go-starterkit-project/modules/client/domain/interfaces"
+	respModel "go-starterkit-project/dto"
+	"go-starterkit-project/modules/client/contracts"
+	"go-starterkit-project/modules/client/dto"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,10 +11,10 @@ import (
 )
 
 type ClientHandler struct {
-	ClientService interfaces.ClientServiceInterface
+	ClientService contracts.ClientServiceInterface
 }
 
-func NewClientHandler(clientService interfaces.ClientServiceInterface) *ClientHandler {
+func NewClientHandler(clientService contracts.ClientServiceInterface) *ClientHandler {
 	return &ClientHandler{
 		ClientService: clientService,
 	}

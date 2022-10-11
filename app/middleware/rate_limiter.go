@@ -4,7 +4,7 @@ import (
 	"go-starterkit-project/utils"
 	"time"
 
-	respModel "go-starterkit-project/domain/dto"
+	respModel "go-starterkit-project/dto"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"

@@ -2,12 +2,12 @@ package services
 
 import (
 	"errors"
-	respModel "go-starterkit-project/domain/dto"
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/auth/domain/dto"
-	"go-starterkit-project/modules/auth/domain/interfaces"
-	roleRepository "go-starterkit-project/modules/role/domain/interfaces"
-	userInterface "go-starterkit-project/modules/user/domain/interfaces"
+	"go-starterkit-project/database/stores"
+	respModel "go-starterkit-project/dto"
+	"go-starterkit-project/modules/auth/contracts"
+	"go-starterkit-project/modules/auth/dto"
+	roleRepository "go-starterkit-project/modules/role/contracts"
+	userInterface "go-starterkit-project/modules/user/contracts"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -23,7 +23,7 @@ type AuthService struct {
 func NewAuthService(
 	userRepository userInterface.UserRepositoryInterface,
 	roleRepository roleRepository.RoleRepositoryInterface,
-) interfaces.UserAuthServiceInterface {
+) contracts.UserAuthServiceInterface {
 	return &AuthService{
 		UserRepository: userRepository,
 		RoleRepository: roleRepository,

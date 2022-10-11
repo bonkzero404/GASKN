@@ -1,8 +1,8 @@
-package interfaces
+package contracts
 
 import (
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/user/domain/dto"
+	"go-starterkit-project/database/stores"
+	"go-starterkit-project/modules/user/dto"
 
 	"github.com/gofiber/fiber/v2"
 )

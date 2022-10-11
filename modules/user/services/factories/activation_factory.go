@@ -1,13 +1,13 @@
 package factories
 
 import (
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/user/domain/interfaces"
+	"go-starterkit-project/database/stores"
+	"go-starterkit-project/modules/user/contracts"
 )
 
 type ActionFactory struct {
-	UserActivationServiceFactory interfaces.UserActivationServiceFactoryInterface
-	UserForgotPassServiceFactory interfaces.UserForgotPassServiceFactoryInterface
+	UserActivationServiceFactory contracts.UserActivationServiceFactoryInterface
+	UserForgotPassServiceFactory contracts.UserForgotPassServiceFactoryInterface
 }
 
 type ActionFactoryInterface interface {
@@ -15,8 +15,8 @@ type ActionFactoryInterface interface {
 }
 
 func NewActionFactory(
-	userActivationServiceFactory interfaces.UserActivationServiceFactoryInterface,
-	userForgotPassServiceFactory interfaces.UserForgotPassServiceFactoryInterface,
+	userActivationServiceFactory contracts.UserActivationServiceFactoryInterface,
+	userForgotPassServiceFactory contracts.UserForgotPassServiceFactoryInterface,
 ) ActionFactoryInterface {
 	return &ActionFactory{
 		UserActivationServiceFactory: userActivationServiceFactory,

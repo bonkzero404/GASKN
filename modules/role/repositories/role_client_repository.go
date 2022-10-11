@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/role/domain/interfaces"
+	"go-starterkit-project/database/stores"
+	"go-starterkit-project/modules/role/contracts"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,7 +14,7 @@ type RoleClientRepository struct {
 	DB *gorm.DB
 }
 
-func NewRoleClientRepository(db *gorm.DB) interfaces.RoleClientRepositoryInterface {
+func NewRoleClientRepository(db *gorm.DB) contracts.RoleClientRepositoryInterface {
 	return &RoleClientRepository{
 		DB: db,
 	}

@@ -1,19 +1,19 @@
 package handlers
 
 import (
-	respModel "go-starterkit-project/domain/dto"
-	"go-starterkit-project/modules/role/domain/dto"
-	"go-starterkit-project/modules/role/domain/interfaces"
+	respModel "go-starterkit-project/dto"
+	"go-starterkit-project/modules/role/contracts"
+	"go-starterkit-project/modules/role/dto"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type RoleClientHandler struct {
-	RoleClientService interfaces.RoleClientServiceInterface
+	RoleClientService contracts.RoleClientServiceInterface
 }
 
-func NewRoleClientHandler(roleClientService interfaces.RoleClientServiceInterface) *RoleClientHandler {
+func NewRoleClientHandler(roleClientService contracts.RoleClientServiceInterface) *RoleClientHandler {
 	return &RoleClientHandler{
 		RoleClientService: roleClientService,
 	}

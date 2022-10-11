@@ -1,22 +1,22 @@
 package services
 
 import (
-	respModel "go-starterkit-project/domain/dto"
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/role/domain/dto"
-	"go-starterkit-project/modules/role/domain/interfaces"
+	"go-starterkit-project/database/stores"
+	respModel "go-starterkit-project/dto"
+	"go-starterkit-project/modules/role/contracts"
+	"go-starterkit-project/modules/role/dto"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type RoleService struct {
-	RoleRepository interfaces.RoleRepositoryInterface
+	RoleRepository contracts.RoleRepositoryInterface
 }
 
 func NewRoleService(
-	roleRepository interfaces.RoleRepositoryInterface,
-) interfaces.RoleServiceInterface {
+	roleRepository contracts.RoleRepositoryInterface,
+) contracts.RoleServiceInterface {
 	return &RoleService{
 		RoleRepository: roleRepository,
 	}

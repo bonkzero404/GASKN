@@ -1,7 +1,7 @@
-package interfaces
+package contracts
 
 import (
-	"go-starterkit-project/modules/client/domain/dto"
+	"go-starterkit-project/modules/client/dto"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"

@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"go-starterkit-project/domain/dto"
+	"go-starterkit-project/dto"
 
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/id"

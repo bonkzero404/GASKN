@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"go-starterkit-project/config"
-	"go-starterkit-project/domain/dto"
+	"go-starterkit-project/dto"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"

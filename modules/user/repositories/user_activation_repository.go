@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"go-starterkit-project/database/driver"
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/user/domain/interfaces"
+	"go-starterkit-project/database/stores"
+	"go-starterkit-project/modules/user/contracts"
 
 	"gorm.io/gorm"
 )
@@ -12,7 +12,7 @@ type UserActivationRepository struct {
 	DB *gorm.DB
 }
 
-func NewUserActivationRepository(db *gorm.DB) interfaces.UserActivationRepositoryInterface {
+func NewUserActivationRepository(db *gorm.DB) contracts.UserActivationRepositoryInterface {
 	return &UserActivationRepository{
 		DB: driver.DB,
 	}

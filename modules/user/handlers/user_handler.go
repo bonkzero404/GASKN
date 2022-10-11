@@ -1,20 +1,20 @@
 package handlers
 
 import (
-	respModel "go-starterkit-project/domain/dto"
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/user/domain/dto"
-	"go-starterkit-project/modules/user/domain/interfaces"
+	"go-starterkit-project/database/stores"
+	respModel "go-starterkit-project/dto"
+	"go-starterkit-project/modules/user/contracts"
+	"go-starterkit-project/modules/user/dto"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type UserHandler struct {
-	UserService interfaces.UserServiceInterface
+	UserService contracts.UserServiceInterface
 }
 
-func NewUserHandler(userService interfaces.UserServiceInterface) *UserHandler {
+func NewUserHandler(userService contracts.UserServiceInterface) *UserHandler {
 	return &UserHandler{
 		UserService: userService,
 	}

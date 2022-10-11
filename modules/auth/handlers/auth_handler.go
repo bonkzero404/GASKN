@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	respModel "go-starterkit-project/domain/dto"
-	"go-starterkit-project/modules/auth/domain/dto"
-	"go-starterkit-project/modules/auth/domain/interfaces"
+	respModel "go-starterkit-project/dto"
+	"go-starterkit-project/modules/auth/contracts"
+	"go-starterkit-project/modules/auth/dto"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,10 +11,10 @@ import (
 )
 
 type AuthHandler struct {
-	AuthService interfaces.UserAuthServiceInterface
+	AuthService contracts.UserAuthServiceInterface
 }
 
-func NewAuthHandler(authService interfaces.UserAuthServiceInterface) *AuthHandler {
+func NewAuthHandler(authService contracts.UserAuthServiceInterface) *AuthHandler {
 	return &AuthHandler{
 		AuthService: authService,
 	}

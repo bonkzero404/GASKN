@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"go-starterkit-project/config"
 	"go-starterkit-project/database/driver"
-	"go-starterkit-project/domain/dto"
-	"go-starterkit-project/domain/stores"
+	"go-starterkit-project/database/stores"
+	"go-starterkit-project/dto"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"

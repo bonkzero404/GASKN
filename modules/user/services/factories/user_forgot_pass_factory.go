@@ -1,19 +1,19 @@
 package factories
 
 import (
-	respModel "go-starterkit-project/domain/dto"
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/user/domain/interfaces"
+	"go-starterkit-project/database/stores"
+	respModel "go-starterkit-project/dto"
+	"go-starterkit-project/modules/user/contracts"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type UserForgotPassServiceFactory struct {
-	UserActivationRepository interfaces.UserActivationRepositoryInterface
+	UserActivationRepository contracts.UserActivationRepositoryInterface
 }
 
-func NewUserForgotPassServiceFactory(userActivationRepository interfaces.UserActivationRepositoryInterface) interfaces.UserForgotPassServiceFactoryInterface {
+func NewUserForgotPassServiceFactory(userActivationRepository contracts.UserActivationRepositoryInterface) contracts.UserForgotPassServiceFactoryInterface {
 	return &UserForgotPassServiceFactory{
 		UserActivationRepository: userActivationRepository,
 	}

@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"go-starterkit-project/domain/stores"
-	"go-starterkit-project/modules/client/domain/interfaces"
+	"go-starterkit-project/database/stores"
+	"go-starterkit-project/modules/client/contracts"
 	"go-starterkit-project/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,7 +13,7 @@ type ClientRepository struct {
 	DB *gorm.DB
 }
 
-func NewClientRepository(db *gorm.DB) interfaces.ClientRepositoryInterface {
+func NewClientRepository(db *gorm.DB) contracts.ClientRepositoryInterface {
 	return &ClientRepository{
 		DB: db,
 	}
