@@ -1,15 +1,19 @@
 package user
 
 import (
+	"github.com/gofiber/fiber/v2"
+
 	"gaskn/app/middleware"
 	"gaskn/modules/user/handlers"
 	"gaskn/utils"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 type ApiRoute struct {
 	UserHandler handlers.UserHandler
+}
+
+type ApiRouteClient struct {
+	UserClientHandler handlers.UserClientHandler
 }
 
 func (handler *ApiRoute) Route(app fiber.Router) {
@@ -45,5 +49,30 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		"/forgot-password",
 		middleware.RateLimiter(5, 30),
 		handler.UserHandler.UpdatePassword,
+	)
+}
+
+// /////////////////
+// Route Role Client
+// /////////////////
+func (handler *ApiRouteClient) Route(app fiber.Router) {
+	const endpointGroup string = "/user"
+
+	userClient := app.Group(utils.SetupSubApiGroup() + endpointGroup)
+	feature := utils.RouteFeature{}
+
+	userClient.Post(
+		"/invitation",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.UserClientHandler.CreateUserInvitation,
+	).Name(
+		feature.
+			SetGroup("Client/Invitation").
+			SetName("CreateClientUserInvitation").
+			SetDescription("User can invite other users to join organizations").
+			SetTenant(true).
+			Exec(),
 	)
 }

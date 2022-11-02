@@ -36,6 +36,16 @@
   },
   {
     "locale": "id",
+    "key": "user:err:user-not-active",
+    "trans": "Pengguna belum melakukan aktivasi"
+  },
+  {
+    "locale": "id",
+    "key": "user:err:user-invited",
+    "trans": "Pengguna telah diundang"
+  },
+  {
+    "locale": "id",
     "key": "user:err:activate-already-active",
     "trans": "Pengguna telah diaktifkan"
   },

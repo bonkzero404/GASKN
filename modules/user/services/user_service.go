@@ -172,13 +172,13 @@ func (service UserService) CreateUserActivation(c *fiber.Ctx, email string, actT
 		}
 	}
 
-	_, errActFactory := service.ActionFactory.Create(actType, &user)
+	_, errActFactory := service.ActionFactory.CreateActivation(&user)
 
 	if errActFactory != nil {
 		return nil, errActFactory
 	}
 
-	return map[string]interface{}{}, nil
+	return nil, nil
 }
 
 func (service UserService) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotPassActRequest) (map[string]interface{}, error) {
@@ -240,5 +240,5 @@ func (service UserService) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserF
 		service.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), forgotPassReq.Code)
 	}()
 
-	return map[string]interface{}{}, nil
+	return nil, nil
 }

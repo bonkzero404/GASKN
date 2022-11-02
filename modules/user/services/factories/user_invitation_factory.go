@@ -21,7 +21,7 @@ func NewUserInvitationServiceFactory(
 	}
 }
 
-func (service UserInvitationServiceFactory) CreateUserInvitation(user *stores.User) (*stores.UserActionCode, error) {
+func (service UserInvitationServiceFactory) CreateUserInvitation(user *stores.User, urlInvitation string, invitedBy string) (*stores.UserActionCode, error) {
 	codeGen := utils.StringWithCharset(32)
 
 	userInvitation := stores.UserActionCode{
@@ -42,8 +42,10 @@ func (service UserInvitationServiceFactory) CreateUserInvitation(user *stores.Us
 		Subject:      "User Invitation",
 		TemplateHtml: "user_invitation.html",
 		BodyParam: map[string]interface{}{
-			"Name": user.FullName,
-			"Code": codeGen,
+			"Name":          user.FullName,
+			"Code":          codeGen,
+			"UrlInvitation": urlInvitation,
+			"InvitedBy":     invitedBy,
 		},
 	}
 

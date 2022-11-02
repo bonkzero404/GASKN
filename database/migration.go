@@ -20,5 +20,6 @@ func MigrateDB() {
 		&stores.RoleClient{},
 		&stores.RoleUserClient{},
 		&stores.ClientAssignment{},
+		&stores.UserInvitation{},
 	)
 }

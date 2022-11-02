@@ -12,7 +12,9 @@ type ActionFactory struct {
 }
 
 type ActionFactoryInterface interface {
-	Create(actionType stores.ActCodeType, user *stores.User) (*stores.UserActionCode, error)
+	CreateActivation(user *stores.User) (*stores.UserActionCode, error)
+	CreateForgotPassword(user *stores.User) (*stores.UserActionCode, error)
+	CreateInvitation(user *stores.User, UrlFrontEndInvitation string, invitedBy string) (*stores.UserActionCode, error)
 }
 
 func NewActionFactory(
@@ -27,31 +29,28 @@ func NewActionFactory(
 	}
 }
 
-func (factory ActionFactory) Create(actionType stores.ActCodeType, user *stores.User) (*stores.UserActionCode, error) {
-	// Activation code
-	if actionType == stores.ACTIVATION_CODE {
-		userAct, err := factory.UserActivationServiceFactory.CreateUserActivation(user)
+func (factory ActionFactory) CreateActivation(user *stores.User) (*stores.UserActionCode, error) {
+	userAct, err := factory.UserActivationServiceFactory.CreateUserActivation(user)
 
-		if err != nil {
-			return nil, err
-		}
-
-		return userAct, nil
+	if err != nil {
+		return nil, err
 	}
 
-	// Forgot password
-	if actionType == stores.FORGOT_PASSWORD {
-		userAct, err := factory.UserForgotPassServiceFactory.CreateUserForgotPass(user)
+	return userAct, nil
+}
 
-		if err != nil {
-			return nil, err
-		}
+func (factory ActionFactory) CreateForgotPassword(user *stores.User) (*stores.UserActionCode, error) {
+	userAct, err := factory.UserForgotPassServiceFactory.CreateUserForgotPass(user)
 
-		return userAct, nil
+	if err != nil {
+		return nil, err
 	}
 
-	// User Invitation
-	userAct, err := factory.UserInvitationServiceFactory.CreateUserInvitation(user)
+	return userAct, nil
+}
+
+func (factory ActionFactory) CreateInvitation(user *stores.User, urlFrontEndInvitation string, invitedBy string) (*stores.UserActionCode, error) {
+	userAct, err := factory.UserInvitationServiceFactory.CreateUserInvitation(user, urlFrontEndInvitation, invitedBy)
 
 	if err != nil {
 		return nil, err

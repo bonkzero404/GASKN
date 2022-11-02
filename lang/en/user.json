@@ -36,6 +36,16 @@
   },
   {
     "locale": "en",
+    "key": "user:err:user-not-active",
+    "trans": "The user has not activated"
+  },
+  {
+    "locale": "en",
+    "key": "user:err:user-invited",
+    "trans": "User has been invited"
+  },
+  {
+    "locale": "en",
     "key": "user:err:activate-already-active",
     "trans": "User already active"
   },
