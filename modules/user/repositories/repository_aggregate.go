@@ -7,27 +7,27 @@ import (
 
 type RepositoryAggregate struct {
 	UserRepository           contracts.UserRepository
-	UserActivationRepository contracts.UserActivationRepository
+	UserActionCodeRepository contracts.UserActionCodeRepository
 }
 
 func NewRepositoryAggregate(
-	userRepository contracts.UserRepository,
-	userActivationRepository contracts.UserActivationRepository,
+	UserRepository contracts.UserRepository,
+	UserActionCodeRepository contracts.UserActionCodeRepository,
 ) contracts.RepositoryAggregate {
 	return &RepositoryAggregate{
-		UserRepository:           userRepository,
-		UserActivationRepository: userActivationRepository,
+		UserRepository:           UserRepository,
+		UserActionCodeRepository: UserActionCodeRepository,
 	}
 }
 
-func (repository RepositoryAggregate) CreateUser(user *stores.User, userActivate *stores.UserActivation) (*stores.User, error) {
+func (repository RepositoryAggregate) CreateUser(user *stores.User, userActivate *stores.UserActionCode) (*stores.User, error) {
 	if err := repository.UserRepository.CreateUser(user).Error; err != nil {
 		return &stores.User{}, err
 	}
 
 	userActivate.UserId = user.ID
 
-	if err := repository.UserActivationRepository.CreateUserActivation(userActivate).Error; err != nil {
+	if err := repository.UserActionCodeRepository.CreateUserActionCode(userActivate).Error; err != nil {
 		return &stores.User{}, err
 	}
 
@@ -66,17 +66,17 @@ func (repository RepositoryAggregate) UpdatePassword(id string, password string)
 	return &user, nil
 }
 
-func (repository RepositoryAggregate) UpdateActivationCodeUsed(userId string, code string) (*stores.UserActivation, error) {
-	var userAct stores.UserActivation
+func (repository RepositoryAggregate) UpdateActionCodeUsed(userId string, code string) (*stores.UserActionCode, error) {
+	var userAct stores.UserActionCode
 
-	if err := repository.UserActivationRepository.FindUserActivationCode(&userAct, userId, code).Error; err != nil {
-		return &stores.UserActivation{}, err
+	if err := repository.UserActionCodeRepository.FindUserActionCode(&userAct, userId, code).Error; err != nil {
+		return &stores.UserActionCode{}, err
 	}
 
 	userAct.IsUsed = true
 
-	if err := repository.UserActivationRepository.UpdateActivationCodeUsed(&userAct).Error; err != nil {
-		return &stores.UserActivation{}, err
+	if err := repository.UserActionCodeRepository.UpdateActionCodeUsed(&userAct).Error; err != nil {
+		return &stores.UserActionCode{}, err
 	}
 
 	return &userAct, nil

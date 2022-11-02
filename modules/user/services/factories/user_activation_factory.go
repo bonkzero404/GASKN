@@ -1,37 +1,37 @@
 package factories
 
 import (
+	"github.com/gofiber/fiber/v2"
+
 	"gaskn/database/stores"
 	respModel "gaskn/dto"
 	"gaskn/modules/user/contracts"
 	"gaskn/utils"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 type UserActivationServiceFactory struct {
-	UserActivationRepository contracts.UserActivationRepository
+	UserActivationRepository contracts.UserActionCodeRepository
 }
 
 func NewUserActivationServiceFactory(
-	userActivationRepository contracts.UserActivationRepository,
+	UserActivationRepository contracts.UserActionCodeRepository,
 ) contracts.UserActivationServiceFactory {
 	return &UserActivationServiceFactory{
-		UserActivationRepository: userActivationRepository,
+		UserActivationRepository: UserActivationRepository,
 	}
 }
 
-func (service UserActivationServiceFactory) CreateUserActivation(user *stores.User) (*stores.UserActivation, error) {
+func (service UserActivationServiceFactory) CreateUserActivation(user *stores.User) (*stores.UserActionCode, error) {
 	codeGen := utils.StringWithCharset(32)
 
-	userActivate := stores.UserActivation{
+	userActivate := stores.UserActionCode{
 		UserId:  user.ID,
 		Code:    codeGen,
 		ActType: stores.ACTIVATION_CODE,
 	}
 
-	if err := service.UserActivationRepository.CreateUserActivation(&userActivate).Error; err != nil {
-		return &stores.UserActivation{}, &respModel.ApiErrorResponse{
+	if err := service.UserActivationRepository.CreateUserActionCode(&userActivate).Error; err != nil {
+		return &stores.UserActionCode{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}

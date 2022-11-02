@@ -2,37 +2,38 @@ package services
 
 import (
 	"errors"
+	"strings"
+	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
+
 	"gaskn/database/stores"
 	respModel "gaskn/dto"
 	"gaskn/modules/user/contracts"
 	"gaskn/modules/user/dto"
 	"gaskn/modules/user/services/factories"
 	"gaskn/utils"
-	"strings"
-	"time"
-
-	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 )
 
 type UserService struct {
 	UserRepository           contracts.UserRepository
-	UserActivationRepository contracts.UserActivationRepository
+	UserActionCodeRepository contracts.UserActionCodeRepository
 	RepositoryAggregate      contracts.RepositoryAggregate
 	ActionFactory            factories.ActionFactoryInterface
 }
 
 func NewUserService(
-	userRepository contracts.UserRepository,
-	userActivationRepository contracts.UserActivationRepository,
-	repositoryAggregate contracts.RepositoryAggregate,
-	factory factories.ActionFactoryInterface,
+	UserRepository contracts.UserRepository,
+	UserActivationRepository contracts.UserActionCodeRepository,
+	RepositoryAggregate contracts.RepositoryAggregate,
+	Factory factories.ActionFactoryInterface,
 ) contracts.UserService {
 	return &UserService{
-		UserRepository:           userRepository,
-		UserActivationRepository: userActivationRepository,
-		RepositoryAggregate:      repositoryAggregate,
-		ActionFactory:            factory,
+		UserRepository:           UserRepository,
+		UserActionCodeRepository: UserActivationRepository,
+		RepositoryAggregate:      RepositoryAggregate,
+		ActionFactory:            Factory,
 	}
 }
 
@@ -48,7 +49,7 @@ func (service UserService) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest)
 
 	activationCode := utils.StringWithCharset(32)
 
-	userAvtivate := stores.UserActivation{
+	userAvtivate := stores.UserActionCode{
 		Code:    activationCode,
 		ActType: stores.ACTIVATION_CODE,
 	}
@@ -94,7 +95,7 @@ func (service UserService) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest)
 
 func (service UserService) UserActivation(c *fiber.Ctx, email string, code string) (*dto.UserCreateResponse, error) {
 	var user stores.User
-	var userAct stores.UserActivation
+	var userAct stores.UserActionCode
 
 	errUser := service.UserRepository.FindUserByEmail(&user, email).Error
 
@@ -112,7 +113,7 @@ func (service UserService) UserActivation(c *fiber.Ctx, email string, code strin
 		}
 	}
 
-	errAct := service.UserActivationRepository.FindUserActivationCode(&userAct, user.ID.String(), code).Error
+	errAct := service.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
 		return &dto.UserCreateResponse{}, &respModel.ApiErrorResponse{
@@ -139,7 +140,7 @@ func (service UserService) UserActivation(c *fiber.Ctx, email string, code strin
 		}
 	}
 
-	service.RepositoryAggregate.UpdateActivationCodeUsed(user.ID.String(), code)
+	service.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), code)
 
 	response := dto.UserCreateResponse{
 		ID:       userNew.ID.String(),
@@ -152,7 +153,7 @@ func (service UserService) UserActivation(c *fiber.Ctx, email string, code strin
 	return &response, nil
 }
 
-func (service UserService) CreateUserActivation(c *fiber.Ctx, email string, actType stores.ActivationType) (map[string]interface{}, error) {
+func (service UserService) CreateUserActivation(c *fiber.Ctx, email string, actType stores.ActCodeType) (map[string]interface{}, error) {
 	var user stores.User
 
 	errUser := service.UserRepository.FindUserByEmail(&user, email).Error
@@ -182,7 +183,7 @@ func (service UserService) CreateUserActivation(c *fiber.Ctx, email string, actT
 
 func (service UserService) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotPassActRequest) (map[string]interface{}, error) {
 	var user stores.User
-	var userAct stores.UserActivation
+	var userAct stores.UserActionCode
 
 	if forgotPassReq.Password != forgotPassReq.RepeatPassword {
 		return nil, &respModel.ApiErrorResponse{
@@ -200,7 +201,7 @@ func (service UserService) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserF
 		}
 	}
 
-	errAct := service.UserActivationRepository.FindUserActivationCode(&userAct, user.ID.String(), forgotPassReq.Code).Error
+	errAct := service.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), forgotPassReq.Code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
 		return nil, &respModel.ApiErrorResponse{
@@ -236,7 +237,7 @@ func (service UserService) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserF
 		}
 
 		service.UserRepository.UpdatePassword(&userData)
-		service.RepositoryAggregate.UpdateActivationCodeUsed(user.ID.String(), forgotPassReq.Code)
+		service.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), forgotPassReq.Code)
 	}()
 
 	return map[string]interface{}{}, nil

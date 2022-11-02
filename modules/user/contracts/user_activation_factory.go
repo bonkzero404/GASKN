@@ -5,5 +5,5 @@ import (
 )
 
 type UserActivationServiceFactory interface {
-	CreateUserActivation(user *stores.User) (*stores.UserActivation, error)
+	CreateUserActivation(user *stores.User) (*stores.UserActionCode, error)
 }

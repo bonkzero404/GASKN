@@ -13,7 +13,7 @@ into the main function
 func MigrateDB() {
 	driver.DB.AutoMigrate(
 		&stores.User{},
-		&stores.UserActivation{},
+		&stores.UserActionCode{},
 		&stores.Client{},
 		&stores.Role{},
 		&stores.RoleUser{},

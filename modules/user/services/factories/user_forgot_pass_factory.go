@@ -1,35 +1,35 @@
 package factories
 
 import (
+	"github.com/gofiber/fiber/v2"
+
 	"gaskn/database/stores"
 	respModel "gaskn/dto"
 	"gaskn/modules/user/contracts"
 	"gaskn/utils"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 type UserForgotPassServiceFactory struct {
-	UserActivationRepository contracts.UserActivationRepository
+	UserForgotPassRepository contracts.UserActionCodeRepository
 }
 
-func NewUserForgotPassServiceFactory(userActivationRepository contracts.UserActivationRepository) contracts.UserForgotPassServiceFactory {
+func NewUserForgotPassServiceFactory(UserForgotPassRepository contracts.UserActionCodeRepository) contracts.UserForgotPassServiceFactory {
 	return &UserForgotPassServiceFactory{
-		UserActivationRepository: userActivationRepository,
+		UserForgotPassRepository: UserForgotPassRepository,
 	}
 }
 
-func (service UserForgotPassServiceFactory) CreateUserForgotPass(user *stores.User) (*stores.UserActivation, error) {
+func (service UserForgotPassServiceFactory) CreateUserForgotPass(user *stores.User) (*stores.UserActionCode, error) {
 	codeGen := utils.StringWithCharset(32)
 
-	userActivate := stores.UserActivation{
+	userActivate := stores.UserActionCode{
 		UserId:  user.ID,
 		Code:    codeGen,
 		ActType: stores.FORGOT_PASSWORD,
 	}
 
-	if err := service.UserActivationRepository.CreateUserActivation(&userActivate).Error; err != nil {
-		return &stores.UserActivation{}, &respModel.ApiErrorResponse{
+	if err := service.UserForgotPassRepository.CreateUserActionCode(&userActivate).Error; err != nil {
+		return &stores.UserActionCode{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}

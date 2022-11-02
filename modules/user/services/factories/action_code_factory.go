@@ -11,7 +11,7 @@ type ActionFactory struct {
 }
 
 type ActionFactoryInterface interface {
-	Create(actionType stores.ActivationType, user *stores.User) (*stores.UserActivation, error)
+	Create(actionType stores.ActCodeType, user *stores.User) (*stores.UserActionCode, error)
 }
 
 func NewActionFactory(
@@ -24,7 +24,7 @@ func NewActionFactory(
 	}
 }
 
-func (factory ActionFactory) Create(actionType stores.ActivationType, user *stores.User) (*stores.UserActivation, error) {
+func (factory ActionFactory) Create(actionType stores.ActCodeType, user *stores.User) (*stores.UserActionCode, error) {
 
 	if actionType == stores.ACTIVATION_CODE {
 		userAct, err := factory.UserActivationServiceFactory.CreateUserActivation(user)
