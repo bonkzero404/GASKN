@@ -1,6 +1,12 @@
 package services
 
 import (
+	"strings"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
+	"github.com/gosimple/slug"
+
 	"gaskn/config"
 	"gaskn/database/driver"
 	"gaskn/database/stores"
@@ -8,11 +14,6 @@ import (
 	"gaskn/modules/client/contracts"
 	"gaskn/modules/client/dto"
 	"gaskn/utils"
-	"strings"
-
-	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
-	"github.com/gosimple/slug"
 )
 
 type ClientService struct {
@@ -30,7 +31,7 @@ func NewClientService(
 func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, userId string) (*dto.ClientResponse, error) {
 	pUuid, _ := uuid.Parse(userId)
 	enforcer := driver.Enforcer
-	clientRoute := config.Config("API_WRAP") + "/" + config.Config("API_VERSION") + "/" + config.Config("API_CLIENT")
+	clientRoute := config.Config("API_WRAP") + "/" + config.Config("API_VERSION") + "/" + config.Config("API_CLIENT") + "/:" + config.Config("API_CLIENT_PARAM")
 
 	clientStore := stores.Client{
 		ClientName:        client.ClientName,
@@ -69,7 +70,7 @@ func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientReques
 	if p, err := enforcer.AddPolicy(
 		role.ID.String(),
 		clientStore.ID.String(),
-		"/"+clientRoute+"/"+clientStore.ID.String()+"/*",
+		"/"+clientRoute+"/*",
 		"GET|POST|PUT|DELETE"); !p {
 		return &dto.ClientResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
