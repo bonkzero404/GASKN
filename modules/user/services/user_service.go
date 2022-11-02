@@ -25,13 +25,13 @@ type UserService struct {
 
 func NewUserService(
 	UserRepository contracts.UserRepository,
-	UserActivationRepository contracts.UserActionCodeRepository,
+	UserActtionCodeRepository contracts.UserActionCodeRepository,
 	RepositoryAggregate contracts.RepositoryAggregate,
 	Factory factories.ActionFactoryInterface,
 ) contracts.UserService {
 	return &UserService{
 		UserRepository:           UserRepository,
-		UserActionCodeRepository: UserActivationRepository,
+		UserActionCodeRepository: UserActtionCodeRepository,
 		RepositoryAggregate:      RepositoryAggregate,
 		ActionFactory:            Factory,
 	}
