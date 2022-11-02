@@ -15,11 +15,12 @@ import (
 *
 Service factory registration
 */
-func registerActivationFactory(userActivationRepository contracts.UserActionCodeRepository) factories.ActionFactoryInterface {
-	actFactory := factories.NewUserActivationServiceFactory(userActivationRepository)
-	forgotPassFactory := factories.NewUserForgotPassServiceFactory(userActivationRepository)
+func registerActionCodeFactory(userActionCodeRepository contracts.UserActionCodeRepository) factories.ActionFactoryInterface {
+	actFactory := factories.NewUserActivationServiceFactory(userActionCodeRepository)
+	forgotPassFactory := factories.NewUserForgotPassServiceFactory(userActionCodeRepository)
+	userInvitationFactory := factories.NewUserInvitationServiceFactory(userActionCodeRepository)
 
-	return factories.NewActionFactory(actFactory, forgotPassFactory)
+	return factories.NewActionFactory(actFactory, forgotPassFactory, userInvitationFactory)
 }
 
 /*
@@ -29,12 +30,12 @@ This function is for registering repository - service - handler
 func RegisterModule(app *fiber.App) {
 
 	userRepository := repositories.NewUserRepository(driver.DB)
-	userActivationRepository := repositories.NewUserActionCodeRepository(driver.DB)
-	aggregateRepository := repositories.NewRepositoryAggregate(userRepository, userActivationRepository)
+	userActionCodeRepository := repositories.NewUserActionCodeRepository(driver.DB)
+	aggregateRepository := repositories.NewRepositoryAggregate(userRepository, userActionCodeRepository)
 
-	userActivationFactory := registerActivationFactory(userActivationRepository)
+	userActivationFactory := registerActionCodeFactory(userActionCodeRepository)
 
-	userService := services.NewUserService(userRepository, userActivationRepository, aggregateRepository, userActivationFactory)
+	userService := services.NewUserService(userRepository, userActionCodeRepository, aggregateRepository, userActivationFactory)
 	userHandler := handlers.NewUserHandler(userService)
 
 	routesInit := ApiRoute{
