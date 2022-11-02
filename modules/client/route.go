@@ -1,11 +1,11 @@
 package role
 
 import (
+	"github.com/gofiber/fiber/v2"
+
 	"gaskn/app/middleware"
 	"gaskn/modules/client/handlers"
 	"gaskn/utils"
-
-	"github.com/gofiber/fiber/v2"
 )
 
 type ApiRoute struct {
