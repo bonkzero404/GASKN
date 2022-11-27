@@ -1,6 +1,9 @@
 package dto
 
+import "gaskn/database/stores"
+
 type UserInvitationApprovalRequest struct {
-	Code   string `json:"code" validate:"required"`
-	Status string `json:"status" validate:"required,in:pending,approved,rejected"`
+	Email  string                      `json:"email" validate:"required,email"`
+	Code   string                      `json:"code" validate:"required"`
+	Status stores.StatusInvitationType `json:"status" validate:"required,oneof=approved rejected"`
 }

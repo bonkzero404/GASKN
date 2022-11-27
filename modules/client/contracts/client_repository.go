@@ -1,15 +1,17 @@
 package contracts
 
 import (
-	"gaskn/database/stores"
-	"gaskn/utils"
-
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
+
+	"gaskn/database/stores"
+	"gaskn/utils"
 )
 
 type ClientRepository interface {
 	CreateClient(client *stores.Client) (*stores.Role, error)
+
+	CreateClientAssignment(client *stores.ClientAssignment) *gorm.DB
 
 	UpdateClientById(client *stores.Client) *gorm.DB
 

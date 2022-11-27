@@ -75,4 +75,19 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 			SetTenant(true).
 			Exec(),
 	)
+
+	userClient.Post(
+		"/invitation/acceptance",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.UserClientHandler.UserInvitationAcceptance,
+	).Name(
+		feature.
+			SetGroup("Client/UserInvitationAcceptance").
+			SetName("AcceptanceClientUserInvitation").
+			SetDescription("User can accept invitation to join organizations").
+			SetTenant(true).
+			Exec(),
+	)
 }

@@ -1,12 +1,12 @@
 package repositories
 
 import (
+	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
+
 	"gaskn/database/stores"
 	"gaskn/modules/client/contracts"
 	"gaskn/utils"
-
-	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 )
 
 type ClientRepository struct {
@@ -98,6 +98,10 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 	}
 
 	return &role, tx.Commit().Error
+}
+
+func (repository ClientRepository) CreateClientAssignment(client *stores.ClientAssignment) *gorm.DB {
+	return repository.DB.Create(&client)
 }
 
 func (repository ClientRepository) UpdateClientById(client *stores.Client) *gorm.DB {

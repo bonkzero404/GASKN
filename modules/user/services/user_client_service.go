@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -111,4 +112,100 @@ func (service UserClientService) CreateUserInvitation(c *fiber.Ctx, req *dto.Use
 	}
 
 	return nil, nil
+}
+
+func (service UserClientService) UserInviteAcceptance(c *fiber.Ctx, email string, code string, accept stores.StatusInvitationType) (*stores.UserInvitation, error) {
+	var user stores.User
+	var userAct stores.UserActionCode
+	var userInvitation stores.UserInvitation
+
+	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
+
+	// Convert client id string to type UUID
+	uuidClientId, _ := uuid.Parse(clientId)
+
+	errUser := service.UserRepository.FindUserByEmail(&user, email).Error
+
+	if errors.Is(errUser, gorm.ErrRecordNotFound) {
+		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusNotFound,
+			Message:    utils.Lang(c, "user:err:user-not-found"),
+		}
+	}
+
+	if !user.IsActive {
+		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, "user:err:activate-already-active"),
+		}
+	}
+
+	errAct := service.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), code).Error
+
+	if errors.Is(errAct, gorm.ErrRecordNotFound) {
+		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusNotFound,
+			Message:    utils.Lang(c, "user:err:activation-not-found"),
+		}
+	}
+
+	t := time.Now()
+
+	if userAct.ExpiredAt.Before(t) {
+		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusGone,
+			Message:    utils.Lang(c, "user:err:activation-expired"),
+		}
+	}
+
+	errInvitation := service.UserInvitationRepository.FindUserInvitation(&userInvitation, user.ID.String(), clientId).Error
+
+	if errors.Is(errInvitation, gorm.ErrRecordNotFound) {
+		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusNotFound,
+			Message:    utils.Lang(c, "user:err:activation-not-found"),
+		}
+	}
+
+	if accept == stores.APPROVED || accept == stores.REJECTED {
+
+		userInvitationUpdate := stores.UserInvitation{
+			ID:               userInvitation.ID,
+			UserId:           user.ID,
+			ClientId:         uuidClientId,
+			UserActionCodeId: userAct.ID,
+			UrlFrontendMatch: userInvitation.UrlFrontendMatch,
+			InvitedBy:        userInvitation.InvitedBy,
+			Status:           accept,
+		}
+
+		errUserInvite := service.UserInvitationRepository.UpdateUserInvitation(&userInvitationUpdate).Error
+
+		if errUserInvite != nil {
+			return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+				StatusCode: fiber.StatusUnprocessableEntity,
+				Message:    errUserInvite.Error(),
+			}
+		}
+
+		service.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), code)
+
+		if accept == stores.APPROVED {
+			// Save to client assignment
+			clientAssign := stores.ClientAssignment{
+				ClientId: uuidClientId,
+				UserId:   user.ID,
+				IsActive: true,
+			}
+
+			service.UserInvitationRepository.CreateClientAssignment(&clientAssign)
+		}
+
+		return &userInvitationUpdate, nil
+	} else {
+		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, "user:err:activation-not-found"),
+		}
+	}
 }

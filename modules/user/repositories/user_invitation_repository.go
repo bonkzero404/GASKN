@@ -29,3 +29,7 @@ func (repository UserInvitationRepository) CreateUserInvitation(userInvitation *
 func (repository UserInvitationRepository) UpdateUserInvitation(userInvitation *stores.UserInvitation) *gorm.DB {
 	return repository.DB.Save(&userInvitation)
 }
+
+func (repository UserInvitationRepository) CreateClientAssignment(clientAssign *stores.ClientAssignment) *gorm.DB {
+	return repository.DB.Create(&clientAssign)
+}
