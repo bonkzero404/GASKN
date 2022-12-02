@@ -16,10 +16,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-/*
-*
-this variable is a global variable to reuse database connection
-*/
+// DB /*
 var DB *gorm.DB
 var DBMock *sql.DB
 
@@ -58,10 +55,7 @@ func setupSqlLog() *gorm.Config {
 	return &gormConfig
 }
 
-/*
-*
-This function as a factory to connect to MySQL or PostgreSQL
-*/
+// ConnectDB /*
 func ConnectDB() *gorm.DB {
 	var err error
 	var dbType string
