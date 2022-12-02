@@ -3,10 +3,10 @@ package app
 import (
 	"gaskn/app/middleware"
 	"gaskn/config"
-	"gaskn/modules/auth"
-	cl "gaskn/modules/client"
-	"gaskn/modules/role"
-	"gaskn/modules/user"
+	"gaskn/features/auth"
+	cl "gaskn/features/client"
+	"gaskn/features/role"
+	"gaskn/features/user"
 	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -89,9 +89,9 @@ func features(app *fiber.App) {
 
 /*
 *
-This function is used to register all modules,
+This function is used to register all features,
 this registration is the last process to register
-all modules
+all features
 */
 func Bootstrap(app *fiber.App) {
 	// Monitor app
