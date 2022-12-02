@@ -6,6 +6,7 @@ import (
 	"gaskn/features/auth"
 	cl "gaskn/features/client"
 	"gaskn/features/role"
+	"gaskn/features/role_assignment"
 	"gaskn/features/user"
 	"gaskn/utils"
 
@@ -111,6 +112,9 @@ func Bootstrap(app *fiber.App) {
 
 	// Register Client
 	cl.RegisterModule(app)
+
+	// Register feature Role Assignment
+	role_assignment.RegisterModule(app)
 }
 
 func SetupLogs() {
