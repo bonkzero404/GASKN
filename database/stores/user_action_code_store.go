@@ -21,10 +21,7 @@ const (
 	INVITATION_CODE ActCodeType = "INVITATION_CODE"
 )
 
-/*
-*
-Table model
-*/
+// UserActionCode /*
 type UserActionCode struct {
 	gorm.Model
 	ID        uuid.UUID   `gorm:"type:char(36);primary_key"`
@@ -36,12 +33,7 @@ type UserActionCode struct {
 	IsUsed    bool
 }
 
-/*
-*
-This function is a feature that gorm has for making hooks,
-this hook function is used to generate uuid and add 2 hours
-when the user performs the create action
-*/
+// BeforeCreate /*
 func (*UserActionCode) BeforeCreate(tx *gorm.DB) error {
 	t := time.Now()
 	newT := t.Add(time.Hour * 2)

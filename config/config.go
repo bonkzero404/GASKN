@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Config
 /**
 This function is to create a configuration
 file with the file name .env

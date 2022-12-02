@@ -13,10 +13,7 @@ const (
 	REJECTED StatusInvitationType = "rejected"
 )
 
-/*
-*
-Table model
-*/
+// UserInvitation /*
 type UserInvitation struct {
 	gorm.Model
 	ID               uuid.UUID      `gorm:"type:char(36);primary_key"`
@@ -31,12 +28,7 @@ type UserInvitation struct {
 	Status           StatusInvitationType
 }
 
-/*
-*
-This function is a feature that gorm has for making hooks,
-this hook function is used to generate uuid and add 2 hours
-when the user performs the create action
-*/
+// BeforeCreate /*
 func (*UserInvitation) BeforeCreate(tx *gorm.DB) error {
 	tx.Statement.SetColumn("ID", uuid.New())
 	return nil

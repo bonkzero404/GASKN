@@ -5,10 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-/*
-*
-Table model
-*/
+// RoleUserClient /*
 type RoleUserClient struct {
 	gorm.Model
 	ID         uuid.UUID `gorm:"type:char(36);primary_key"`
@@ -19,12 +16,7 @@ type RoleUserClient struct {
 	IsActive   bool
 }
 
-/*
-*
-This function is a feature that gorm has for making hooks,
-this hook function is used to generate uuid when the user
-performs the create action
-*/
+// BeforeCreate /*
 func (*RoleUserClient) BeforeCreate(tx *gorm.DB) error {
 	tx.Statement.SetColumn("ID", uuid.New())
 	return nil
