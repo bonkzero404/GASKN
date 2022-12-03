@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"gaskn/driver"
 	"gorm.io/gorm"
 
 	"gaskn/database/stores"
@@ -14,7 +13,7 @@ type UserActionCodeRepository struct {
 
 func NewUserActionCodeRepository(db *gorm.DB) contracts.UserActionCodeRepository {
 	return &UserActionCodeRepository{
-		DB: driver.DB,
+		DB: db,
 	}
 }
 

@@ -26,10 +26,10 @@ func NewRoleAssignmentService(
 	}
 }
 
-func (service RoleAssignmentService) CheckExistsRoleAssignment(clientIdUuid uuid.UUID, roleIdUuid uuid.UUID, req *dto.RoleAssignmentRequest) (*stores.RoleClient, error) {
+func (service RoleAssignmentService) CheckExistsRoleAssignment(clientIdUuid uuid.UUID, roleIdUuid uuid.UUID) (*stores.RoleClient, error) {
 	var clientRole = stores.RoleClient{}
 
-	errRoleClient := service.RoleClientRepository.GetRoleClientId(&clientRole, req.RoleId, clientIdUuid.String()).Error
+	errRoleClient := service.RoleClientRepository.GetRoleClientId(&clientRole, roleIdUuid.String(), clientIdUuid.String()).Error
 
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
 		return &stores.RoleClient{}, &respModel.ApiErrorResponse{
@@ -54,7 +54,7 @@ func (service RoleAssignmentService) CreateRoleAssignment(c *fiber.Ctx, req *dto
 		}
 	}
 
-	existsResp, errExists := service.CheckExistsRoleAssignment(clientIdUuid, roleIdUuid, req)
+	existsResp, errExists := service.CheckExistsRoleAssignment(clientIdUuid, roleIdUuid)
 
 	if errExists != nil {
 		return nil, errExists
@@ -95,7 +95,7 @@ func (service RoleAssignmentService) RemoveRoleAssignment(c *fiber.Ctx, req *dto
 		}
 	}
 
-	_, errExists := service.CheckExistsRoleAssignment(clientIdUuid, roleIdUuid, req)
+	_, errExists := service.CheckExistsRoleAssignment(clientIdUuid, roleIdUuid)
 
 	if errExists != nil {
 		return nil, errExists

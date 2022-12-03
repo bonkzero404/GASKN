@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"gaskn/driver"
 	"gorm.io/gorm"
 
 	"gaskn/database/stores"
@@ -14,7 +13,7 @@ type UserInvitationRepository struct {
 
 func NewUserInvitationRepository(db *gorm.DB) contracts.UserInvitationRepository {
 	return &UserInvitationRepository{
-		DB: driver.DB,
+		DB: db,
 	}
 }
 

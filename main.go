@@ -53,5 +53,8 @@ func main() {
 	appPort := fmt.Sprintf("%s:%s", config.Config("APP_HOST"), config.Config("APP_PORT"))
 
 	// Listen app
-	app.Listen(appPort)
+	err := app.Listen(appPort)
+	if err != nil {
+		panic(err)
+	}
 }

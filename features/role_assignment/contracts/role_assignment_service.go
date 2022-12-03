@@ -8,7 +8,7 @@ import (
 )
 
 type RoleAssignmentService interface {
-	CheckExistsRoleAssignment(clientIdUuid uuid.UUID, roleIdUuid uuid.UUID, req *dto.RoleAssignmentRequest) (*stores.RoleClient, error)
+	CheckExistsRoleAssignment(clientIdUuid uuid.UUID, roleIdUuid uuid.UUID) (*stores.RoleClient, error)
 	CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleAssignmentRequest) (*dto.RoleAssignmentResponse, error)
 	RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleAssignmentRequest) (*dto.RoleAssignmentResponse, error)
 }

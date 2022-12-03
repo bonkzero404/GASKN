@@ -1,7 +1,6 @@
 package driver
 
 import (
-	"database/sql"
 	"fmt"
 	"gaskn/config"
 	"gaskn/utils"
@@ -18,7 +17,6 @@ import (
 
 // DB /*
 var DB *gorm.DB
-var DBMock *sql.DB
 
 func setupSqlLog() *gorm.Config {
 	var gormConfig gorm.Config
@@ -80,7 +78,10 @@ func ConnectDB() *gorm.DB {
 	}
 
 	// Call db pooling function
-	dbPooling(DB)
+	errPool := dbPooling(DB)
+	if errPool != nil {
+		panic("Error database pooling")
+	}
 
 	return DB
 }
@@ -91,7 +92,7 @@ This function is for database pooling
 */
 func dbPooling(sqlDb *gorm.DB) error {
 	// Get generic database object sql.DB to use its functions
-	sqlDB, err := DB.DB()
+	sqlDB, err := sqlDb.DB()
 
 	if err != nil {
 		panic("failed to connect database")

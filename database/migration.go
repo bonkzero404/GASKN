@@ -3,11 +3,12 @@ package database
 import (
 	"gaskn/database/stores"
 	"gaskn/driver"
+	"log"
 )
 
 // MigrateDB /*
 func MigrateDB() {
-	driver.DB.AutoMigrate(
+	err := driver.DB.AutoMigrate(
 		&stores.User{},
 		&stores.UserActionCode{},
 		&stores.Client{},
@@ -20,4 +21,7 @@ func MigrateDB() {
 		&stores.PermissionRule{},
 		&stores.PermissionRuleDetail{},
 	)
+	if err != nil {
+		log.Println(err)
+	}
 }
