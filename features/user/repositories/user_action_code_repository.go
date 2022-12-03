@@ -29,6 +29,10 @@ func (repository UserActionCodeRepository) FindActionCode(userActivation *stores
 	return repository.DB.First(&userActivation, "code = ?", code)
 }
 
+func (repository UserActionCodeRepository) FindExistsActionCode(userActionCode *stores.UserActionCode, userId string, actType stores.ActCodeType) *gorm.DB {
+	return repository.DB.Take(&userActionCode, "user_id = ? and act_type = ?", userId, actType)
+}
+
 func (repository UserActionCodeRepository) CreateUserActionCode(userActivate *stores.UserActionCode) *gorm.DB {
 	return repository.DB.Create(&userActivate)
 }

@@ -45,7 +45,8 @@ func NewUserClientService(
 func (service UserClientService) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvitationRequest, invitedByUser string, actType stores.ActCodeType) (map[string]interface{}, error) {
 	var user stores.User
 	var userInviteBy stores.User
-	var userInvitation stores.UserInvitation
+	// var userInvitation stores.UserInvitation
+	var userActionCode stores.UserActionCode
 
 	// Get client id from param url
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
@@ -81,38 +82,99 @@ func (service UserClientService) CreateUserInvitation(c *fiber.Ctx, req *dto.Use
 		}
 	}
 
-	// Check invitation data is available
-	checkInvitation := service.UserInvitationRepository.FindUserInvitation(&userInvitation, user.ID.String(), clientId)
+	// Check action code by user if exists
+	errActionCode := service.UserActionCodeRepository.FindExistsActionCode(&userActionCode, user.ID.String(), stores.INVITATION_CODE).Error
 
-	if checkInvitation.RowsAffected > 0 {
-		return nil, &respModel.ApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "user:err:user-invited"),
+	if errActionCode != nil {
+		actCode, errActFactory := service.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName)
+
+		if errActFactory != nil {
+			return nil, errActFactory
 		}
+
+		userInvitationNew := stores.UserInvitation{
+			UserId:           user.ID,
+			ClientId:         uuidClientId,
+			UserActionCodeId: actCode.ID,
+			UrlFrontendMatch: req.Url,
+			InvitedBy:        userInviteBy.FullName,
+			Status:           stores.PENDING,
+		}
+
+		errInvitation := service.UserInvitationRepository.CreateUserInvitation(&userInvitationNew)
+
+		if errInvitation != nil {
+			return nil, errInvitation.Error
+		}
+
+		return nil, nil
 	}
 
-	actCode, errActFactory := service.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName)
+	t := time.Now()
 
-	if errActFactory != nil {
-		return nil, errActFactory
+	// Check if expired can re-create invitation
+	if userActionCode.ExpiredAt.Before(t) {
+		actCode, errActFactory := service.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName)
+
+		if errActFactory != nil {
+			return nil, errActFactory
+		}
+
+		userInvitationNew := stores.UserInvitation{
+			UserId:           user.ID,
+			ClientId:         uuidClientId,
+			UserActionCodeId: actCode.ID,
+			UrlFrontendMatch: req.Url,
+			InvitedBy:        userInviteBy.FullName,
+			Status:           stores.PENDING,
+		}
+
+		errInvitation := service.UserInvitationRepository.CreateUserInvitation(&userInvitationNew)
+
+		if errInvitation != nil {
+			return nil, errInvitation.Error
+		}
+
+		return nil, nil
 	}
 
-	userInvitationNew := stores.UserInvitation{
-		UserId:           user.ID,
-		ClientId:         uuidClientId,
-		UserActionCodeId: actCode.ID,
-		UrlFrontendMatch: req.Url,
-		InvitedBy:        userInviteBy.FullName,
-		Status:           stores.PENDING,
+	return nil, &respModel.ApiErrorResponse{
+		StatusCode: fiber.StatusUnprocessableEntity,
+		Message:    utils.Lang(c, "user:err:user-invited"),
 	}
 
-	errInvitation := service.UserInvitationRepository.CreateUserInvitation(&userInvitationNew)
-
-	if errInvitation != nil {
-		return nil, errInvitation.Error
-	}
-
-	return nil, nil
+	// Check invitation data is available
+	//checkInvitation := service.UserInvitationRepository.FindUserInvitation(&userInvitation, user.ID.String(), clientId)
+	//
+	//if checkInvitation.RowsAffected > 0 {
+	//	return nil, &respModel.ApiErrorResponse{
+	//		StatusCode: fiber.StatusUnprocessableEntity,
+	//		Message:    utils.Lang(c, "user:err:user-invited"),
+	//	}
+	//}
+	//
+	//actCode, errActFactory := service.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName)
+	//
+	//if errActFactory != nil {
+	//	return nil, errActFactory
+	//}
+	//
+	//userInvitationNew := stores.UserInvitation{
+	//	UserId:           user.ID,
+	//	ClientId:         uuidClientId,
+	//	UserActionCodeId: actCode.ID,
+	//	UrlFrontendMatch: req.Url,
+	//	InvitedBy:        userInviteBy.FullName,
+	//	Status:           stores.PENDING,
+	//}
+	//
+	//errInvitation := service.UserInvitationRepository.CreateUserInvitation(&userInvitationNew)
+	//
+	//if errInvitation != nil {
+	//	return nil, errInvitation.Error
+	//}
+	//
+	//return nil, nil
 }
 
 func (service UserClientService) UserInviteAcceptance(c *fiber.Ctx, code string, accept stores.StatusInvitationType) (*stores.UserInvitation, error) {

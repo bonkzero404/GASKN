@@ -11,6 +11,8 @@ type UserActionCodeRepository interface {
 
 	FindActionCode(userActivation *stores.UserActionCode, code string) *gorm.DB
 
+	FindExistsActionCode(userActionCode *stores.UserActionCode, userId string, actType stores.ActCodeType) *gorm.DB
+
 	CreateUserActionCode(userActionCode *stores.UserActionCode) *gorm.DB
 
 	UpdateActionCodeUsed(userActionCode *stores.UserActionCode) *gorm.DB
