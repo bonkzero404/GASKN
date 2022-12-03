@@ -13,24 +13,27 @@ import (
 	respModel "gaskn/dto"
 	"gaskn/features/client/contracts"
 	"gaskn/features/client/dto"
+	userContract "gaskn/features/user/contracts"
 	"gaskn/utils"
 )
 
 type ClientService struct {
 	ClientRepository contracts.ClientRepository
+	UserRepository   userContract.UserRepository
 }
 
 func NewClientService(
 	clientRepository contracts.ClientRepository,
+	UserRepository userContract.UserRepository,
 ) contracts.ClientService {
 	return &ClientService{
 		ClientRepository: clientRepository,
+		UserRepository:   UserRepository,
 	}
 }
 
 func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, userId string) (*dto.ClientResponse, error) {
 	pUuid, _ := uuid.Parse(userId)
-	enforcer := driver.Enforcer
 	clientRoute := config.Config("API_WRAP") + "/" + config.Config("API_VERSION") + "/" + config.Config("API_CLIENT") + "/:" + config.Config("API_CLIENT_PARAM")
 
 	clientStore := stores.Client{
@@ -58,8 +61,19 @@ func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientReques
 		}
 	}
 
+	// Get User By Id
+	var user = stores.User{}
+	service.UserRepository.FindUserById(&user, pUuid.String())
+
 	// Crete group policy
-	if g, err := enforcer.AddGroupingPolicy(pUuid.String(), role.ID.String(), clientStore.ID.String()); !g {
+	if g, err := driver.AddGroupingPolicy(
+		pUuid.String(),
+		role.ID.String(),
+		clientStore.ID.String(),
+		user.FullName,
+		role.RoleName,
+		clientStore.ClientName,
+	); !g {
 		return &dto.ClientResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, err.Error()),
@@ -67,11 +81,15 @@ func (service ClientService) CreateClient(c *fiber.Ctx, client *dto.ClientReques
 	}
 
 	// Create permission user to group
-	if p, err := enforcer.AddPolicy(
+	if p, err := driver.AddPolicy(
 		role.ID.String(),
 		clientStore.ID.String(),
 		"/"+clientRoute+"/*",
-		"GET|POST|PUT|DELETE"); !p {
+		"GET|POST|PUT|DELETE",
+		"",
+		role.RoleName,
+		clientStore.ClientName,
+	); !p {
 		return &dto.ClientResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, err.Error()),

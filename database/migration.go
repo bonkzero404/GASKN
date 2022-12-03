@@ -5,11 +5,7 @@ import (
 	"gaskn/database/stores"
 )
 
-/*
-*
-This function is used for auto migration and is loaded
-into the main function
-*/
+// MigrateDB /*
 func MigrateDB() {
 	driver.DB.AutoMigrate(
 		&stores.User{},
@@ -21,5 +17,7 @@ func MigrateDB() {
 		&stores.RoleUserClient{},
 		&stores.ClientAssignment{},
 		&stores.UserInvitation{},
+		&stores.PermissionRule{},
+		&stores.PermissionRuleDetail{},
 	)
 }

@@ -82,5 +82,8 @@ func (repository RoleClientRepository) GetRoleClientList(role *[]stores.Role, c 
 }
 
 func (repository RoleClientRepository) GetRoleClientId(role *stores.RoleClient, roleId string, clientId string) *gorm.DB {
-	return repository.DB.First(&role, "role_id = ? and client_id = ?", roleId, clientId)
+	return repository.DB.
+		Preload("Client").
+		Preload("Role").
+		First(&role, "role_id = ? and client_id = ?", roleId, clientId)
 }

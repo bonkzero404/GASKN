@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"gaskn/config"
+	"gaskn/database/driver"
 	"gaskn/database/stores"
 	respModel "gaskn/dto"
 	fclient "gaskn/features/role/contracts"
@@ -11,20 +12,18 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"log"
 )
 
 type RoleAssignmentService struct {
-	RoleAssignmentRepository contracts.RoleAssignmentRepository
-	RoleClientRepository     fclient.RoleClientRepository
+	RoleClientRepository fclient.RoleClientRepository
 }
 
 func NewRoleAssignmentService(
-	RoleAssignmentRepository contracts.RoleAssignmentRepository,
 	RoleClientRepository fclient.RoleClientRepository,
 ) contracts.RoleAssignmentService {
 	return &RoleAssignmentService{
-		RoleAssignmentRepository: RoleAssignmentRepository,
-		RoleClientRepository:     RoleClientRepository,
+		RoleClientRepository: RoleClientRepository,
 	}
 }
 
@@ -54,17 +53,20 @@ func (service RoleAssignmentService) CreateRoleAssignment(c *fiber.Ctx, req *dto
 		}
 	}
 
-	save := service.RoleAssignmentRepository.CreateRoleAssignment(
-		roleIdUuid,
-		clientIdUuid,
+	log.Print("TAIIIIII " + clientRole.Role.RoleName)
+
+	if save, _ := driver.AddPolicy(
+		roleIdUuid.String(),
+		clientIdUuid.String(),
 		req.RouteFeature,
 		req.MethodFeature,
-	)
-
-	if !save {
+		"",
+		clientRole.Role.RoleName,
+		clientRole.Client.ClientName,
+	); !save {
 		return &dto.RoleAssignmentResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "failed to save policy",
+			Message:    "Telah terjadi error, kemungkinan role sudah ditetapkan",
 		}
 	}
 

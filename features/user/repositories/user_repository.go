@@ -27,11 +27,11 @@ func (repository UserRepository) UpdateUserIsActive(user *stores.User) *gorm.DB 
 }
 
 func (repository UserRepository) FindUserByEmail(user *stores.User, email string) *gorm.DB {
-	return repository.DB.First(&user, "email = ?", email)
+	return repository.DB.Take(&user, "email = ?", email)
 }
 
 func (repository UserRepository) FindUserById(user *stores.User, id string) *gorm.DB {
-	return repository.DB.First(&user, "id = ?", id)
+	return repository.DB.Take(&user, "id = ?", id)
 }
 
 func (repository UserRepository) UpdatePassword(user *stores.User) *gorm.DB {

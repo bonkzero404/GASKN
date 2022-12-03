@@ -5,13 +5,10 @@ import (
 	"gaskn/config"
 	"gaskn/database/driver"
 	"gaskn/database/stores"
-
 	"gorm.io/gorm"
 )
 
 func CreateCasbinPermission(db *gorm.DB) error {
-	enforcer := driver.Enforcer
-
 	var user stores.User
 	var role stores.Role
 
@@ -27,11 +24,26 @@ func CreateCasbinPermission(db *gorm.DB) error {
 		return errRole
 	}
 
-	if g, err := enforcer.AddGroupingPolicy(user.ID.String(), role.ID.String(), "*"); !g {
+	if g, err := driver.AddGroupingPolicy(
+		user.ID.String(),
+		role.ID.String(),
+		"*",
+		config.Config("ADMIN_FULLNAME"),
+		config.Config("ADMIN_ROLENAME"),
+		"",
+	); !g {
 		return err
 	}
 
-	if p, err := enforcer.AddPolicy(role.ID.String(), "*", "*", "GET|POST|PUT|DELETE"); !p {
+	if p, err := driver.AddPolicy(
+		role.ID.String(),
+		"*",
+		"*",
+		"GET|POST|PUT|DELETE",
+		"",
+		config.Config("ADMIN_ROLENAME"),
+		"",
+	); !p {
 		return err
 	}
 

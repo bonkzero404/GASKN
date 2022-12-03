@@ -20,7 +20,7 @@ func CreateUser(db *gorm.DB) error {
 		user = stores.User{
 			FullName: config.Config("ADMIN_FULLNAME"),
 			Email:    config.Config("ADMIN_EMAIL"),
-			Phone:    config.Config("ADMIN_PASSWORD"),
+			Phone:    config.Config("ADMIN_PHONE"),
 			Password: hashPassword,
 			IsActive: true,
 		}

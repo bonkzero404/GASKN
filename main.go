@@ -27,11 +27,11 @@ func main() {
 	// Call database connection
 	driver.ConnectDB()
 
-	// Init Casbin
-	driver.InitCasbin()
-
 	// Auto migration table
 	database.MigrateDB()
+
+	// Init Casbin
+	driver.InitCasbin()
 
 	// Handling global cors
 	app.Use(cors.New())
