@@ -14,7 +14,7 @@ import (
 *
 This function is for registering repository - service - handler
 */
-func RegisterModule(app *fiber.App) {
+func RegisterFeature(app *fiber.App) {
 	userReposiry := userRepo.NewUserRepository(driver.DB)
 	clientRepository := repositories.NewClientRepository(driver.DB)
 	clientService := services.NewClientService(clientRepository, userReposiry)

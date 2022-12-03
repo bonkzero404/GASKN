@@ -88,12 +88,7 @@ func features(app *fiber.App) {
 	}
 }
 
-/*
-*
-This function is used to register all features,
-this registration is the last process to register
-all features
-*/
+// Bootstrap /*
 func Bootstrap(app *fiber.App) {
 	// Monitor app
 	app.Get("/monitor", monitor.New())
@@ -102,19 +97,19 @@ func Bootstrap(app *fiber.App) {
 	features(app)
 
 	// Register module user
-	user.RegisterModule(app)
+	user.RegisterFeature(app)
 
 	// Register module auth
-	auth.RegisterModule(app)
+	auth.RegisterFeature(app)
 
 	// Register module role
-	role.RegisterModule(app)
+	role.RegisterFeature(app)
 
 	// Register Client
-	cl.RegisterModule(app)
+	cl.RegisterFeature(app)
 
 	// Register feature Role Assignment
-	role_assignment.RegisterModule(app)
+	role_assignment.RegisterFeature(app)
 }
 
 func SetupLogs() {

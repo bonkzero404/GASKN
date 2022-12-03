@@ -9,8 +9,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// RegisterModule /*
-func RegisterModule(app *fiber.App) {
+// RegisterFeature /*
+func RegisterFeature(app *fiber.App) {
 
 	roleClientRepository := roleClientRepo.NewRoleClientRepository(driver.DB)
 	roleAssignmentService := services.NewRoleAssignmentService(roleClientRepository)

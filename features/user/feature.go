@@ -28,7 +28,7 @@ func registerActionCodeFactory(userActionCodeRepository contracts.UserActionCode
 *
 This function is for registering repository - service - handler
 */
-func RegisterModule(app *fiber.App) {
+func RegisterFeature(app *fiber.App) {
 
 	userRepository := repositories.NewUserRepository(driver.DB)
 	userActionCodeRepository := repositories.NewUserActionCodeRepository(driver.DB)
