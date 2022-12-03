@@ -1,14 +1,13 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
-
 	"gaskn/database/stores"
 	respModel "gaskn/dto"
 	"gaskn/features/user/contracts"
 	"gaskn/features/user/dto"
 	"gaskn/utils"
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 type UserClientHandler struct {
@@ -79,7 +78,8 @@ func (service *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := service.UserClientService.UserInviteAcceptance(c, request.Code, request.Status)
+	var req = &request
+	response, err := service.UserClientService.UserInviteAcceptance(c, req.Code, req.Status)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)

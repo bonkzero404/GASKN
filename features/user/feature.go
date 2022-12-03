@@ -45,7 +45,8 @@ func RegisterFeature(app *fiber.App) {
 	var routesInitTenant = ApiRouteClient{}
 
 	routesInit := ApiRoute{
-		UserHandler: *userHandler,
+		UserHandler:       *userHandler,
+		UserClientHandler: *userClientHandler,
 	}
 
 	routesInit.Route(app)
