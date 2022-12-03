@@ -96,13 +96,13 @@ func Bootstrap(app *fiber.App) {
 	// Register features
 	features(app)
 
-	// Register module user
+	// Register feature user
 	user.RegisterFeature(app)
 
-	// Register module auth
+	// Register feature auth
 	auth.RegisterFeature(app)
 
-	// Register module role
+	// Register feature role
 	role.RegisterFeature(app)
 
 	// Register Client
