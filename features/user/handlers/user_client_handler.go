@@ -49,7 +49,7 @@ func (service *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
-			Message: utils.Lang(c, "user:err:create-failed"),
+			Message: utils.Lang(c, "user:err:create-invitation"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

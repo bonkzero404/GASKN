@@ -6,6 +6,11 @@
   },
   {
     "locale": "en",
+    "key": "user:err:create-invitation",
+    "trans": "Failed to invite a user"
+  },
+  {
+    "locale": "en",
     "key": "user:err:activation-failed",
     "trans": "Failed to activate a user"
   },

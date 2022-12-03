@@ -6,6 +6,11 @@
   },
   {
     "locale": "id",
+    "key": "user:err:create-invitation",
+    "trans": "Gagal mengundang pengguna"
+  },
+  {
+    "locale": "id",
     "key": "user:err:activation-failed",
     "trans": "Gagal mengaktifkan pengguna"
   },
