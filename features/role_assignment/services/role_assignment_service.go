@@ -12,7 +12,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"log"
 )
 
 type RoleAssignmentService struct {
@@ -52,8 +51,6 @@ func (service RoleAssignmentService) CreateRoleAssignment(c *fiber.Ctx, req *dto
 			Message:    "Role client not found",
 		}
 	}
-
-	log.Print("TAIIIIII " + clientRole.Role.RoleName)
 
 	if save, _ := driver.AddPolicy(
 		roleIdUuid.String(),
