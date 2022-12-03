@@ -74,7 +74,7 @@ func (service *UserHandler) UserActivation(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := service.UserService.UserActivation(c, request.Email, request.Code)
+	response, err := service.UserService.UserActivation(c, request.Code)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)

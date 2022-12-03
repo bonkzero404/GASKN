@@ -10,7 +10,7 @@ import (
 type UserService interface {
 	CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest) (*dto.UserCreateResponse, error)
 
-	UserActivation(c *fiber.Ctx, email string, code string) (*dto.UserCreateResponse, error)
+	UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateResponse, error)
 
 	CreateUserActivation(c *fiber.Ctx, email string, actType stores.ActCodeType) (map[string]interface{}, error)
 

@@ -93,11 +93,20 @@ func (service UserService) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest)
 	return &response, nil
 }
 
-func (service UserService) UserActivation(c *fiber.Ctx, email string, code string) (*dto.UserCreateResponse, error) {
+func (service UserService) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateResponse, error) {
 	var user stores.User
 	var userAct stores.UserActionCode
 
-	errUser := service.UserRepository.FindUserByEmail(&user, email).Error
+	errAct := service.UserActionCodeRepository.FindActionCode(&userAct, code).Error
+
+	if errors.Is(errAct, gorm.ErrRecordNotFound) {
+		return &dto.UserCreateResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusNotFound,
+			Message:    utils.Lang(c, "user:err:activation-not-found"),
+		}
+	}
+
+	errUser := service.UserRepository.FindUserById(&user, userAct.UserId.String()).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return &dto.UserCreateResponse{}, &respModel.ApiErrorResponse{
@@ -110,15 +119,6 @@ func (service UserService) UserActivation(c *fiber.Ctx, email string, code strin
 		return &dto.UserCreateResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "user:err:activate-already-active"),
-		}
-	}
-
-	errAct := service.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), code).Error
-
-	if errors.Is(errAct, gorm.ErrRecordNotFound) {
-		return &dto.UserCreateResponse{}, &respModel.ApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:activation-not-found"),
 		}
 	}
 
@@ -140,7 +140,10 @@ func (service UserService) UserActivation(c *fiber.Ctx, email string, code strin
 		}
 	}
 
-	service.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), code)
+	_, err := service.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), code)
+	if err != nil {
+		return nil, err
+	}
 
 	response := dto.UserCreateResponse{
 		ID:       userNew.ID.String(),
@@ -237,7 +240,10 @@ func (service UserService) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserF
 		}
 
 		service.UserRepository.UpdatePassword(&userData)
-		service.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), forgotPassReq.Code)
+		_, err := service.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), forgotPassReq.Code)
+		if err != nil {
+			return
+		}
 	}()
 
 	return nil, nil
