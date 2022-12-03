@@ -1,11 +1,11 @@
 [
   {
-    "locale": "en",
+    "locale": "id",
     "key": "role-assign:err:failed-unknown",
     "trans": "Terjadi kesalahan, mungkin peran telah ditetapkan"
   },
   {
-    "locale": "en",
+    "locale": "id",
     "key": "role-assign:err:failed-remove-permit",
     "trans": "Gagal menghapus peran"
   }
