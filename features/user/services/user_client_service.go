@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"github.com/golang-jwt/jwt/v4"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -114,17 +115,16 @@ func (service UserClientService) CreateUserInvitation(c *fiber.Ctx, req *dto.Use
 	return nil, nil
 }
 
-func (service UserClientService) UserInviteAcceptance(c *fiber.Ctx, email string, code string, accept stores.StatusInvitationType) (*stores.UserInvitation, error) {
+func (service UserClientService) UserInviteAcceptance(c *fiber.Ctx, code string, accept stores.StatusInvitationType) (*stores.UserInvitation, error) {
+	token := c.Locals("user").(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
+	userId := claims["id"].(string)
+
 	var user stores.User
 	var userAct stores.UserActionCode
 	var userInvitation stores.UserInvitation
 
-	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
-
-	// Convert client id string to type UUID
-	uuidClientId, _ := uuid.Parse(clientId)
-
-	errUser := service.UserRepository.FindUserByEmail(&user, email).Error
+	errUser := service.UserRepository.FindUserById(&user, userId).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
@@ -158,7 +158,7 @@ func (service UserClientService) UserInviteAcceptance(c *fiber.Ctx, email string
 		}
 	}
 
-	errInvitation := service.UserInvitationRepository.FindUserInvitation(&userInvitation, user.ID.String(), clientId).Error
+	errInvitation := service.UserInvitationRepository.FindInvitationByActId(&userInvitation, userAct.ID.String()).Error
 
 	if errors.Is(errInvitation, gorm.ErrRecordNotFound) {
 		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
@@ -172,7 +172,7 @@ func (service UserClientService) UserInviteAcceptance(c *fiber.Ctx, email string
 		userInvitationUpdate := stores.UserInvitation{
 			ID:               userInvitation.ID,
 			UserId:           user.ID,
-			ClientId:         uuidClientId,
+			ClientId:         userInvitation.ClientId,
 			UserActionCodeId: userAct.ID,
 			UrlFrontendMatch: userInvitation.UrlFrontendMatch,
 			InvitedBy:        userInvitation.InvitedBy,
@@ -193,7 +193,7 @@ func (service UserClientService) UserInviteAcceptance(c *fiber.Ctx, email string
 		if accept == stores.APPROVED {
 			// Save to client assignment
 			clientAssign := stores.ClientAssignment{
-				ClientId: uuidClientId,
+				ClientId: userInvitation.ClientId,
 				UserId:   user.ID,
 				IsActive: true,
 			}

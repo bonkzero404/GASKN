@@ -21,6 +21,10 @@ func (repository UserInvitationRepository) FindUserInvitation(userInvitation *st
 	return repository.DB.First(&userInvitation, "user_id = ? AND client_id = ?", userId, clientId)
 }
 
+func (repository UserInvitationRepository) FindInvitationByActId(userInvitation *stores.UserInvitation, actId string) *gorm.DB {
+	return repository.DB.First(&userInvitation, "user_action_code_id = ?", actId)
+}
+
 func (repository UserInvitationRepository) CreateUserInvitation(userInvitation *stores.UserInvitation) *gorm.DB {
 	return repository.DB.Create(&userInvitation)
 }

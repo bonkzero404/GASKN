@@ -79,7 +79,7 @@ func (service *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := service.UserClientService.UserInviteAcceptance(c, request.Email, request.Code, request.Status)
+	response, err := service.UserClientService.UserInviteAcceptance(c, request.Code, request.Status)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)

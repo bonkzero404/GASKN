@@ -9,7 +9,8 @@ import (
 )
 
 type ApiRoute struct {
-	UserHandler handlers.UserHandler
+	UserHandler       handlers.UserHandler
+	UserClientHandler handlers.UserClientHandler
 }
 
 type ApiRouteClient struct {
@@ -50,6 +51,13 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		handler.UserHandler.UpdatePassword,
 	)
+
+	user.Post(
+		"/invitation/acceptance",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		handler.UserClientHandler.UserInvitationAcceptance,
+	)
 }
 
 // /////////////////
@@ -72,21 +80,6 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 			SetGroup("Client/UserInvitation").
 			SetName("CreateClientUserInvitation").
 			SetDescription("User can invite other users to join organizations").
-			SetTenant(true).
-			Exec(),
-	)
-
-	userClient.Post(
-		"/invitation/acceptance",
-		middleware.Authenticate(),
-		middleware.RateLimiter(5, 30),
-		middleware.Permission(),
-		handler.UserClientHandler.UserInvitationAcceptance,
-	).Name(
-		feature.
-			SetGroup("Client/UserInvitationAcceptance").
-			SetName("AcceptanceClientUserInvitation").
-			SetDescription("User can accept invitation to join organizations").
 			SetTenant(true).
 			Exec(),
 	)
