@@ -6,10 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-/*
-*
-This function is used to wrap a json response globally
-*/
+// ApiWrapper /*
 func ApiWrapper(ctx *fiber.Ctx, code int, status string, data interface{}, errors interface{}) error {
 	meta := dto.Meta{
 		Route:  ctx.Route().Path,

@@ -10,10 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 )
 
-/*
-*
-This function is used as middleware for rate limit request
-*/
+// RateLimiter /*
 func RateLimiter(max int, duration time.Duration) func(ctx *fiber.Ctx) error {
 	return limiter.New(limiter.Config{
 		LimitReached: func(ctx *fiber.Ctx) error {

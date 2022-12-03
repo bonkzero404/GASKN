@@ -12,7 +12,7 @@ import (
 )
 
 func SendMail(data *dto.Mail) {
-	var mailFrom string = data.From
+	var mailFrom = data.From
 
 	t := template.New(data.TemplateHtml)
 

@@ -9,10 +9,7 @@ import (
 	jwtware "github.com/gofiber/jwt/v3"
 )
 
-/*
-*
-This function is used as middleware for authentication
-*/
+// Authenticate /*
 func Authenticate() func(ctx *fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {

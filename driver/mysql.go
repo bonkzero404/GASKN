@@ -6,10 +6,7 @@ import (
 	"strconv"
 )
 
-/*
-*
-DSN MySQL Connection string
-*/
+// DsnMySqlDB /*
 func DsnMySqlDB() string {
 	p := config.Config("DB_PORT")
 	port, _ := strconv.ParseUint(p, 10, 32)

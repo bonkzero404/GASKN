@@ -10,10 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-/*
-*
-This function is for registering repository - service - handler
-*/
+// RegisterFeature /*
 func RegisterFeature(app *fiber.App) {
 
 	roleRepository := repositories.NewRoleRepository(driver.DB)

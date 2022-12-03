@@ -6,10 +6,7 @@ import (
 	"strconv"
 )
 
-/*
-*
-DSN PostgreSQL Connection string
-*/
+// DsnPostgreSqlDB /*
 func DsnPostgreSqlDB() string {
 	p := config.Config("DB_PORT")
 	port, _ := strconv.ParseUint(p, 10, 32)

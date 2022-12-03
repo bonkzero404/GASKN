@@ -20,10 +20,7 @@ func NewAuthHandler(authService contracts.UserAuthService) *AuthHandler {
 	}
 }
 
-/*
-*
-Authentication handler
-*/
+// Authentication /*
 func (service *AuthHandler) Authentication(c *fiber.Ctx) error {
 	var request dto.UserAuthRequest
 

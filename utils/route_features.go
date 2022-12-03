@@ -7,11 +7,11 @@ import (
 )
 
 type RouteFeature struct {
-	route_group string
-	route_name  string
-	description string
-	only_admin  bool
-	tenant      bool
+	RouteGroup  string `json:"route_group"`
+	RouteName   string `json:"route_name"`
+	Description string `json:"description"`
+	OnlyAdmin   bool   `json:"only_admin"`
+	Tenant      bool   `json:"group"`
 }
 
 type FeatureLists struct {
@@ -41,85 +41,85 @@ type FeatureGroup struct {
 }
 
 func (f *RouteFeature) SetGroup(str string) *RouteFeature {
-	f.route_group = str
+	f.RouteGroup = str
 	return f
 }
 
 func (f *RouteFeature) SetName(str string) *RouteFeature {
-	f.route_name = str
+	f.RouteName = str
 	return f
 }
 
 func (f *RouteFeature) SetDescription(str string) *RouteFeature {
-	f.description = str
+	f.Description = str
 	return f
 }
 
 func (f *RouteFeature) SetOnlyAdmin(a bool) *RouteFeature {
-	f.only_admin = a
+	f.OnlyAdmin = a
 	return f
 }
 
 func (f *RouteFeature) SetTenant(a bool) *RouteFeature {
-	f.tenant = a
+	f.Tenant = a
 	return f
 }
 
 func (f *RouteFeature) Exec() string {
 	var iface = make(map[string]interface{})
 
-	if f.route_group != "" {
-		iface["group"] = f.route_group
+	if f.RouteGroup != "" {
+		iface["group"] = f.RouteGroup
 	} else {
 		iface["group"] = ""
 	}
 
-	if f.route_name != "" {
-		iface["name"] = f.route_name
+	if f.RouteName != "" {
+		iface["name"] = f.RouteName
 	} else {
 		iface["name"] = ""
 	}
 
-	if f.description != "" {
-		iface["description"] = f.description
+	if f.Description != "" {
+		iface["description"] = f.Description
 	} else {
 		iface["description"] = ""
 	}
 
-	iface["only_admin"] = f.only_admin
+	iface["only_admin"] = f.OnlyAdmin
 
-	iface["tenant"] = f.tenant
+	iface["tenant"] = f.Tenant
 
 	res, _ := json.Marshal(iface)
 
 	f.cleanup()
 
-	iface["only_admin"] = f.only_admin
+	iface["only_admin"] = f.OnlyAdmin
 
-	iface["tenant"] = f.tenant
+	iface["tenant"] = f.Tenant
 
 	return string(res)
 }
 
 func (f *RouteFeature) cleanup() {
-	if f.route_group != "" {
-		f.route_group = ""
+	if f.RouteGroup != "" {
+		f.RouteGroup = ""
 	}
 
-	if f.route_name != "" {
-		f.route_name = ""
+	if f.RouteName != "" {
+		f.RouteName = ""
 	}
 
-	if f.description != "" {
-		f.description = ""
+	if f.Description != "" {
+		f.Description = ""
 	}
 
-	if f.only_admin {
-		f.only_admin = false
+	if f.OnlyAdmin {
+		f.OnlyAdmin = false
 	}
 
-	if f.tenant {
-		f.tenant = true
+	if f.Tenant {
+		f.Tenant = true
 	}
 
 }
@@ -138,7 +138,10 @@ func ExtractRouteAsFeatures(app *fiber.App, isTenant bool) []FeatureLists {
 			if item.Name != "" && IsJSON(item.Name) {
 				var nameInfo = make(map[string]interface{})
 
-				json.Unmarshal([]byte(item.Name), &nameInfo)
+				err := json.Unmarshal([]byte(item.Name), &nameInfo)
+				if err != nil {
+					return nil
+				}
 
 				if nameInfo["tenant"].(bool) == isTenant {
 					resp = append(resp, FeatureLists{
@@ -161,7 +164,7 @@ func ExtractRouteAsFeatures(app *fiber.App, isTenant bool) []FeatureLists {
 func FeaturesGroupLists(app *fiber.App, isTenant bool) []FeatureGroup {
 	var list = ExtractRouteAsFeatures(app, isTenant)
 	m := make(map[string]bool)
-	var a = []string{}
+	var a []string
 	var resp []FeatureGroup
 
 	for _, item := range list {

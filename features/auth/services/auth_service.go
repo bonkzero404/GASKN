@@ -30,10 +30,7 @@ func NewAuthService(
 	}
 }
 
-/*
-*
-This function is used to handle authentication
-*/
+// Authenticate /*
 func (service AuthService) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error) {
 	var user stores.User
 
@@ -99,10 +96,7 @@ func (service AuthService) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest)
 	return &response, nil
 }
 
-/*
-*
-This function is used to authorize users and display logged in user data
-*/
+// GetProfile /*
 func (service AuthService) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileResponse, error) {
 	var user stores.User
 	// var roleUser []stores.RoleUser
@@ -130,10 +124,7 @@ func (service AuthService) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthPro
 	return &response, nil
 }
 
-/*
-*
-This function is used to refresh token
-*/
+// RefreshToken /*
 func (service AuthService) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserAuthResponse, error) {
 	var user stores.User
 

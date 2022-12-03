@@ -15,11 +15,9 @@ This constant is used to create a string enumeration type to
 distinguish the type of user who is activating or requesting
 forgotten passwords
 */
-const (
-	ACTIVATION_CODE ActCodeType = "ACTIVATION_CODE"
-	FORGOT_PASSWORD ActCodeType = "FORGOT_PASSWORD"
-	INVITATION_CODE ActCodeType = "INVITATION_CODE"
-)
+const ACTIVATION_CODE ActCodeType = "ACTIVATION_CODE"
+const FORGOT_PASSWORD ActCodeType = "FORGOT_PASSWORD"
+const INVITATION_CODE ActCodeType = "INVITATION_CODE"
 
 // UserActionCode /*
 type UserActionCode struct {

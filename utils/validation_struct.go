@@ -7,8 +7,8 @@ import (
 	"github.com/go-playground/locales/id"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
-	en_translations "github.com/go-playground/validator/v10/translations/en"
-	id_translations "github.com/go-playground/validator/v10/translations/id"
+	entranslations "github.com/go-playground/validator/v10/translations/en"
+	idtranslations "github.com/go-playground/validator/v10/translations/id"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -25,19 +25,28 @@ func ValidateStruct(s interface{}, ctx *fiber.Ctx) []*dto.ErrorResponse {
 		trans, _ = uni.GetTranslator("en")
 		validate = validator.New()
 
-		en_translations.RegisterDefaultTranslations(validate, trans)
+		err := entranslations.RegisterDefaultTranslations(validate, trans)
+		if err != nil {
+			return nil
+		}
 	} else if ctx.Query("lang") != "" && ctx.Query("lang") == "id" {
 		uni := ut.New(id, id)
 		trans, _ = uni.GetTranslator("id")
 		validate = validator.New()
 
-		id_translations.RegisterDefaultTranslations(validate, trans)
+		err := idtranslations.RegisterDefaultTranslations(validate, trans)
+		if err != nil {
+			return nil
+		}
 	} else {
 		uni := ut.New(en, en)
 		trans, _ = uni.GetTranslator("en")
 		validate = validator.New()
 
-		en_translations.RegisterDefaultTranslations(validate, trans)
+		err := entranslations.RegisterDefaultTranslations(validate, trans)
+		if err != nil {
+			return nil
+		}
 	}
 
 	err := validate.Struct(s)
