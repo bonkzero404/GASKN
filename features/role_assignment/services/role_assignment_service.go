@@ -17,13 +17,16 @@ import (
 
 type RoleAssignmentService struct {
 	RoleClientRepository fclient.RoleClientRepository
+	RoleRepository       fclient.RoleRepository
 }
 
 func NewRoleAssignmentService(
 	RoleClientRepository fclient.RoleClientRepository,
+	RoleRepository fclient.RoleRepository,
 ) contracts.RoleAssignmentService {
 	return &RoleAssignmentService{
 		RoleClientRepository: RoleClientRepository,
+		RoleRepository:       RoleRepository,
 	}
 }
 
@@ -40,6 +43,25 @@ func (service RoleAssignmentService) CheckExistsRoleAssignment(c *fiber.Ctx, cli
 	}
 
 	return &clientRole, nil
+}
+
+func (service RoleAssignmentService) CheckExistsRoleUserAssignment(c *fiber.Ctx, userId uuid.UUID, clientIdUuid uuid.UUID) (*stores.ClientAssignment, error) {
+	var clientAssign = stores.ClientAssignment{}
+
+	errRoleUserClient := service.RoleClientRepository.GetUserHasClient(
+		&clientAssign,
+		userId.String(),
+		clientIdUuid.String(),
+	).Error
+
+	if errors.Is(errRoleUserClient, gorm.ErrRecordNotFound) {
+		return &stores.ClientAssignment{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusNotFound,
+			Message:    utils.Lang(c, "role:err:read-exists"),
+		}
+	}
+
+	return &clientAssign, nil
 }
 
 // CreateRoleAssignment /**
@@ -111,6 +133,68 @@ func (service RoleAssignmentService) RemoveRoleAssignment(c *fiber.Ctx, req *dto
 		return &dto.RoleAssignmentResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "role-assign:err:failed-remove-permit"),
+		}
+	}
+
+	saveResponse := dto.RoleAssignmentResponse{
+		RoleId:   roleIdUuid.String(),
+		ClientId: clientIdUuid.String(),
+	}
+
+	return &saveResponse, nil
+}
+
+func (service RoleAssignmentService) AssignUserPermitToRole(c *fiber.Ctx, req *dto.RoleUserAssignment) (*dto.RoleAssignmentResponse, error) {
+	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
+	clientIdUuid, errClientIdUuid := uuid.Parse(clientId)
+	userIdUuid, errUserUuid := uuid.Parse(req.UserId)
+	roleIdUuid, errRoleUuid := uuid.Parse(req.RoleId)
+
+	if errRoleUuid != nil || errClientIdUuid != nil || errUserUuid != nil {
+		return &dto.RoleAssignmentResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, "global:err:invalid-format"),
+		}
+	}
+
+	// Check if user has client
+	existsResp, errExists := service.CheckExistsRoleUserAssignment(c, userIdUuid, clientIdUuid)
+
+	if errExists != nil {
+		return nil, errExists
+	}
+
+	// Check if role has available
+	var role = stores.Role{}
+	errRole := service.RoleRepository.GetRoleById(&role, roleIdUuid.String()).Error
+
+	if errRole != nil {
+		return &dto.RoleAssignmentResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, "role:err:read-exists"),
+		}
+	}
+
+	saveUserRoleClient := service.RoleClientRepository.CreateUserClientRole(userIdUuid, roleIdUuid, clientIdUuid)
+
+	if !saveUserRoleClient {
+		return &dto.RoleAssignmentResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    "Gagal menetapkan pengguna ke peran",
+		}
+	}
+
+	if save, _ := driver.AddGroupingPolicy(
+		userIdUuid.String(),
+		roleIdUuid.String(),
+		clientIdUuid.String(),
+		existsResp.User.FullName,
+		role.RoleName,
+		existsResp.Client.ClientName,
+	); !save {
+		return &dto.RoleAssignmentResponse{}, &respModel.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, "role-assign:err:failed-unknown"),
 		}
 	}
 

@@ -56,12 +56,60 @@ func (repository RoleClientRepository) CreateRoleClient(role *stores.Role, clien
 	return role, tx.Commit().Error
 }
 
+func (repository RoleClientRepository) CreateUserClientRole(userId uuid.UUID, roleId uuid.UUID, clientId uuid.UUID) bool {
+
+	tx := repository.DB.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return false
+	}
+
+	// Set Role
+	// Set role User
+	roleUser := stores.RoleUser{
+		RoleId:   roleId,
+		UserId:   userId,
+		IsActive: true,
+	}
+
+	// Create Role
+	if err := tx.Create(&roleUser).Error; err != nil {
+		tx.Rollback()
+		return false
+	}
+
+	// Set Role User with Client
+	roleUserClient := stores.RoleUserClient{
+		ClientId:   clientId,
+		RoleUserId: roleUser.ID,
+		IsActive:   true,
+	}
+
+	// Create Role
+	if err := tx.Create(&roleUserClient).Error; err != nil {
+		tx.Rollback()
+		return false
+	}
+
+	if commitError := tx.Commit().Error; commitError != nil {
+		return false
+	}
+
+	return true
+}
+
 func (repository RoleClientRepository) GetRoleClientById(roleClient *stores.RoleClient, id string, clientId string) *gorm.DB {
 	return repository.DB.
 		Joins("left join roles on role_clients.role_id = roles.id").
 		Preload("Client").
 		Preload("Role").
-		First(&roleClient, "roles.id = ? and role_clients.client_id = ?", id, clientId)
+		Take(&roleClient, "roles.id = ? and role_clients.client_id = ?", id, clientId)
 }
 
 func (repository RoleClientRepository) GetRoleClientByName(roleClient *stores.RoleClient, roleName string, clientId string) *gorm.DB {
@@ -86,4 +134,11 @@ func (repository RoleClientRepository) GetRoleClientId(role *stores.RoleClient, 
 		Preload("Client").
 		Preload("Role").
 		First(&role, "role_id = ? and client_id = ?", roleId, clientId)
+}
+
+func (repository RoleClientRepository) GetUserHasClient(clientAssignment *stores.ClientAssignment, userId string, clientId string) *gorm.DB {
+	return repository.DB.
+		Preload("Client").
+		Preload("User").
+		Take(&clientAssignment, "user_id = ? and client_id = ?", userId, clientId)
 }

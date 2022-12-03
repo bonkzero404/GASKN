@@ -47,4 +47,19 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 			SetTenant(true).
 			Exec(),
 	)
+
+	roleClient.Post(
+		"/user",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.RoleAssignmentHandler.AssignUserPermitToRole,
+	).Name(
+		feature.
+			SetGroup("Client/Role/Assignment/User").
+			SetName("CreateUserClientRoleAssignment").
+			SetDescription("Users (clients) can assignment another user").
+			SetTenant(true).
+			Exec(),
+	)
 }

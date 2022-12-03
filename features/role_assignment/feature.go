@@ -11,9 +11,10 @@ import (
 
 // RegisterFeature /*
 func RegisterFeature(app *fiber.App) {
-
+	roleRepository := roleClientRepo.NewRoleRepository(driver.DB)
 	roleClientRepository := roleClientRepo.NewRoleClientRepository(driver.DB)
-	roleAssignmentService := services.NewRoleAssignmentService(roleClientRepository)
+
+	roleAssignmentService := services.NewRoleAssignmentService(roleClientRepository, roleRepository)
 	RoleAssignmentHandler := handlers.NewRoleAssignmentHandler(roleAssignmentService)
 
 	routesInit := ApiRouteClient{
