@@ -12,7 +12,7 @@ type RoleUserClient struct {
 	ClientId   uuid.UUID `gorm:"type:char(36):index"`
 	RoleUserId uuid.UUID `gorm:"type:char(36):index"`
 	Client     Client    `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	RoleUser   RoleUser  `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	RoleUser   RoleUser  `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	IsActive   bool
 }
 
