@@ -4,6 +4,7 @@ import (
 	"gaskn/database/stores"
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
+	"log"
 )
 
 var Enforcer *casbin.Enforcer
@@ -97,6 +98,15 @@ func AddPolicy(roleId string, clientId string, routeEndpoint string, httpMethod 
 		if errCreateDetail != nil {
 			return false, errCreateDetail
 		}
+	}
+
+	return true, nil
+}
+
+func RemovePolicy(roleId string, clientId string, routeEndpoint string, httpMethod string) (bool, error) {
+	log.Println(clientId)
+	if g, err := Enforcer.RemovePolicy(roleId, clientId, routeEndpoint, httpMethod); !g {
+		return false, err
 	}
 
 	return true, nil
