@@ -42,7 +42,7 @@ func NewUserClientService(
 	}
 }
 
-func (service UserClientService) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvitationRequest, invitedByUser string, actType stores.ActCodeType) (map[string]interface{}, error) {
+func (service UserClientService) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvitationRequest, invitedByUser string) (map[string]interface{}, error) {
 	var user stores.User
 	var userInviteBy stores.User
 	// var userInvitation stores.UserInvitation
@@ -250,7 +250,10 @@ func (service UserClientService) UserInviteAcceptance(c *fiber.Ctx, code string,
 			}
 		}
 
-		service.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), code)
+		_, err := service.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), code)
+		if err != nil {
+			return nil, err
+		}
 
 		if accept == stores.APPROVED {
 			// Save to client assignment

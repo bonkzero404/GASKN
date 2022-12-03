@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"gaskn/database/stores"
 	respModel "gaskn/dto"
 	"gaskn/features/user/contracts"
 	"gaskn/features/user/dto"
@@ -44,7 +43,7 @@ func (service *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := service.UserClientService.CreateUserInvitation(c, &request, userIdInvitationBy, stores.INVITATION_CODE)
+	response, err := service.UserClientService.CreateUserInvitation(c, &request, userIdInvitationBy)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)
