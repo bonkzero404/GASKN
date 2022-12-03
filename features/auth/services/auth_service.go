@@ -38,7 +38,7 @@ func (service AuthService) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest)
 	errUser := service.UserRepository.FindUserByEmail(&user, auth.Email).Error
 
 	// Check if the user is not found
-	// then displayan error message
+	// then display an error message
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
