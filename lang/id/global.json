@@ -6,6 +6,11 @@
   },
   {
     "locale": "id",
+    "key": "global:err:invalid-format",
+    "trans": "Format inputan tidak valid"
+  },
+  {
+    "locale": "id",
     "key": "global:err:body-parser",
     "trans": "Gagal membuat body parser"
   },

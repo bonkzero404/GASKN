@@ -6,6 +6,11 @@
   },
   {
     "locale": "en",
+    "key": "global:err:invalid-format",
+    "trans": "Invalid format input"
+  },
+  {
+    "locale": "en",
     "key": "global:err:body-parser",
     "trans": "Failed to create body parser"
   },

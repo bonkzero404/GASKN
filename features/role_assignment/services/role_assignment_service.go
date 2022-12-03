@@ -9,6 +9,7 @@ import (
 	fclient "gaskn/features/role/contracts"
 	"gaskn/features/role_assignment/contracts"
 	"gaskn/features/role_assignment/dto"
+	"gaskn/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -26,7 +27,7 @@ func NewRoleAssignmentService(
 	}
 }
 
-func (service RoleAssignmentService) CheckExistsRoleAssignment(clientIdUuid uuid.UUID, roleIdUuid uuid.UUID) (*stores.RoleClient, error) {
+func (service RoleAssignmentService) CheckExistsRoleAssignment(c *fiber.Ctx, clientIdUuid uuid.UUID, roleIdUuid uuid.UUID) (*stores.RoleClient, error) {
 	var clientRole = stores.RoleClient{}
 
 	errRoleClient := service.RoleClientRepository.GetRoleClientId(&clientRole, roleIdUuid.String(), clientIdUuid.String()).Error
@@ -34,7 +35,7 @@ func (service RoleAssignmentService) CheckExistsRoleAssignment(clientIdUuid uuid
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
 		return &stores.RoleClient{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    "Role client not found",
+			Message:    utils.Lang(c, "role:err:read-exists"),
 		}
 	}
 
@@ -50,11 +51,11 @@ func (service RoleAssignmentService) CreateRoleAssignment(c *fiber.Ctx, req *dto
 	if errRoleUuid != nil || errClientIdUuid != nil {
 		return &dto.RoleAssignmentResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "invalid format",
+			Message:    utils.Lang(c, "global:err:invalid-format"),
 		}
 	}
 
-	existsResp, errExists := service.CheckExistsRoleAssignment(clientIdUuid, roleIdUuid)
+	existsResp, errExists := service.CheckExistsRoleAssignment(c, clientIdUuid, roleIdUuid)
 
 	if errExists != nil {
 		return nil, errExists
@@ -71,7 +72,7 @@ func (service RoleAssignmentService) CreateRoleAssignment(c *fiber.Ctx, req *dto
 	); !save {
 		return &dto.RoleAssignmentResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "Telah terjadi error, kemungkinan role sudah ditetapkan",
+			Message:    utils.Lang(c, "role-assign:err:failed-unknown"),
 		}
 	}
 
@@ -91,11 +92,11 @@ func (service RoleAssignmentService) RemoveRoleAssignment(c *fiber.Ctx, req *dto
 	if errRoleUuid != nil || errClientIdUuid != nil {
 		return &dto.RoleAssignmentResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "invalid format",
+			Message:    utils.Lang(c, "global:err:invalid-format"),
 		}
 	}
 
-	_, errExists := service.CheckExistsRoleAssignment(clientIdUuid, roleIdUuid)
+	_, errExists := service.CheckExistsRoleAssignment(c, clientIdUuid, roleIdUuid)
 
 	if errExists != nil {
 		return nil, errExists
@@ -109,7 +110,7 @@ func (service RoleAssignmentService) RemoveRoleAssignment(c *fiber.Ctx, req *dto
 	); !remove {
 		return &dto.RoleAssignmentResponse{}, &respModel.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "Gagal menhapus permission role",
+			Message:    utils.Lang(c, "role-assign:err:failed-remove-permit"),
 		}
 	}
 

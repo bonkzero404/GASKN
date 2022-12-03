@@ -1,0 +1,12 @@
+[
+  {
+    "locale": "en",
+    "key": "role-assign:err:failed-unknown",
+    "trans": "An error has occurred, possibly the role has already been assigned"
+  },
+  {
+    "locale": "en",
+    "key": "role-assign:err:failed-remove-permit",
+    "trans": "Failed remove permission role"
+  }
+]
