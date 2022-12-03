@@ -1,10 +1,10 @@
 package user
 
 import (
+	"gaskn/driver"
 	"github.com/gofiber/fiber/v2"
 
 	"gaskn/config"
-	"gaskn/database/driver"
 	"gaskn/features/user/contracts"
 	"gaskn/features/user/handlers"
 	"gaskn/features/user/repositories"

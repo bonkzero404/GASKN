@@ -3,8 +3,8 @@ package seeders
 import (
 	"errors"
 	"gaskn/config"
-	"gaskn/database/driver"
 	"gaskn/database/stores"
+	"gaskn/driver"
 	"gorm.io/gorm"
 )
 

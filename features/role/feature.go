@@ -2,7 +2,7 @@ package role
 
 import (
 	"gaskn/config"
-	"gaskn/database/driver"
+	"gaskn/driver"
 	"gaskn/features/role/handlers"
 	"gaskn/features/role/repositories"
 	"gaskn/features/role/services"

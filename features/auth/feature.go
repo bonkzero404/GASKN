@@ -1,7 +1,7 @@
 package auth
 
 import (
-	"gaskn/database/driver"
+	"gaskn/driver"
 	"gaskn/features/auth/handlers"
 	"gaskn/features/auth/services"
 	roleRepo "gaskn/features/role/repositories"

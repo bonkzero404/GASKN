@@ -1,7 +1,7 @@
 package role
 
 import (
-	"gaskn/database/driver"
+	"gaskn/driver"
 	"gaskn/features/client/handlers"
 	"gaskn/features/client/repositories"
 	"gaskn/features/client/services"

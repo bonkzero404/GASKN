@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"gaskn/config"
-	"gaskn/database/driver"
 	"gaskn/database/stores"
+	driver2 "gaskn/driver"
 	"gaskn/dto"
 	"gaskn/utils"
 
@@ -16,7 +16,7 @@ import (
 
 func Permission() func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		enforcer := driver.Enforcer
+		enforcer := driver2.Enforcer
 
 		var roleUser stores.RoleUser
 		var roleUserClient stores.RoleUserClient
@@ -29,7 +29,7 @@ func Permission() func(c *fiber.Ctx) error {
 
 		clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
-		err := driver.DB.Take(&roleUser, "user_id = ?", userId).Error
+		err := driver2.DB.Take(&roleUser, "user_id = ?", userId).Error
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return utils.ApiForbidden(c, dto.Errors{
@@ -41,7 +41,7 @@ func Permission() func(c *fiber.Ctx) error {
 			permit = "*"
 		}
 
-		errUserClient := driver.DB.Take(&roleUserClient, "role_user_id = ? AND client_id = ?", roleUser.ID, clientId).Error
+		errUserClient := driver2.DB.Take(&roleUserClient, "role_user_id = ? AND client_id = ?", roleUser.ID, clientId).Error
 
 		if errors.Is(errUserClient, gorm.ErrRecordNotFound) {
 			permit = "*"

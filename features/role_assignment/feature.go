@@ -1,7 +1,7 @@
 package role_assignment
 
 import (
-	"gaskn/database/driver"
+	"gaskn/driver"
 	roleClientRepo "gaskn/features/role/repositories"
 	"gaskn/features/role_assignment/handlers"
 	"gaskn/features/role_assignment/services"

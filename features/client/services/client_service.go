@@ -1,6 +1,7 @@
 package services
 
 import (
+	"gaskn/driver"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -8,7 +9,6 @@ import (
 	"github.com/gosimple/slug"
 
 	"gaskn/config"
-	"gaskn/database/driver"
 	"gaskn/database/stores"
 	respModel "gaskn/dto"
 	"gaskn/features/client/contracts"

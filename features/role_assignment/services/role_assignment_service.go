@@ -3,8 +3,8 @@ package services
 import (
 	"errors"
 	"gaskn/config"
-	"gaskn/database/driver"
 	"gaskn/database/stores"
+	"gaskn/driver"
 	respModel "gaskn/dto"
 	fclient "gaskn/features/role/contracts"
 	"gaskn/features/role_assignment/contracts"

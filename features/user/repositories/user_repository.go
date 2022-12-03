@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"gaskn/database/driver"
 	"gaskn/database/stores"
+	"gaskn/driver"
 	"gaskn/features/user/contracts"
 
 	"gorm.io/gorm"

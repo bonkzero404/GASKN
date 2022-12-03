@@ -5,7 +5,7 @@ import (
 	appRoute "gaskn/app"
 	"gaskn/config"
 	"gaskn/database"
-	"gaskn/database/driver"
+	driver2 "gaskn/driver"
 	"gaskn/seeders"
 	"gaskn/utils"
 	"log"
@@ -25,13 +25,13 @@ func main() {
 	appRoute.SetupLogs()
 
 	// Call database connection
-	driver.ConnectDB()
+	driver2.ConnectDB()
 
 	// Auto migration table
 	database.MigrateDB()
 
 	// Init Casbin
-	driver.InitCasbin()
+	driver2.InitCasbin()
 
 	// Handling global cors
 	app.Use(cors.New())
@@ -44,7 +44,7 @@ func main() {
 
 	// Run Seeder
 	for _, seed := range seeders.All() {
-		if err := seed.Run(driver.DB); err != nil {
+		if err := seed.Run(driver2.DB); err != nil {
 			log.Fatalf("Running seed '%s', failed with error: %s", seed.Name, err)
 		}
 	}

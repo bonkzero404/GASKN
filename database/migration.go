@@ -1,8 +1,8 @@
 package database
 
 import (
-	"gaskn/database/driver"
 	"gaskn/database/stores"
+	"gaskn/driver"
 )
 
 // MigrateDB /*
