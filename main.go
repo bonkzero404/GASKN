@@ -17,7 +17,10 @@ import (
 
 func main() {
 	// Fiber app
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		AppName:       config.Config("APP_NAME"),
+		CaseSensitive: true,
+	})
 
 	utils.SetupLang()
 
