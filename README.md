@@ -1,5 +1,7 @@
 # GASKN
 
+![example workflow](https://github.com/bonkzero404/gaskn/actions/workflows/go.yml/badge.svg)
+
 GASKN stands for Go Api Starter Kit eNgine, is a simple go starterkit to speed up your job. this project is still under development, you can make a Pull Request into this project.
 
 # How to run this project?
