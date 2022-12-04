@@ -17,10 +17,7 @@ import (
 
 func main() {
 	// Fiber app
-	app := fiber.New(fiber.Config{
-		AppName:       config.Config("APP_NAME"),
-		CaseSensitive: true,
-	})
+	app := fiber.New(utils.FiberConf())
 
 	utils.SetupLang()
 
@@ -54,6 +51,9 @@ func main() {
 
 	// Set port
 	appPort := fmt.Sprintf("%s:%s", config.Config("APP_HOST"), config.Config("APP_PORT"))
+
+	// Print banner
+	utils.PrintBanner()
 
 	// Listen app
 	err := app.Listen(appPort)
