@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"errors"
-	"fmt"
 	"gaskn/config"
 	"gaskn/database/stores"
 	driver2 "gaskn/driver"
@@ -48,8 +47,6 @@ func Permission() func(c *fiber.Ctx) error {
 		} else {
 			permit = roleUserClient.ClientId.String()
 		}
-
-		fmt.Print(userId, permit, c.Path(), c.Method())
 
 		if ok, _ := enforcer.Enforce(userId, permit, c.Path(), c.Method()); !ok {
 			return utils.ApiForbidden(c, dto.Errors{

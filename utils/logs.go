@@ -119,10 +119,3 @@ func reverseString(str string) string {
 	}
 	return string(byte_str)
 }
-
-func changeDateLogToDate(date string) string {
-	layout := "2006/01/02"
-	t, _ := time.Parse(layout, date)
-
-	return t.Format("2006-01-02")
-}

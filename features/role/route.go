@@ -16,9 +16,7 @@ type ApiRouteClient struct {
 	RoleClientHandler handlers.RoleClientHandler
 }
 
-// /////////////////
-// Route Role
-// /////////////////
+// Route /**
 func (handler *ApiRoute) Route(app fiber.Router) {
 	const endpointGroup string = "/role"
 
@@ -87,9 +85,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 
 }
 
-// /////////////////
-// Route Role Client
-// /////////////////
+// Route /**
 func (handler *ApiRouteClient) Route(app fiber.Router) {
 	const endpointGroup string = "/role"
 
