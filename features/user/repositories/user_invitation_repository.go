@@ -4,35 +4,16 @@ import (
 	"gorm.io/gorm"
 
 	"gaskn/database/stores"
-	"gaskn/features/user/contracts"
 )
 
-type UserInvitationRepository struct {
-	DB *gorm.DB
-}
+type UserInvitationRepository interface {
+	FindUserInvitation(userInvitation *stores.UserInvitation, userId string, clientId string) *gorm.DB
 
-func NewUserInvitationRepository(db *gorm.DB) contracts.UserInvitationRepository {
-	return &UserInvitationRepository{
-		DB: db,
-	}
-}
+	FindInvitationByActId(userInvitation *stores.UserInvitation, actId string) *gorm.DB
 
-func (repository UserInvitationRepository) FindUserInvitation(userInvitation *stores.UserInvitation, userId string, clientId string) *gorm.DB {
-	return repository.DB.First(&userInvitation, "user_id = ? AND client_id = ?", userId, clientId)
-}
+	CreateUserInvitation(userInvitation *stores.UserInvitation) *gorm.DB
 
-func (repository UserInvitationRepository) FindInvitationByActId(userInvitation *stores.UserInvitation, actId string) *gorm.DB {
-	return repository.DB.First(&userInvitation, "user_action_code_id = ?", actId)
-}
+	UpdateUserInvitation(userInvitation *stores.UserInvitation) *gorm.DB
 
-func (repository UserInvitationRepository) CreateUserInvitation(userInvitation *stores.UserInvitation) *gorm.DB {
-	return repository.DB.Create(&userInvitation)
-}
-
-func (repository UserInvitationRepository) UpdateUserInvitation(userInvitation *stores.UserInvitation) *gorm.DB {
-	return repository.DB.Save(&userInvitation)
-}
-
-func (repository UserInvitationRepository) CreateClientAssignment(clientAssign *stores.ClientAssignment) *gorm.DB {
-	return repository.DB.Create(&clientAssign)
+	CreateClientAssignment(clientAssign *stores.ClientAssignment) *gorm.DB
 }

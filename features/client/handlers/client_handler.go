@@ -2,8 +2,8 @@ package handlers
 
 import (
 	respModel "gaskn/dto"
-	"gaskn/features/client/contracts"
 	"gaskn/features/client/dto"
+	"gaskn/features/client/interactors"
 	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,10 +11,10 @@ import (
 )
 
 type ClientHandler struct {
-	ClientService contracts.ClientService
+	ClientService interactors.Client
 }
 
-func NewClientHandler(clientService contracts.ClientService) *ClientHandler {
+func NewClientHandler(clientService interactors.Client) *ClientHandler {
 	return &ClientHandler{
 		ClientService: clientService,
 	}

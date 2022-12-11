@@ -2,19 +2,19 @@ package role_assignment
 
 import (
 	"gaskn/driver"
-	roleClientRepo "gaskn/features/role/repositories"
+	"gaskn/features/role/repositories/implements"
 	"gaskn/features/role_assignment/handlers"
-	"gaskn/features/role_assignment/services"
+	implements2 "gaskn/features/role_assignment/interactors/implements"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 // RegisterFeature /*
 func RegisterFeature(app *fiber.App) {
-	roleRepository := roleClientRepo.NewRoleRepository(driver.DB)
-	roleClientRepository := roleClientRepo.NewRoleClientRepository(driver.DB)
+	roleRepository := implements.NewRoleRepository(driver.DB)
+	roleClientRepository := implements.NewRoleClientRepository(driver.DB)
 
-	roleAssignmentService := services.NewRoleAssignmentService(roleClientRepository, roleRepository)
+	roleAssignmentService := implements2.NewRoleAssignment(roleClientRepository, roleRepository)
 	RoleAssignmentHandler := handlers.NewRoleAssignmentHandler(roleAssignmentService)
 
 	routesInit := ApiRouteClient{

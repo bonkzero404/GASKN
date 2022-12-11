@@ -2,26 +2,26 @@ package user
 
 import (
 	"gaskn/driver"
+	implements4 "gaskn/features/user/factories/implements"
+	implements2 "gaskn/features/user/interactors/implements"
+	"gaskn/features/user/repositories"
+	"gaskn/features/user/repositories/implements"
 	"github.com/gofiber/fiber/v2"
 
 	"gaskn/config"
-	"gaskn/features/user/contracts"
 	"gaskn/features/user/handlers"
-	"gaskn/features/user/repositories"
-	"gaskn/features/user/services"
-	"gaskn/features/user/services/factories"
 )
 
 /*
 *
 Service factory registration
 */
-func registerActionCodeFactory(userActionCodeRepository contracts.UserActionCodeRepository) factories.ActionFactoryInterface {
-	actFactory := factories.NewUserActivationServiceFactory(userActionCodeRepository)
-	forgotPassFactory := factories.NewUserForgotPassServiceFactory(userActionCodeRepository)
-	userInvitationFactory := factories.NewUserInvitationServiceFactory(userActionCodeRepository)
+func registerActionCodeFactory(userActionCodeRepository repositories.UserActionCodeRepository) implements4.ActionFactoryInterface {
+	actFactory := implements4.NewUserActivationServiceFactory(userActionCodeRepository)
+	forgotPassFactory := implements4.NewUserForgotPassServiceFactory(userActionCodeRepository)
+	userInvitationFactory := implements4.NewUserInvitationServiceFactory(userActionCodeRepository)
 
-	return factories.NewActionFactory(actFactory, forgotPassFactory, userInvitationFactory)
+	return implements4.NewActionFactory(actFactory, forgotPassFactory, userInvitationFactory)
 }
 
 /*
@@ -30,16 +30,16 @@ This function is for registering repository - service - handler
 */
 func RegisterFeature(app *fiber.App) {
 
-	userRepository := repositories.NewUserRepository(driver.DB)
-	userActionCodeRepository := repositories.NewUserActionCodeRepository(driver.DB)
-	aggregateRepository := repositories.NewRepositoryAggregate(userRepository, userActionCodeRepository)
-	userInvitationRepository := repositories.NewUserInvitationRepository(driver.DB)
+	userRepository := implements.NewUserRepository(driver.DB)
+	userActionCodeRepository := implements.NewUserActionCodeRepository(driver.DB)
+	aggregateRepository := implements.NewRepositoryAggregate(userRepository, userActionCodeRepository)
+	userInvitationRepository := implements.NewUserInvitationRepository(driver.DB)
 	userActionFactory := registerActionCodeFactory(userActionCodeRepository)
 
-	userService := services.NewUserService(userRepository, userActionCodeRepository, aggregateRepository, userActionFactory)
+	userService := implements2.NewUser(userRepository, userActionCodeRepository, aggregateRepository, userActionFactory)
 	userHandler := handlers.NewUserHandler(userService)
 
-	userClientService := services.NewUserClientService(userRepository, userActionCodeRepository, userInvitationRepository, aggregateRepository, userActionFactory)
+	userClientService := implements2.NewUserClient(userRepository, userActionCodeRepository, userInvitationRepository, aggregateRepository, userActionFactory)
 	userClientHandler := handlers.NewUserClientHandler(userClientService)
 
 	var routesInitTenant = ApiRouteClient{}

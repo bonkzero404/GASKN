@@ -2,17 +2,17 @@ package handlers
 
 import (
 	respModel "gaskn/dto"
-	"gaskn/features/role_assignment/contracts"
 	"gaskn/features/role_assignment/dto"
+	"gaskn/features/role_assignment/interactors"
 	"gaskn/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
 type RoleAssignmentHandler struct {
-	RoleAssignmentService contracts.RoleAssignmentService
+	RoleAssignmentService interactors.RoleAssignment
 }
 
-func NewRoleAssignmentHandler(RoleAssignmentService contracts.RoleAssignmentService) *RoleAssignmentHandler {
+func NewRoleAssignmentHandler(RoleAssignmentService interactors.RoleAssignment) *RoleAssignmentHandler {
 	return &RoleAssignmentHandler{
 		RoleAssignmentService: RoleAssignmentService,
 	}

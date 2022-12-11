@@ -3,9 +3,9 @@ package role
 import (
 	"gaskn/driver"
 	"gaskn/features/client/handlers"
-	"gaskn/features/client/repositories"
-	"gaskn/features/client/services"
-	userRepo "gaskn/features/user/repositories"
+	"gaskn/features/client/interactors/implements"
+	implements2 "gaskn/features/client/repositories/implements"
+	userRepo "gaskn/features/user/repositories/implements"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,8 +13,8 @@ import (
 // RegisterFeature /*
 func RegisterFeature(app *fiber.App) {
 	userReposiry := userRepo.NewUserRepository(driver.DB)
-	clientRepository := repositories.NewClientRepository(driver.DB)
-	clientService := services.NewClientService(clientRepository, userReposiry)
+	clientRepository := implements2.NewClientRepository(driver.DB)
+	clientService := implements.NewClient(clientRepository, userReposiry)
 	ClientHandler := handlers.NewClientHandler(clientService)
 
 	routesInit := ApiRoute{

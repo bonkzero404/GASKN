@@ -2,18 +2,18 @@ package handlers
 
 import (
 	respModel "gaskn/dto"
-	"gaskn/features/role/contracts"
 	"gaskn/features/role/dto"
+	"gaskn/features/role/interactors"
 	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type RoleHandler struct {
-	RoleService contracts.RoleService
+	RoleService interactors.Role
 }
 
-func NewRoleHandler(roleService contracts.RoleService) *RoleHandler {
+func NewRoleHandler(roleService interactors.Role) *RoleHandler {
 	return &RoleHandler{
 		RoleService: roleService,
 	}

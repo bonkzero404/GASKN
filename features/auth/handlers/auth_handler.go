@@ -2,8 +2,8 @@ package handlers
 
 import (
 	respModel "gaskn/dto"
-	"gaskn/features/auth/contracts"
 	"gaskn/features/auth/dto"
+	"gaskn/features/auth/interactors"
 	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,10 +11,10 @@ import (
 )
 
 type AuthHandler struct {
-	AuthService contracts.UserAuthService
+	AuthService interactors.UserAuth
 }
 
-func NewAuthHandler(authService contracts.UserAuthService) *AuthHandler {
+func NewAuthHandler(authService interactors.UserAuth) *AuthHandler {
 	return &AuthHandler{
 		AuthService: authService,
 	}

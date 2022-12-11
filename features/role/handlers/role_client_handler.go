@@ -2,18 +2,18 @@ package handlers
 
 import (
 	respModel "gaskn/dto"
-	"gaskn/features/role/contracts"
 	"gaskn/features/role/dto"
+	"gaskn/features/role/interactors"
 	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type RoleClientHandler struct {
-	RoleClientService contracts.RoleClientService
+	RoleClientService interactors.RoleClient
 }
 
-func NewRoleClientHandler(roleClientService contracts.RoleClientService) *RoleClientHandler {
+func NewRoleClientHandler(roleClientService interactors.RoleClient) *RoleClientHandler {
 	return &RoleClientHandler{
 		RoleClientService: roleClientService,
 	}
@@ -90,7 +90,7 @@ func (service *RoleClientHandler) UpdateRoleClient(c *fiber.Ctx) error {
 
 	roleId := c.Params("id")
 
-	response, err := service.RoleClientService.UpdateRoleClient(c, roleId, &request)
+	response, err := service.RoleClientService.UpdateRoleClient(c, roleId)
 
 	if err != nil {
 		re := err.(*respModel.ApiErrorResponse)

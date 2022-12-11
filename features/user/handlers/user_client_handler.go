@@ -2,18 +2,18 @@ package handlers
 
 import (
 	respModel "gaskn/dto"
-	"gaskn/features/user/contracts"
 	"gaskn/features/user/dto"
+	"gaskn/features/user/interactors"
 	"gaskn/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 )
 
 type UserClientHandler struct {
-	UserClientService contracts.UserClientService
+	UserClientService interactors.UserClient
 }
 
-func NewUserClientHandler(UserClientService contracts.UserClientService) *UserClientHandler {
+func NewUserClientHandler(UserClientService interactors.UserClient) *UserClientHandler {
 	return &UserClientHandler{
 		UserClientService: UserClientService,
 	}

@@ -3,18 +3,18 @@ package auth
 import (
 	"gaskn/driver"
 	"gaskn/features/auth/handlers"
-	"gaskn/features/auth/services"
-	roleRepo "gaskn/features/role/repositories"
-	"gaskn/features/user/repositories"
+	implements2 "gaskn/features/auth/interactors/implements"
+	roleRepo "gaskn/features/role/repositories/implements"
+	"gaskn/features/user/repositories/implements"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 // RegisterFeature /*
 func RegisterFeature(app *fiber.App) {
-	userRepository := repositories.NewUserRepository(driver.DB)
+	userRepository := implements.NewUserRepository(driver.DB)
 	roleRepository := roleRepo.NewRoleRepository(driver.DB)
-	authService := services.NewAuthService(userRepository, roleRepository)
+	authService := implements2.NewAuth(userRepository, roleRepository)
 	authHandler := handlers.NewAuthHandler(authService)
 
 	routesInit := ApiRoute{

@@ -3,18 +3,18 @@ package handlers
 import (
 	"gaskn/database/stores"
 	respModel "gaskn/dto"
-	"gaskn/features/user/contracts"
 	"gaskn/features/user/dto"
+	"gaskn/features/user/interactors"
 	"gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 type UserHandler struct {
-	UserService contracts.UserService
+	UserService interactors.User
 }
 
-func NewUserHandler(userService contracts.UserService) *UserHandler {
+func NewUserHandler(userService interactors.User) *UserHandler {
 	return &UserHandler{
 		UserService: userService,
 	}

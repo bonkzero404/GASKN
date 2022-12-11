@@ -4,39 +4,16 @@ import (
 	"gorm.io/gorm"
 
 	"gaskn/database/stores"
-	"gaskn/features/user/contracts"
 )
 
-type UserActionCodeRepository struct {
-	DB *gorm.DB
-}
+type UserActionCodeRepository interface {
+	FindUserActionCode(userActionCode *stores.UserActionCode, userId string, code string) *gorm.DB
 
-func NewUserActionCodeRepository(db *gorm.DB) contracts.UserActionCodeRepository {
-	return &UserActionCodeRepository{
-		DB: db,
-	}
-}
+	FindActionCode(userActivation *stores.UserActionCode, code string) *gorm.DB
 
-func (repository UserActionCodeRepository) FindUserActionCode(
-	userActivation *stores.UserActionCode,
-	userId string,
-	code string,
-) *gorm.DB {
-	return repository.DB.First(&userActivation, "user_id = ? AND code = ?", userId, code)
-}
+	FindExistsActionCode(userActionCode *stores.UserActionCode, userId string, actType stores.ActCodeType) *gorm.DB
 
-func (repository UserActionCodeRepository) FindActionCode(userActivation *stores.UserActionCode, code string) *gorm.DB {
-	return repository.DB.First(&userActivation, "code = ?", code)
-}
+	CreateUserActionCode(userActionCode *stores.UserActionCode) *gorm.DB
 
-func (repository UserActionCodeRepository) FindExistsActionCode(userActionCode *stores.UserActionCode, userId string, actType stores.ActCodeType) *gorm.DB {
-	return repository.DB.Take(&userActionCode, "user_id = ? and act_type = ?", userId, actType)
-}
-
-func (repository UserActionCodeRepository) CreateUserActionCode(userActivate *stores.UserActionCode) *gorm.DB {
-	return repository.DB.Create(&userActivate)
-}
-
-func (repository UserActionCodeRepository) UpdateActionCodeUsed(userActivate *stores.UserActionCode) *gorm.DB {
-	return repository.DB.Save(&userActivate)
+	UpdateActionCodeUsed(userActionCode *stores.UserActionCode) *gorm.DB
 }
