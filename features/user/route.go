@@ -20,7 +20,8 @@ type ApiRouteClient struct {
 func (handler *ApiRoute) Route(app fiber.Router) {
 	const endpointGroup string = "/user"
 
-	user := app.Group(utils.SetupApiGroup() + endpointGroup)
+	user := utils.GasknRouter{}
+	user.Set(app).Group(utils.SetupApiGroup() + endpointGroup)
 
 	user.Post(
 		"/register",
@@ -60,14 +61,13 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 	)
 }
 
-// /////////////////
-// Route Role Client
-// /////////////////
 func (handler *ApiRouteClient) Route(app fiber.Router) {
 	const endpointGroup string = "/user"
 
-	userClient := app.Group(utils.SetupSubApiGroup() + endpointGroup)
-	feature := utils.RouteFeature{}
+	userClient := utils.GasknRouter{}
+	userClient.Set(app).
+		Group(utils.SetupSubApiGroup() + endpointGroup).
+		SetGroupName("Client/UserInvitation") // app.Group(utils.SetupSubApiGroup() + endpointGroup)
 
 	userClient.Post(
 		"/invitation",
@@ -75,12 +75,9 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.UserClientHandler.CreateUserInvitation,
-	).Name(
-		feature.
-			SetGroup("Client/UserInvitation").
-			SetName("CreateClientUserInvitation").
-			SetDescription("User can invite other users to join organizations").
-			SetTenant(true).
-			Exec(),
-	)
+	).
+		SetRouteName("CreateClientUserInvitation").
+		SetRouteDescription("User can invite other users to join organizations").
+		SetRouteTenant(true).
+		Execute()
 }

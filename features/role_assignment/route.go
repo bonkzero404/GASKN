@@ -15,8 +15,11 @@ type ApiRouteClient struct {
 func (handler *ApiRouteClient) Route(app fiber.Router) {
 	const endpointGroup string = "/role-assignment"
 
-	roleClient := app.Group(utils.SetupSubApiGroup() + endpointGroup)
-	feature := utils.RouteFeature{}
+	roleClient := utils.GasknRouter{}
+
+	roleClient.Set(app).
+		Group(utils.SetupSubApiGroup() + endpointGroup).
+		SetGroupName("Client/Role/Assignment")
 
 	roleClient.Post(
 		"/",
@@ -24,14 +27,11 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.RoleAssignmentHandler.CreateRoleAssignment,
-	).Name(
-		feature.
-			SetGroup("Client/Role/Assignment").
-			SetName("CreateClientRoleAssignment").
-			SetDescription("Users (clients) can assignment roles").
-			SetTenant(true).
-			Exec(),
-	)
+	).
+		SetRouteName("CreateClientRoleAssignment").
+		SetRouteDescription("Users (clients) can assignment roles").
+		SetRouteTenant(true).
+		Execute()
 
 	roleClient.Delete(
 		"/",
@@ -39,14 +39,11 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.RoleAssignmentHandler.RemoveRoleAssignment,
-	).Name(
-		feature.
-			SetGroup("Client/Role/Assignment").
-			SetName("RemoveClientRoleAssignment").
-			SetDescription("Users (clients) can remove assignment roles").
-			SetTenant(true).
-			Exec(),
-	)
+	).
+		SetRouteName("RemoveClientRoleAssignment").
+		SetRouteDescription("Users (clients) can remove assignment roles").
+		SetRouteTenant(true).
+		Execute()
 
 	roleClient.Post(
 		"/user",
@@ -54,12 +51,9 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.RoleAssignmentHandler.AssignUserPermitToRole,
-	).Name(
-		feature.
-			SetGroup("Client/Role/Assignment/User").
-			SetName("CreateUserClientRoleAssignment").
-			SetDescription("Users (clients) can assignment another user").
-			SetTenant(true).
-			Exec(),
-	)
+	).
+		SetRouteName("CreateUserClientRoleAssignment").
+		SetRouteDescription("Users (clients) can assignment another user").
+		SetRouteTenant(true).
+		Execute()
 }

@@ -11,6 +11,7 @@ func FiberConf() fiber.Config {
 		AppName:               config.Config("APP_NAME"),
 		CaseSensitive:         true,
 		DisableStartupMessage: true,
+		// EnablePrintRoutes:     true,
 	}
 
 	return cnf

@@ -15,7 +15,9 @@ type ApiRoute struct {
 func (handler *ApiRoute) Route(app fiber.Router) {
 	const endpointGroup string = "/auth"
 
-	user := app.Group(utils.SetupApiGroup() + endpointGroup)
+	user := utils.GasknRouter{}
+
+	user.Set(app).Group(utils.SetupApiGroup() + endpointGroup)
 
 	user.Post(
 		"/",

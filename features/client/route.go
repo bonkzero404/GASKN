@@ -12,24 +12,21 @@ type ApiRoute struct {
 	ClientHandler handlers.ClientHandler
 }
 
+type ApiRouteClient struct {
+	ClientHandler handlers.ClientHandler
+}
+
 func (handler *ApiRoute) Route(app fiber.Router) {
 	const endpointGroup string = "/client"
 
-	client := app.Group(utils.SetupApiGroup() + endpointGroup)
-	clientAcc := app.Group(utils.SetupSubApiGroup())
-	feature := utils.RouteFeature{}
+	client := utils.GasknRouter{}
+	client.Set(app).Group(utils.SetupApiGroup() + endpointGroup)
 
 	client.Post(
 		"/",
 		middleware.Authenticate(),
 		middleware.RateLimiter(5, 30),
 		handler.ClientHandler.CreateClient,
-	).Name(
-		feature.
-			SetGroup("Client").
-			SetName("CreateClient").
-			SetDescription("Users can create client").
-			Exec(),
 	)
 
 	client.Get(
@@ -37,13 +34,13 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.Authenticate(),
 		middleware.RateLimiter(5, 30),
 		handler.ClientHandler.GetClientByUser,
-	).Name(
-		feature.
-			SetGroup("Client").
-			SetName("GetClientByUser").
-			SetDescription("Users can get client by user").
-			Exec(),
 	)
+
+}
+
+func (handler *ApiRouteClient) Route(app fiber.Router) {
+	clientAcc := utils.GasknRouter{}
+	clientAcc.Set(app).Group(utils.SetupSubApiGroup()).SetGroupName("Client") //app.Group(utils.SetupSubApiGroup())
 
 	clientAcc.Put(
 		"/update",
@@ -51,10 +48,10 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		middleware.Permission(),
 		handler.ClientHandler.UpdateClient,
-	).Name(feature.
-		SetGroup("Client").
-		SetName("UpdateClient").
-		SetDescription("Users can update client").
-		Exec())
+	).
+		SetRouteName("UpdateClient").
+		SetRouteDescription("Users can update client").
+		SetRouteTenant(true).
+		Execute()
 
 }

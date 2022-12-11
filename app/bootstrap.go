@@ -15,76 +15,61 @@ import (
 )
 
 func extrasFeature(app *fiber.App) {
-	feature := utils.RouteFeature{}
+	var route = utils.GasknRouter{}
 
+	route.Set(app).Group(utils.SetupApiGroup() + "/features").SetGroupName("Features")
 	// Get feature lists
-	app.Get(
-		utils.SetupApiGroup()+"/features",
+	route.Get(
+		"/",
 		middleware.Authenticate(),
 		middleware.Permission(),
 		func(c *fiber.Ctx) error {
 			return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c.App(), false))
 		}).
-		Name(
-			feature.
-				SetGroup("Features").
-				SetName("FeatureLists").
-				SetDescription("Admin get get route lists").
-				SetOnlyAdmin(true).
-				Exec(),
-		)
+		SetRouteName("FeatureLists").
+		SetRouteDescription("Admin get route lists").
+		Execute()
 
 	// Get feature per group
-	app.Get(
-		utils.SetupApiGroup()+"/features/group",
+	route.Get(
+		"/group",
 		middleware.Authenticate(),
 		middleware.Permission(),
 		func(c *fiber.Ctx) error {
 			return utils.ApiOk(c, utils.FeaturesGroupLists(c.App(), false))
 		}).
-		Name(
-			feature.
-				SetGroup("Features").
-				SetName("FeatureGroupLists").
-				SetDescription("Admin get get group route lists").
-				SetOnlyAdmin(true).
-				Exec(),
-		)
+		SetRouteName("FeatureGroupLists").
+		SetRouteDescription("Admin get get group route lists").
+		Execute()
 
 	if config.Config("TENANCY") == "true" {
+		route.Set(app).Group(utils.SetupSubApiGroup() + "/features").SetGroupName("Client/Features")
+
 		// Get feature lists Tenant
-		app.Get(
-			utils.SetupSubApiGroup()+"/features",
+		route.Get(
+			"/",
 			middleware.Authenticate(),
 			middleware.Permission(),
 			func(c *fiber.Ctx) error {
 				return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c.App(), true))
 			}).
-			Name(
-				feature.
-					SetGroup("Client/Features").
-					SetName("FeatureLists").
-					SetDescription("Admin get get route lists").
-					SetTenant(true).
-					Exec(),
-			)
+			SetRouteName("FeatureLists").
+			SetRouteDescription("Admin get get route lists").
+			SetRouteTenant(true).
+			Execute()
 
 		// Get feature per group tenant
-		app.Get(
-			utils.SetupSubApiGroup()+"/features/group",
+		route.Get(
+			"/group",
 			middleware.Authenticate(),
 			middleware.Permission(),
 			func(c *fiber.Ctx) error {
 				return utils.ApiOk(c, utils.FeaturesGroupLists(c.App(), true))
 			}).
-			Name(
-				feature.
-					SetGroup("Client/Features").
-					SetName("FeatureGroupLists").
-					SetDescription("Admin get get group route lists").
-					SetTenant(true).
-					Exec(),
-			)
+			SetRouteName("FeatureGroupLists").
+			SetRouteDescription("Admin get get group route lists").
+			SetRouteTenant(true).
+			Execute()
 	}
 }
 
