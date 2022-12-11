@@ -14,7 +14,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 )
 
-func features(app *fiber.App) {
+func extrasFeature(app *fiber.App) {
 	feature := utils.RouteFeature{}
 
 	// Get feature lists
@@ -94,7 +94,7 @@ func Bootstrap(app *fiber.App) {
 	app.Get("/monitor", monitor.New())
 
 	// Register features
-	features(app)
+	extrasFeature(app)
 
 	// Register feature user
 	user.RegisterFeature(app)
