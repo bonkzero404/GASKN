@@ -2,7 +2,7 @@ package implements
 
 import (
 	"gaskn/database/stores"
-	respModel "gaskn/dto"
+	responseDto "gaskn/dto"
 	"gaskn/features/role/dto"
 	"gaskn/features/role/interactors"
 	"gaskn/features/role/repositories"
@@ -34,7 +34,7 @@ func (interact Role) CreateRole(c *fiber.Ctx, role *dto.RoleRequest) (*dto.RoleR
 	err := interact.RoleRepository.CreateRole(&roleData).Error
 
 	if err != nil {
-		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
+		return &dto.RoleResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "global:err:failed-unknown"),
 		}
@@ -57,7 +57,7 @@ func (interact Role) GetRoleList(c *fiber.Ctx) (*utils.Pagination, error) {
 	res, err := interact.RoleRepository.GetRoleList(&roles, c)
 
 	if err != nil {
-		return nil, &respModel.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}
@@ -84,7 +84,7 @@ func (interact Role) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleRequest) 
 	errCheckRole := interact.RoleRepository.GetRoleById(&roleStore, id).Error
 
 	if errCheckRole != nil {
-		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
+		return &dto.RoleResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "role:err:read-exists"),
 		}
@@ -97,7 +97,7 @@ func (interact Role) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleRequest) 
 	err := interact.RoleRepository.UpdateRoleById(&roleStore).Error
 
 	if err != nil {
-		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
+		return &dto.RoleResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "global:err:failed-unknown"),
 		}
@@ -120,7 +120,7 @@ func (interact Role) DeleteRoleById(c *fiber.Ctx, id string) (*dto.RoleResponse,
 	errCheckRole := interact.RoleRepository.GetRoleById(&roleStore, id).Error
 
 	if errCheckRole != nil {
-		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
+		return &dto.RoleResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "role:err:read-exists"),
 		}
@@ -129,7 +129,7 @@ func (interact Role) DeleteRoleById(c *fiber.Ctx, id string) (*dto.RoleResponse,
 	err := interact.RoleRepository.DeleteRoleById(&roleStore).Error
 
 	if err != nil {
-		return &dto.RoleResponse{}, &respModel.ApiErrorResponse{
+		return &dto.RoleResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "global:err:failed-unknown"),
 		}

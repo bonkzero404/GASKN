@@ -3,10 +3,11 @@ package implements
 import (
 	"gaskn/features/user/factories"
 	"gaskn/features/user/repositories"
+
 	"github.com/gofiber/fiber/v2"
 
 	"gaskn/database/stores"
-	respModel "gaskn/dto"
+	responseDto "gaskn/dto"
 	"gaskn/utils"
 )
 
@@ -30,13 +31,13 @@ func (service UserForgotPassServiceFactory) CreateUserForgotPass(user *stores.Us
 	}
 
 	if err := service.UserForgotPassRepository.CreateUserActionCode(&userActivate).Error; err != nil {
-		return &stores.UserActionCode{}, &respModel.ApiErrorResponse{
+		return &stores.UserActionCode{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}
 	}
 
-	sendMail := respModel.Mail{
+	sendMail := responseDto.Mail{
 		To:           []string{user.Email},
 		Subject:      "Forgot Password",
 		TemplateHtml: "user_forgot_password.html",

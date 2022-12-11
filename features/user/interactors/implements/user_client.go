@@ -5,8 +5,9 @@ import (
 	"gaskn/features/user/factories/implements"
 	"gaskn/features/user/interactors"
 	"gaskn/features/user/repositories"
-	"github.com/golang-jwt/jwt/v4"
 	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
@@ -14,7 +15,7 @@ import (
 
 	"gaskn/config"
 	"gaskn/database/stores"
-	respModel "gaskn/dto"
+	responseDto "gaskn/dto"
 	"gaskn/features/user/dto"
 	"gaskn/utils"
 )
@@ -59,7 +60,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 	errUser := interact.UserRepository.FindUserByEmail(&user, req.Email).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &respModel.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, "user:err:user-not-found"),
 		}
@@ -67,7 +68,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 
 	// Check user if not active
 	if !user.IsActive {
-		return nil, &respModel.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "user:err:user-not-active"),
 		}
@@ -77,7 +78,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 	errUserInvitedBy := interact.UserRepository.FindUserById(&userInviteBy, invitedByUser).Error
 
 	if errors.Is(errUserInvitedBy, gorm.ErrRecordNotFound) {
-		return nil, &respModel.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, "user:err:user-not-found"),
 		}
@@ -139,7 +140,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 		return nil, nil
 	}
 
-	return nil, &respModel.ApiErrorResponse{
+	return nil, &responseDto.ApiErrorResponse{
 		StatusCode: fiber.StatusUnprocessableEntity,
 		Message:    utils.Lang(c, "user:err:user-invited"),
 	}
@@ -148,7 +149,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 	//checkInvitation := interactinteract.UserInvitationRepository.FindUserInvitation(&userInvitation, user.ID.String(), clientId)
 	//
 	//if checkInvitation.RowsAffected > 0 {
-	//	return nil, &respModel.ApiErrorResponse{
+	//	return nil, &responseDto.ApiErrorResponse{
 	//		StatusCode: fiber.StatusUnprocessableEntity,
 	//		Message:    utils.Lang(c, "user:err:user-invited"),
 	//	}
@@ -190,14 +191,14 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	errUser := interact.UserRepository.FindUserById(&user, userId).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, "user:err:user-not-found"),
 		}
 	}
 
 	if !user.IsActive {
-		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "user:err:activate-already-active"),
 		}
@@ -206,7 +207,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	errAct := interact.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
-		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, "user:err:activation-not-found"),
 		}
@@ -215,7 +216,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	t := time.Now()
 
 	if userAct.ExpiredAt.Before(t) {
-		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
 			Message:    utils.Lang(c, "user:err:activation-expired"),
 		}
@@ -224,7 +225,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	errInvitation := interact.UserInvitationRepository.FindInvitationByActId(&userInvitation, userAct.ID.String()).Error
 
 	if errors.Is(errInvitation, gorm.ErrRecordNotFound) {
-		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, "user:err:activation-not-found"),
 		}
@@ -245,7 +246,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 		errUserInvite := interact.UserInvitationRepository.UpdateUserInvitation(&userInvitationUpdate).Error
 
 		if errUserInvite != nil {
-			return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+			return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    errUserInvite.Error(),
 			}
@@ -269,7 +270,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 
 		return &userInvitationUpdate, nil
 	} else {
-		return &stores.UserInvitation{}, &respModel.ApiErrorResponse{
+		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "user:err:activation-not-found"),
 		}

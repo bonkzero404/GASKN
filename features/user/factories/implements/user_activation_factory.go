@@ -3,10 +3,11 @@ package implements
 import (
 	"gaskn/features/user/factories"
 	"gaskn/features/user/repositories"
+
 	"github.com/gofiber/fiber/v2"
 
 	"gaskn/database/stores"
-	respModel "gaskn/dto"
+	responseDto "gaskn/dto"
 	"gaskn/utils"
 )
 
@@ -32,13 +33,13 @@ func (service UserActivationServiceFactory) CreateUserActivation(user *stores.Us
 	}
 
 	if err := service.UserActivationRepository.CreateUserActionCode(&userActivate).Error; err != nil {
-		return &stores.UserActionCode{}, &respModel.ApiErrorResponse{
+		return &stores.UserActionCode{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}
 	}
 
-	sendMail := respModel.Mail{
+	sendMail := responseDto.Mail{
 		To:           []string{user.Email},
 		Subject:      "User Activation",
 		TemplateHtml: "user_activation.html",

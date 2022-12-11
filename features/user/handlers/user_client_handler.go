@@ -1,10 +1,11 @@
 package handlers
 
 import (
-	respModel "gaskn/dto"
+	responseDto "gaskn/dto"
 	"gaskn/features/user/dto"
 	"gaskn/features/user/interactors"
 	"gaskn/utils"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -27,7 +28,7 @@ func (service *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 	userIdInvitationBy := claims["id"].(string)
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, respModel.Errors{
+		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
 			Message: utils.Lang(c, "global:err:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -36,7 +37,7 @@ func (service *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, respModel.Errors{
+		return utils.ApiErrorValidation(c, responseDto.Errors{
 			Message: utils.Lang(c, "global:err:validate"),
 			Cause:   utils.Lang(c, "global:err:validate-cause"),
 			Inputs:  errors,
@@ -46,8 +47,8 @@ func (service *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 	response, err := service.UserClientService.CreateUserInvitation(c, &request, userIdInvitationBy)
 
 	if err != nil {
-		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
+		re := err.(*responseDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
 			Message: utils.Lang(c, "user:err:create-invitation"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -61,7 +62,7 @@ func (service *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
 	var request dto.UserInvitationApprovalRequest
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, respModel.Errors{
+		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
 			Message: utils.Lang(c, "global:err:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -70,7 +71,7 @@ func (service *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, respModel.Errors{
+		return utils.ApiErrorValidation(c, responseDto.Errors{
 			Message: utils.Lang(c, "global:err:validate"),
 			Cause:   utils.Lang(c, "global:err:validate-cause"),
 			Inputs:  errors,
@@ -81,8 +82,8 @@ func (service *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
 	response, err := service.UserClientService.UserInviteAcceptance(c, req.Code, req.Status)
 
 	if err != nil {
-		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
+		re := err.(*responseDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
 			Message: utils.Lang(c, "user:err:activation-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,

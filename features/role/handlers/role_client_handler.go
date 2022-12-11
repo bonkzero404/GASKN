@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	respModel "gaskn/dto"
+	responseDto "gaskn/dto"
 	"gaskn/features/role/dto"
 	"gaskn/features/role/interactors"
 	"gaskn/utils"
@@ -23,7 +23,7 @@ func (service *RoleClientHandler) CreateClientRole(c *fiber.Ctx) error {
 	var request dto.RoleRequest
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, respModel.Errors{
+		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
 			Message: utils.Lang(c, "global:err:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -32,7 +32,7 @@ func (service *RoleClientHandler) CreateClientRole(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, respModel.Errors{
+		return utils.ApiErrorValidation(c, responseDto.Errors{
 			Message: utils.Lang(c, "global:err:validate"),
 			Cause:   utils.Lang(c, "global:err:validate-cause"),
 			Inputs:  errors,
@@ -42,8 +42,8 @@ func (service *RoleClientHandler) CreateClientRole(c *fiber.Ctx) error {
 	response, err := service.RoleClientService.CreateRoleClient(c, &request)
 
 	if err != nil {
-		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
+		re := err.(*responseDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
 			Message: utils.Lang(c, "role:err:create-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -57,8 +57,8 @@ func (service *RoleClientHandler) GetRoleClientList(c *fiber.Ctx) error {
 	response, err := service.RoleClientService.GetRoleClientList(c)
 
 	if err != nil {
-		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
+		re := err.(*responseDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
 			Message: utils.Lang(c, "role:err:read-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -72,7 +72,7 @@ func (service *RoleClientHandler) UpdateRoleClient(c *fiber.Ctx) error {
 	var request dto.RoleRequest
 
 	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, respModel.Errors{
+		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
 			Message: utils.Lang(c, "global:err:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -81,7 +81,7 @@ func (service *RoleClientHandler) UpdateRoleClient(c *fiber.Ctx) error {
 
 	errors := utils.ValidateStruct(request, c)
 	if errors != nil {
-		return utils.ApiErrorValidation(c, respModel.Errors{
+		return utils.ApiErrorValidation(c, responseDto.Errors{
 			Message: utils.Lang(c, "global:err:validate"),
 			Cause:   utils.Lang(c, "global:err:validate-cause"),
 			Inputs:  errors,
@@ -93,8 +93,8 @@ func (service *RoleClientHandler) UpdateRoleClient(c *fiber.Ctx) error {
 	response, err := service.RoleClientService.UpdateRoleClient(c, roleId)
 
 	if err != nil {
-		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
+		re := err.(*responseDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
 			Message: utils.Lang(c, "role:err:update-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -110,8 +110,8 @@ func (service *RoleClientHandler) DeleteRoleClient(c *fiber.Ctx) error {
 	response, err := service.RoleClientService.DeleteRoleClientById(c, roleId)
 
 	if err != nil {
-		re := err.(*respModel.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, respModel.Errors{
+		re := err.(*responseDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
 			Message: utils.Lang(c, "role:err:delete-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,

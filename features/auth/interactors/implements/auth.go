@@ -3,7 +3,7 @@ package implements
 import (
 	"errors"
 	"gaskn/database/stores"
-	respModel "gaskn/dto"
+	responseDto "gaskn/dto"
 	"gaskn/features/auth/dto"
 	"gaskn/features/auth/interactors"
 	roleRepository "gaskn/features/role/repositories"
@@ -40,7 +40,7 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 	// Check if the user is not found
 	// then display an error message
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &dto.UserAuthResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
 			Message:    utils.Lang(c, "auth:err:invalid-auth"),
 		}
@@ -48,7 +48,7 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 
 	// Check if a query operation error occurs
 	if errUser != nil {
-		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &dto.UserAuthResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "global:err:failed-unknown"),
 		}
@@ -56,7 +56,7 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 
 	// Check if the user status is not active
 	if !user.IsActive {
-		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &dto.UserAuthResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
 			Message:    utils.Lang(c, "auth:err:user-not-active"),
 		}
@@ -67,7 +67,7 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 
 	// Check if it doesn't match, show an error message
 	if !match {
-		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &dto.UserAuthResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
 			Message:    utils.Lang(c, "auth:err:invalid-auth"),
 		}
@@ -76,7 +76,7 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 	token, exp, errToken := utils.CreateToken(user.ID.String())
 
 	if errToken != nil {
-		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &dto.UserAuthResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "auth:err:err-token"),
 		}
@@ -106,7 +106,7 @@ func (service Auth) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileRes
 
 	// Check if there is a query error
 	if errUser != nil {
-		return &dto.UserAuthProfileResponse{}, &respModel.ApiErrorResponse{
+		return &dto.UserAuthProfileResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "global:err:failed-unknown"),
 		}
@@ -137,7 +137,7 @@ func (service Auth) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserA
 
 	// Check if something went wrong with query
 	if errUser != nil {
-		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &dto.UserAuthResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "global:err:failed-unknown"),
 		}
@@ -145,7 +145,7 @@ func (service Auth) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserA
 
 	token, exp, errToken := utils.CreateToken(user.ID.String())
 	if errToken != nil {
-		return &dto.UserAuthResponse{}, &respModel.ApiErrorResponse{
+		return &dto.UserAuthResponse{}, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "auth:err:err-token"),
 		}
