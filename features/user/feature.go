@@ -2,6 +2,8 @@ package user
 
 import (
 	"gaskn/driver"
+	implements5 "gaskn/features/role/repositories/implements"
+	implements6 "gaskn/features/role_assignment/interactors/implements"
 	implements4 "gaskn/features/user/factories/implements"
 	implements2 "gaskn/features/user/interactors/implements"
 	"gaskn/features/user/repositories"
@@ -39,7 +41,19 @@ func RegisterFeature(app *fiber.App) {
 	userService := implements2.NewUser(userRepository, userActionCodeRepository, aggregateRepository, userActionFactory)
 	userHandler := handlers.NewUserHandler(userService)
 
-	userClientService := implements2.NewUserClient(userRepository, userActionCodeRepository, userInvitationRepository, aggregateRepository, userActionFactory)
+	repoUserRole := implements5.NewRoleRepository(driver.DB)
+	repoUserRoleClient := implements5.NewRoleClientRepository(driver.DB)
+	interactAssign := implements6.NewRoleAssignment(repoUserRoleClient, repoUserRole)
+
+	userClientService := implements2.NewUserClient(
+		userRepository,
+		userActionCodeRepository,
+		userInvitationRepository,
+		aggregateRepository,
+		userActionFactory,
+		repoUserRoleClient,
+		interactAssign,
+	)
 	userClientHandler := handlers.NewUserClientHandler(userClientService)
 
 	var routesInitTenant = ApiRouteClient{}

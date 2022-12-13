@@ -23,7 +23,10 @@ type UserInvitation struct {
 	Client           Client         `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	UserActionCodeId uuid.UUID      `gorm:"type:char(36):index"`
 	UserActionCode   UserActionCode `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	RoleClientId     uuid.UUID      `gorm:"type:char(36):index"`
+	RoleClient       RoleClient     `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	InvitedBy        string         `gorm:"type:varchar(100);not null"`
+	Role             string         `gorm:"type:varchar(100);not null"`
 	UrlFrontendMatch string         `gorm:"type:text;not null"`
 	Status           StatusInvitationType
 }

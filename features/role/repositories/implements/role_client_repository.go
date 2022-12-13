@@ -106,10 +106,9 @@ func (repository RoleClientRepository) CreateUserClientRole(userId uuid.UUID, ro
 
 func (repository RoleClientRepository) GetRoleClientById(roleClient *stores.RoleClient, id string, clientId string) *gorm.DB {
 	return repository.DB.
-		Joins("left join roles on role_clients.role_id = roles.id").
 		Preload("Client").
 		Preload("Role").
-		Take(&roleClient, "roles.id = ? and role_clients.client_id = ?", id, clientId)
+		Take(&roleClient, "role_clients.id = ? and role_clients.client_id = ?", id, clientId)
 }
 
 func (repository RoleClientRepository) GetRoleClientByName(roleClient *stores.RoleClient, roleName string, clientId string) *gorm.DB {

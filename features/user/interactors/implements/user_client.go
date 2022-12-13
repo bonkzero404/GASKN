@@ -2,6 +2,8 @@ package implements
 
 import (
 	"errors"
+	repoRole "gaskn/features/role/repositories"
+	interactRoleUserAssignment "gaskn/features/role_assignment/interactors"
 	"gaskn/features/user/factories/implements"
 	"gaskn/features/user/interactors"
 	"gaskn/features/user/repositories"
@@ -16,6 +18,7 @@ import (
 	"gaskn/config"
 	"gaskn/database/stores"
 	responseDto "gaskn/dto"
+	dtoAssignment "gaskn/features/role_assignment/dto"
 	"gaskn/features/user/dto"
 	"gaskn/utils"
 )
@@ -25,7 +28,9 @@ type UserClient struct {
 	UserActionCodeRepository repositories.UserActionCodeRepository
 	UserInvitationRepository repositories.UserInvitationRepository
 	RepositoryAggregate      repositories.RepositoryAggregate
+	RoleClientRepository     repoRole.RoleClientRepository
 	ActionFactory            implements.ActionFactoryInterface
+	RoleAssignment           interactRoleUserAssignment.RoleAssignment
 }
 
 func NewUserClient(
@@ -34,6 +39,8 @@ func NewUserClient(
 	UserInvitationRepository repositories.UserInvitationRepository,
 	RepositoryAggregate repositories.RepositoryAggregate,
 	Factory implements.ActionFactoryInterface,
+	RoleClientRepository repoRole.RoleClientRepository,
+	RoleAssignment interactRoleUserAssignment.RoleAssignment,
 ) interactors.UserClient {
 	return &UserClient{
 		UserRepository:           UserRepository,
@@ -41,6 +48,8 @@ func NewUserClient(
 		UserInvitationRepository: UserInvitationRepository,
 		RepositoryAggregate:      RepositoryAggregate,
 		ActionFactory:            Factory,
+		RoleClientRepository:     RoleClientRepository,
+		RoleAssignment:           RoleAssignment,
 	}
 }
 
@@ -49,6 +58,8 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 	var userInviteBy stores.User
 	// var userInvitation stores.UserInvitation
 	var userActionCode stores.UserActionCode
+
+	var roleClient stores.RoleClient
 
 	// Get client id from param url
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
@@ -84,6 +95,16 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 		}
 	}
 
+	// Check role Client
+	errRoleClient := interact.RoleClientRepository.GetRoleClientId(&roleClient, req.RoleId, clientId).Error
+
+	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
+		return nil, &responseDto.ApiErrorResponse{
+			StatusCode: fiber.StatusNotFound,
+			Message:    utils.Lang(c, "role:err:read-exists"),
+		}
+	}
+
 	// Check action code by user if exists
 	errActionCode := interact.UserActionCodeRepository.FindExistsActionCode(&userActionCode, user.ID.String(), stores.INVITATION_CODE).Error
 
@@ -100,6 +121,8 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 			UserActionCodeId: actCode.ID,
 			UrlFrontendMatch: req.Url,
 			InvitedBy:        userInviteBy.FullName,
+			RoleClientId:     roleClient.ID,
+			Role:             roleClient.Role.RoleName,
 			Status:           stores.PENDING,
 		}
 
@@ -128,6 +151,8 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 			UserActionCodeId: actCode.ID,
 			UrlFrontendMatch: req.Url,
 			InvitedBy:        userInviteBy.FullName,
+			RoleClientId:     roleClient.ID,
+			Role:             roleClient.Role.RoleName,
 			Status:           stores.PENDING,
 		}
 
@@ -144,39 +169,6 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 		StatusCode: fiber.StatusUnprocessableEntity,
 		Message:    utils.Lang(c, "user:err:user-invited"),
 	}
-
-	// Check invitation data is available
-	//checkInvitation := interactinteract.UserInvitationRepository.FindUserInvitation(&userInvitation, user.ID.String(), clientId)
-	//
-	//if checkInvitation.RowsAffected > 0 {
-	//	return nil, &responseDto.ApiErrorResponse{
-	//		StatusCode: fiber.StatusUnprocessableEntity,
-	//		Message:    utils.Lang(c, "user:err:user-invited"),
-	//	}
-	//}
-	//
-	//actCode, errActFactory := interactinteract.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName)
-	//
-	//if errActFactory != nil {
-	//	return nil, errActFactory
-	//}
-	//
-	//userInvitationNew := stores.UserInvitation{
-	//	UserId:           user.ID,
-	//	ClientId:         uuidClientId,
-	//	UserActionCodeId: actCode.ID,
-	//	UrlFrontendMatch: req.Url,
-	//	InvitedBy:        userInviteBy.FullName,
-	//	Status:           stores.PENDING,
-	//}
-	//
-	//errInvitation := interactinteract.UserInvitationRepository.CreateUserInvitation(&userInvitationNew)
-	//
-	//if errInvitation != nil {
-	//	return nil, errInvitation.Error
-	//}
-	//
-	//return nil, nil
 }
 
 func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accept stores.StatusInvitationType) (*stores.UserInvitation, error) {
@@ -187,6 +179,9 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	var user stores.User
 	var userAct stores.UserActionCode
 	var userInvitation stores.UserInvitation
+	var roleClient stores.RoleClient
+
+	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
 	errUser := interact.UserRepository.FindUserById(&user, userId).Error
 
@@ -231,6 +226,16 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 		}
 	}
 
+	// Check role Client
+	errRoleClient := interact.RoleClientRepository.GetRoleClientById(&roleClient, userInvitation.RoleClientId.String(), clientId).Error
+
+	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
+		return nil, &responseDto.ApiErrorResponse{
+			StatusCode: fiber.StatusNotFound,
+			Message:    utils.Lang(c, "role:err:read-exists"),
+		}
+	}
+
 	if accept == stores.APPROVED || accept == stores.REJECTED {
 
 		userInvitationUpdate := stores.UserInvitation{
@@ -240,6 +245,8 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 			UserActionCodeId: userAct.ID,
 			UrlFrontendMatch: userInvitation.UrlFrontendMatch,
 			InvitedBy:        userInvitation.InvitedBy,
+			RoleClientId:     roleClient.ID,
+			Role:             roleClient.Role.RoleName,
 			Status:           accept,
 		}
 
@@ -266,6 +273,20 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 			}
 
 			interact.UserInvitationRepository.CreateClientAssignment(&clientAssign)
+
+			var assignPermit = &dtoAssignment.RoleUserAssignment{
+				UserId: user.ID.String(),
+				RoleId: roleClient.RoleId.String(),
+			}
+
+			_, errAssignPermit := interact.RoleAssignment.AssignUserPermitToRole(c, assignPermit)
+
+			if errAssignPermit != nil {
+				return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
+					StatusCode: fiber.StatusUnprocessableEntity,
+					Message:    errAssignPermit.Error(),
+				}
+			}
 		}
 
 		return &userInvitationUpdate, nil

@@ -52,13 +52,6 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		handler.UserHandler.UpdatePassword,
 	)
-
-	user.Post(
-		"/invitation/acceptance",
-		middleware.Authenticate(),
-		middleware.RateLimiter(5, 30),
-		handler.UserClientHandler.UserInvitationAcceptance,
-	)
 }
 
 func (handler *ApiRouteClient) Route(app fiber.Router) {
@@ -80,4 +73,11 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		SetRouteDescriptionKeyLang("route:client:user:invitation").
 		SetRouteTenant(true).
 		Execute()
+
+	userClient.Post(
+		"/invitation/acceptance",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		handler.UserClientHandler.UserInvitationAcceptance,
+	)
 }

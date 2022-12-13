@@ -152,7 +152,7 @@ func (interact RoleClient) DeleteRoleClientById(c *fiber.Ctx, id string) (*dto.R
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
 	// Check role if inserted
-	errRoleClient := interact.RoleClientRepository.GetRoleClientById(&roleClient, id, clientId).Error
+	errRoleClient := interact.RoleClientRepository.GetRoleClientId(&roleClient, id, clientId).Error
 
 	if errRoleClient != nil {
 		return &dto.RoleResponse{}, &responseDto.ApiErrorResponse{
