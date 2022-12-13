@@ -71,7 +71,7 @@
   },
   {
     "locale": "en",
-    "key": "route:client:role:assignment:assign",
-    "trans": "User (Client) can assignment another user"
+    "key": "route:client:user:invitation",
+    "trans": "User can invite other users to join organizations"
   }
 ]

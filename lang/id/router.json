@@ -71,7 +71,7 @@
   },
   {
     "locale": "id",
-    "key": "route:client:role:assignment:assign",
-    "trans": "Pengguna (Klien) dapat menetapkan pengguna lain"
+    "key": "route:client:user:invitation",
+    "trans": "Pengguna dapat mengundang pengguna lain untuk bergabung dengan organisasi"
   }
 ]

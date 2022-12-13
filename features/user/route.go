@@ -77,7 +77,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.UserClientHandler.CreateUserInvitation,
 	).
 		SetRouteName("CreateClientUserInvitation").
-		SetRouteDescription("User can invite other users to join organizations").
+		SetRouteDescriptionKeyLang("route:client:user:invitation").
 		SetRouteTenant(true).
 		Execute()
 }
