@@ -1,0 +1,77 @@
+[
+  {
+    "locale": "en",
+    "key": "route:features",
+    "trans": "User can display feature list"
+  },
+  {
+    "locale": "en",
+    "key": "route:features:group",
+    "trans": "Users can display feature lists in grouping mode"
+  },
+  {
+    "locale": "en",
+    "key": "route:client:update",
+    "trans": "Users can make changes to client data"
+  },
+  {
+    "locale": "en",
+    "key": "route:client:role:add",
+    "trans": "User (Client) can add role data"
+  },
+  {
+    "locale": "en",
+    "key": "route:client:role:update",
+    "trans": "User (Client) can update role data"
+  },
+  {
+    "locale": "en",
+    "key": "route:client:role:delete",
+    "trans": "User (Client) can delete role data"
+  },
+  {
+    "locale": "en",
+    "key": "route:client:role:list",
+    "trans": "User (Client) can get role lists"
+  },
+  {
+    "locale": "en",
+    "key": "route:role:add",
+    "trans": "User can add role data"
+  },
+  {
+    "locale": "en",
+    "key": "route:role:update",
+    "trans": "User can update role data"
+  },
+  {
+    "locale": "en",
+    "key": "route:role:delete",
+    "trans": "User can delete role data"
+  },
+  {
+    "locale": "en",
+    "key": "route:role:list",
+    "trans": "User can get role lists"
+  },
+  {
+    "locale": "en",
+    "key": "route:client:role:assignment:add",
+    "trans": "User (Client) can assignment roles"
+  },
+  {
+    "locale": "en",
+    "key": "route:client:role:assignment:remove",
+    "trans": "User (Client) can remove the assigned roles"
+  },
+  {
+    "locale": "en",
+    "key": "route:client:role:assignment:assign",
+    "trans": "User (Client) can assignment another user"
+  },
+  {
+    "locale": "en",
+    "key": "route:client:role:assignment:assign",
+    "trans": "User (Client) can assignment another user"
+  }
+]

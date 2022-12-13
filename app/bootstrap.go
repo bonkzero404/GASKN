@@ -24,10 +24,10 @@ func extrasFeature(app *fiber.App) {
 		middleware.Authenticate(),
 		middleware.Permission(),
 		func(c *fiber.Ctx) error {
-			return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c.App(), false))
+			return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c, false))
 		}).
 		SetRouteName("FeatureLists").
-		SetRouteDescription("Admin get route lists").
+		SetRouteDescriptionKeyLang("route:features").
 		Execute()
 
 	// Get feature per group
@@ -36,10 +36,10 @@ func extrasFeature(app *fiber.App) {
 		middleware.Authenticate(),
 		middleware.Permission(),
 		func(c *fiber.Ctx) error {
-			return utils.ApiOk(c, utils.FeaturesGroupLists(c.App(), false))
+			return utils.ApiOk(c, utils.FeaturesGroupLists(c, false))
 		}).
 		SetRouteName("FeatureGroupLists").
-		SetRouteDescription("Admin get get group route lists").
+		SetRouteDescriptionKeyLang("route:features:group").
 		Execute()
 
 	if config.Config("TENANCY") == "true" {
@@ -51,10 +51,10 @@ func extrasFeature(app *fiber.App) {
 			middleware.Authenticate(),
 			middleware.Permission(),
 			func(c *fiber.Ctx) error {
-				return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c.App(), true))
+				return utils.ApiOk(c, utils.ExtractRouteAsFeatures(c, true))
 			}).
 			SetRouteName("FeatureLists").
-			SetRouteDescription("Admin get get route lists").
+			SetRouteDescriptionKeyLang("route:features").
 			SetRouteTenant(true).
 			Execute()
 
@@ -64,10 +64,10 @@ func extrasFeature(app *fiber.App) {
 			middleware.Authenticate(),
 			middleware.Permission(),
 			func(c *fiber.Ctx) error {
-				return utils.ApiOk(c, utils.FeaturesGroupLists(c.App(), true))
+				return utils.ApiOk(c, utils.FeaturesGroupLists(c, true))
 			}).
 			SetRouteName("FeatureGroupLists").
-			SetRouteDescription("Admin get get group route lists").
+			SetRouteDescriptionKeyLang("route:features:group").
 			SetRouteTenant(true).
 			Execute()
 	}

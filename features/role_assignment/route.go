@@ -29,7 +29,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.RoleAssignmentHandler.CreateRoleAssignment,
 	).
 		SetRouteName("CreateClientRoleAssignment").
-		SetRouteDescription("Users (clients) can assignment roles").
+		SetRouteDescriptionKeyLang("route:client:role:assignment:add").
 		SetRouteTenant(true).
 		Execute()
 
@@ -41,7 +41,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.RoleAssignmentHandler.RemoveRoleAssignment,
 	).
 		SetRouteName("RemoveClientRoleAssignment").
-		SetRouteDescription("Users (clients) can remove assignment roles").
+		SetRouteDescriptionKeyLang("route:client:role:assignment:remove").
 		SetRouteTenant(true).
 		Execute()
 
@@ -53,7 +53,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.RoleAssignmentHandler.AssignUserPermitToRole,
 	).
 		SetRouteName("CreateUserClientRoleAssignment").
-		SetRouteDescription("Users (clients) can assignment another user").
+		SetRouteDescriptionKeyLang("route:client:role:assignment:assign").
 		SetRouteTenant(true).
 		Execute()
 }

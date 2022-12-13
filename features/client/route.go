@@ -50,7 +50,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.ClientHandler.UpdateClient,
 	).
 		SetRouteName("UpdateClient").
-		SetRouteDescription("Users can update client").
+		SetRouteDescriptionKeyLang("route:client:update").
 		SetRouteTenant(true).
 		Execute()
 

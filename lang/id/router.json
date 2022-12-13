@@ -1,0 +1,77 @@
+[
+  {
+    "locale": "id",
+    "key": "route:features",
+    "trans": "Pengguna dapat menampilkan daftar featuret"
+  },
+  {
+    "locale": "id",
+    "key": "route:features:group",
+    "trans": "Pengguna dapat menampilkan daftar feature dengan mode grouping"
+  },
+  {
+    "locale": "id",
+    "key": "route:client:update",
+    "trans": "Pengguna dapat melakukan perubahan data client"
+  },
+  {
+    "locale": "id",
+    "key": "route:client:role:add",
+    "trans": "Pengguna (Klien) dapat menambahkan data peran"
+  },
+  {
+    "locale": "id",
+    "key": "route:client:role:update",
+    "trans": "Pengguna (Klien) dapat memperbarui data peran"
+  },
+  {
+    "locale": "id",
+    "key": "route:client:role:delete",
+    "trans": "Pengguna (Klien) dapat menghapus data peran"
+  },
+  {
+    "locale": "id",
+    "key": "route:client:role:list",
+    "trans": "Pengguna (Klien) bisa mendapatkan daftar peran"
+  },
+  {
+    "locale": "id",
+    "key": "route:role:add",
+    "trans": "Pengguna dapat menambahkan data peran"
+  },
+  {
+    "locale": "id",
+    "key": "route:role:update",
+    "trans": "Pengguna dapat memperbarui data peran"
+  },
+  {
+    "locale": "id",
+    "key": "route:role:delete",
+    "trans": "Pengguna dapat menghapus data peran"
+  },
+  {
+    "locale": "id",
+    "key": "route:role:list",
+    "trans": "Pengguna bisa mendapatkan daftar peran"
+  },
+  {
+    "locale": "id",
+    "key": "route:client:role:assignment:add",
+    "trans": "Pengguna (Klien) dapat menetapkan peran"
+  },
+  {
+    "locale": "id",
+    "key": "route:client:role:assignment:remove",
+    "trans": "Pengguna (Klien) dapat menghapus peran yang telah di tetapkan"
+  },
+  {
+    "locale": "id",
+    "key": "route:client:role:assignment:assign",
+    "trans": "Pengguna (Klien) dapat menetapkan pengguna lain"
+  },
+  {
+    "locale": "id",
+    "key": "route:client:role:assignment:assign",
+    "trans": "Pengguna (Klien) dapat menetapkan pengguna lain"
+  }
+]
