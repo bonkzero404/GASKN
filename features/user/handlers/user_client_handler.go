@@ -55,7 +55,7 @@ func (service *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 		})
 	}
 
-	return utils.ApiCreated(c, response)
+	return utils.ApiCreated(c, &response)
 }
 
 func (service *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
@@ -90,5 +90,5 @@ func (service *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
 		})
 	}
 
-	return utils.ApiCreated(c, response)
+	return utils.ApiCreated(c, &response)
 }

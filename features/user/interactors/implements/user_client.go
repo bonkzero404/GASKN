@@ -53,7 +53,7 @@ func NewUserClient(
 	}
 }
 
-func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvitationRequest, invitedByUser string) (map[string]interface{}, error) {
+func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvitationRequest, invitedByUser string) (*dto.UserInvitationResponse, error) {
 	var user stores.User
 	var userInviteBy stores.User
 	// var userInvitation stores.UserInvitation
@@ -128,11 +128,18 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 
 		errInvitation := interact.UserInvitationRepository.CreateUserInvitation(&userInvitationNew)
 
-		if errInvitation != nil {
+		if errInvitation.Error != nil {
 			return nil, errInvitation.Error
 		}
 
-		return nil, nil
+		var resp = dto.UserInvitationResponse{
+			InvitedBy:     userInviteBy.FullName,
+			InvitedTo:     user.FullName,
+			InvitedToRole: roleClient.Role.RoleName,
+			ClientId:      clientId,
+		}
+
+		return &resp, nil
 	}
 
 	t := time.Now()
@@ -158,11 +165,18 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 
 		errInvitation := interact.UserInvitationRepository.CreateUserInvitation(&userInvitationNew)
 
-		if errInvitation != nil {
+		if errInvitation.Error != nil {
 			return nil, errInvitation.Error
 		}
 
-		return nil, nil
+		var resp = dto.UserInvitationResponse{
+			InvitedBy:     userInviteBy.FullName,
+			InvitedTo:     user.FullName,
+			InvitedToRole: roleClient.Role.RoleName,
+			ClientId:      clientId,
+		}
+
+		return &resp, nil
 	}
 
 	return nil, &responseDto.ApiErrorResponse{
@@ -171,7 +185,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 	}
 }
 
-func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accept stores.StatusInvitationType) (*stores.UserInvitation, error) {
+func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accept stores.StatusInvitationType) (*dto.UserInvitationResponse, error) {
 	token := c.Locals("user").(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
 	userId := claims["id"].(string)
@@ -186,14 +200,14 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	errUser := interact.UserRepository.FindUserById(&user, userId).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, "user:err:user-not-found"),
 		}
 	}
 
 	if !user.IsActive {
-		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "user:err:activate-already-active"),
 		}
@@ -202,7 +216,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	errAct := interact.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
-		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, "user:err:activation-not-found"),
 		}
@@ -211,7 +225,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	t := time.Now()
 
 	if userAct.ExpiredAt.Before(t) {
-		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
 			Message:    utils.Lang(c, "user:err:activation-expired"),
 		}
@@ -220,7 +234,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	errInvitation := interact.UserInvitationRepository.FindInvitationByActId(&userInvitation, userAct.ID.String()).Error
 
 	if errors.Is(errInvitation, gorm.ErrRecordNotFound) {
-		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, "user:err:activation-not-found"),
 		}
@@ -253,7 +267,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 		errUserInvite := interact.UserInvitationRepository.UpdateUserInvitation(&userInvitationUpdate).Error
 
 		if errUserInvite != nil {
-			return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
+			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    errUserInvite.Error(),
 			}
@@ -282,16 +296,24 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 			_, errAssignPermit := interact.RoleAssignment.AssignUserPermitToRole(c, assignPermit)
 
 			if errAssignPermit != nil {
-				return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
+				return nil, &responseDto.ApiErrorResponse{
 					StatusCode: fiber.StatusUnprocessableEntity,
 					Message:    errAssignPermit.Error(),
 				}
 			}
 		}
 
-		return &userInvitationUpdate, nil
+		var resp = dto.UserInvitationResponse{
+			InvitedBy:     userInvitation.InvitedBy,
+			InvitedTo:     user.FullName,
+			InvitedToRole: roleClient.Role.RoleName,
+			ClientId:      clientId,
+		}
+
+		return &resp, nil
+
 	} else {
-		return &stores.UserInvitation{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "user:err:activation-not-found"),
 		}
