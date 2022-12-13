@@ -14,7 +14,7 @@ type ActionFactory struct {
 type ActionFactoryInterface interface {
 	CreateActivation(user *stores.User) (*stores.UserActionCode, error)
 	CreateForgotPassword(user *stores.User) (*stores.UserActionCode, error)
-	CreateInvitation(user *stores.User, UrlFrontEndInvitation string, invitedBy string) (*stores.UserActionCode, error)
+	CreateInvitation(user *stores.User, UrlFrontEndInvitation string, invitedBy string, role string, clientId string) (*stores.UserActionCode, error)
 }
 
 func NewActionFactory(
@@ -49,8 +49,8 @@ func (factory ActionFactory) CreateForgotPassword(user *stores.User) (*stores.Us
 	return userAct, nil
 }
 
-func (factory ActionFactory) CreateInvitation(user *stores.User, urlFrontEndInvitation string, invitedBy string) (*stores.UserActionCode, error) {
-	userAct, err := factory.UserInvitationServiceFactory.CreateUserInvitation(user, urlFrontEndInvitation, invitedBy)
+func (factory ActionFactory) CreateInvitation(user *stores.User, urlFrontEndInvitation string, invitedBy string, role string, clientId string) (*stores.UserActionCode, error) {
+	userAct, err := factory.UserInvitationServiceFactory.CreateUserInvitation(user, urlFrontEndInvitation, invitedBy, role, clientId)
 
 	if err != nil {
 		return nil, err

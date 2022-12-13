@@ -5,5 +5,5 @@ import (
 )
 
 type UserInvitationServiceFactory interface {
-	CreateUserInvitation(user *stores.User, urlInvitation string, invitedBy string) (*stores.UserActionCode, error)
+	CreateUserInvitation(user *stores.User, urlInvitation string, invitedBy string, role string, clientId string) (*stores.UserActionCode, error)
 }

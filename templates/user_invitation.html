@@ -6,8 +6,8 @@
   <body>
     <p>Hi {{.Name}}</p>
     <p>
-      You have been invited by {{.InvitedBy}} to be a part of it, please click the link below to agree.
+      You have been invited by <strong>{{.InvitedBy}}</strong> to be a part of it, you will get <strong>{{.Role}}</strong> access permission, please click the link below to accept.
     </p>
-    <p>Here is the URL aggrement: {{.UrlInvitation}}?code={{.Code}}</p>
+    <p>{{.UrlInvitation}}?code={{.Code}}&cid={{.ClientId}}</p>
   </body>
 </html>

@@ -23,7 +23,7 @@ func NewUserInvitationServiceFactory(
 	}
 }
 
-func (service UserInvitationServiceFactory) CreateUserInvitation(user *stores.User, urlInvitation string, invitedBy string) (*stores.UserActionCode, error) {
+func (service UserInvitationServiceFactory) CreateUserInvitation(user *stores.User, urlInvitation string, invitedBy string, role string, clientId string) (*stores.UserActionCode, error) {
 	codeGen := utils.StringWithCharset(32)
 
 	userInvitation := stores.UserActionCode{
@@ -48,6 +48,8 @@ func (service UserInvitationServiceFactory) CreateUserInvitation(user *stores.Us
 			"Code":          codeGen,
 			"UrlInvitation": urlInvitation,
 			"InvitedBy":     invitedBy,
+			"Role":          role,
+			"ClientId":      clientId,
 		},
 	}
 

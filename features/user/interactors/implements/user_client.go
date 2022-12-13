@@ -109,7 +109,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 	errActionCode := interact.UserActionCodeRepository.FindExistsActionCode(&userActionCode, user.ID.String(), stores.INVITATION_CODE).Error
 
 	if errActionCode != nil {
-		actCode, errActFactory := interact.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName)
+		actCode, errActFactory := interact.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName, roleClient.Role.RoleName, clientId)
 
 		if errActFactory != nil {
 			return nil, errActFactory
@@ -139,7 +139,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 
 	// Check if expired can re-create invitation
 	if userActionCode.ExpiredAt.Before(t) {
-		actCode, errActFactory := interact.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName)
+		actCode, errActFactory := interact.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName, roleClient.Role.RoleName, clientId)
 
 		if errActFactory != nil {
 			return nil, errActFactory
