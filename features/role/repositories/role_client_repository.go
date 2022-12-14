@@ -23,4 +23,6 @@ type RoleClientRepository interface {
 	GetRoleClientId(role *stores.RoleClient, roleId string, clientId string) *gorm.DB
 
 	GetUserHasClient(clientAssignment *stores.ClientAssignment, userId string, clientId string) *gorm.DB
+
+	GetRoleUser(roleUser *stores.RoleUser, userId string, roleId string) *gorm.DB
 }

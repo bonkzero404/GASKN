@@ -8,11 +8,54 @@ import (
 	"github.com/bonkzero404/gaskn/utils"
 )
 
-type ApiRouteClient struct {
+type ApiRoute struct {
 	RoleAssignmentHandler handlers.RoleAssignmentHandler
 }
 
-func (handler *ApiRouteClient) Route(app fiber.Router) {
+func (handler *ApiRoute) Route(app fiber.Router) {
+	const endpointGroup string = "/role-assignment"
+
+	role := utils.GasknRouter{}
+
+	role.Set(app).
+		Group(utils.SetupApiGroup() + endpointGroup).
+		SetGroupName("Role/Assignment")
+
+	role.Post(
+		"/",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.RoleAssignmentHandler.CreateRoleAssignment,
+	).
+		SetRouteName("CreateRoleAssignment").
+		SetRouteDescriptionKeyLang("route:client:role:assignment:add").
+		Execute()
+
+	role.Delete(
+		"/",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.RoleAssignmentHandler.RemoveRoleAssignment,
+	).
+		SetRouteName("RemoveRoleAssignment").
+		SetRouteDescriptionKeyLang("route:client:role:assignment:remove").
+		Execute()
+
+	role.Post(
+		"/user",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.RoleAssignmentHandler.AssignUserPermitToRole,
+	).
+		SetRouteName("CreateUserRoleAssignment").
+		SetRouteDescriptionKeyLang("route:client:role:assignment:assign").
+		Execute()
+}
+
+func (handler *ApiRoute) RouteClient(app fiber.Router) {
 	const endpointGroup string = "/role-assignment"
 
 	roleClient := utils.GasknRouter{}

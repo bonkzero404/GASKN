@@ -23,5 +23,10 @@
     "locale": "en",
     "key": "global:err:validate-cause",
     "trans": "Some fields must be validated"
+  },
+  {
+    "locale": "en",
+    "key": "global:err:not-allowed",
+    "trans": "Your request is not allowed"
   }
 ]

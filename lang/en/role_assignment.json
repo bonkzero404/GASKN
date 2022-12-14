@@ -8,5 +8,15 @@
     "locale": "en",
     "key": "role-assign:err:failed-remove-permit",
     "trans": "Failed remove permission role"
+  },
+  {
+    "locale": "en",
+    "key": "role-assign:err:exists",
+    "trans": "The role has been assigned to the user"
+  },
+  {
+    "locale": "en",
+    "key": "role-assign:err:failed",
+    "trans": "Failed to assign user to role"
   }
 ]

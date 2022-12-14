@@ -23,5 +23,10 @@
     "locale": "id",
     "key": "global:err:validate-cause",
     "trans": "Beberapa input field harus divalidasi"
+  },
+  {
+    "locale": "id",
+    "key": "global:err:not-allowed",
+    "trans": "Permintaan Anda tidak diizinkan"
   }
 ]

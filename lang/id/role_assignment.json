@@ -8,5 +8,15 @@
     "locale": "id",
     "key": "role-assign:err:failed-remove-permit",
     "trans": "Gagal menghapus peran"
+  },
+  {
+    "locale": "id",
+    "key": "role-assign:err:exists",
+    "trans": "Peran telah di tetapkan terhadap user"
+  },
+  {
+    "locale": "id",
+    "key": "role-assign:err:failed",
+    "trans": "Gagal menetapkan pengguna ke peran"
   }
 ]

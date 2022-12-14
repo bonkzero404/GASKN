@@ -84,17 +84,19 @@ func (repository RoleClientRepository) CreateUserClientRole(userId uuid.UUID, ro
 		return false
 	}
 
-	// Set Role User with Client
-	roleUserClient := stores.RoleUserClient{
-		ClientId:   clientId,
-		RoleUserId: roleUser.ID,
-		IsActive:   true,
-	}
+	if clientId != uuid.Nil {
+		// Set Role User with Client
+		roleUserClient := stores.RoleUserClient{
+			ClientId:   clientId,
+			RoleUserId: roleUser.ID,
+			IsActive:   true,
+		}
 
-	// Create Role
-	if err := tx.Create(&roleUserClient).Error; err != nil {
-		tx.Rollback()
-		return false
+		// Create Role
+		if err := tx.Create(&roleUserClient).Error; err != nil {
+			tx.Rollback()
+			return false
+		}
 	}
 
 	if commitError := tx.Commit().Error; commitError != nil {
@@ -140,4 +142,11 @@ func (repository RoleClientRepository) GetUserHasClient(clientAssignment *stores
 		Preload("Client", "is_active = ?", true).
 		Preload("User", "is_active = ?", true).
 		Take(&clientAssignment, "user_id = ? and client_id = ?", userId, clientId)
+}
+
+func (repository RoleClientRepository) GetRoleUser(roleUser *stores.RoleUser, userId string, roleId string) *gorm.DB {
+	return repository.DB.
+		Preload("User", "is_active = ?", true).
+		Preload("Role", "is_active = ?", true).
+		Take(&roleUser, "user_id = ? and role_id = ?", userId, roleId)
 }
