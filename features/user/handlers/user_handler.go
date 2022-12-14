@@ -20,8 +20,13 @@ func NewUserHandler(userService interactors.User) *UserHandler {
 	}
 }
 
-func (service *UserHandler) RegisterUser(c *fiber.Ctx) error {
+func (service *UserHandler) CreateUser(c *fiber.Ctx) error {
 	var request dto.UserCreateRequest
+	var routeInternal = false
+
+	if c.Params("CreateUser") == "create" {
+		routeInternal = true
+	}
 
 	if err := c.BodyParser(&request); err != nil {
 		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
@@ -40,7 +45,7 @@ func (service *UserHandler) RegisterUser(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := service.UserService.CreateUser(c, &request)
+	response, err := service.UserService.CreateUser(c, &request, routeInternal)
 
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)

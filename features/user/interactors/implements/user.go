@@ -2,9 +2,11 @@ package implements
 
 import (
 	"errors"
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/features/user/factories"
 	"github.com/bonkzero404/gaskn/features/user/interactors"
 	"github.com/bonkzero404/gaskn/features/user/repositories"
+	"github.com/google/uuid"
 	"strings"
 	"time"
 
@@ -22,6 +24,7 @@ type User struct {
 	UserActionCodeRepository repositories.UserActionCodeRepository
 	RepositoryAggregate      repositories.RepositoryAggregate
 	ActionFactory            factories.ActionFactory
+	UserInvitationRepository repositories.UserInvitationRepository
 }
 
 func NewUser(
@@ -29,16 +32,18 @@ func NewUser(
 	UserActionCodeRepository repositories.UserActionCodeRepository,
 	RepositoryAggregate repositories.RepositoryAggregate,
 	Factory factories.ActionFactory,
+	UserInvitationRepository repositories.UserInvitationRepository,
 ) interactors.User {
 	return &User{
 		UserRepository:           UserRepository,
 		UserActionCodeRepository: UserActionCodeRepository,
 		RepositoryAggregate:      RepositoryAggregate,
 		ActionFactory:            Factory,
+		UserInvitationRepository: UserInvitationRepository,
 	}
 }
 
-func (interact User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest) (*dto.UserCreateResponse, error) {
+func (interact User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isInternalRegister bool) (*dto.UserCreateResponse, error) {
 	hashPassword, _ := utils.HashPassword(user.Password)
 
 	userData := stores.User{
@@ -50,12 +55,20 @@ func (interact User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest) (*dto
 
 	activationCode := utils.StringWithCharset(32)
 
-	userAvtivate := stores.UserActionCode{
+	var userActionCode = stores.UserActionCode{}
+
+	userActionCode = stores.UserActionCode{
 		Code:    activationCode,
 		ActType: stores.ACTIVATION_CODE,
 	}
 
-	result, err := interact.RepositoryAggregate.CreateUser(&userData, &userAvtivate)
+	// Check admin or client admin create a user
+	if isInternalRegister {
+		userActionCode.IsUsed = true
+		userData.IsActive = true
+	}
+
+	result, err := interact.RepositoryAggregate.CreateUser(&userData, &userActionCode)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key") {
@@ -71,14 +84,45 @@ func (interact User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest) (*dto
 		}
 	}
 
-	sendMail := responseDto.Mail{
-		To:           []string{user.Email},
-		Subject:      "User Activation",
-		TemplateHtml: "user_activation.html",
-		BodyParam: map[string]interface{}{
-			"Name": user.FullName,
-			"Code": activationCode,
-		},
+	// Check if create user from Client
+	// Get ClientId if it's client
+	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
+
+	if clientId != "" {
+		cUuid, _ := uuid.Parse(clientId)
+		clientAssign := stores.ClientAssignment{
+			ClientId: cUuid,
+			UserId:   userData.ID,
+			IsActive: true,
+		}
+
+		interact.UserInvitationRepository.CreateClientAssignment(&clientAssign)
+	}
+
+	var sendMail = responseDto.Mail{}
+
+	if isInternalRegister {
+		sendMail = responseDto.Mail{
+			To:           []string{user.Email},
+			Subject:      "User Invitation",
+			TemplateHtml: "user_creation.html",
+			BodyParam: map[string]interface{}{
+				"Name":     user.FullName,
+				"Client":   config.Config("APP_NAME"),
+				"Email":    user.Email,
+				"Password": user.Password,
+			},
+		}
+	} else {
+		sendMail = responseDto.Mail{
+			To:           []string{user.Email},
+			Subject:      "User Activation",
+			TemplateHtml: "user_activation.html",
+			BodyParam: map[string]interface{}{
+				"Name": user.FullName,
+				"Code": activationCode,
+			},
+		}
 	}
 
 	utils.SendMail(&sendMail)

@@ -73,5 +73,10 @@
     "locale": "en",
     "key": "route:client:user:invitation",
     "trans": "User can invite other users to join organizations"
+  },
+  {
+    "locale": "en",
+    "key": "user:create",
+    "trans": "Users can create accounts for other users"
   }
 ]

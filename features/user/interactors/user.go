@@ -8,7 +8,7 @@ import (
 )
 
 type User interface {
-	CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest) (*dto.UserCreateResponse, error)
+	CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isInternalRegister bool) (*dto.UserCreateResponse, error)
 
 	UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateResponse, error)
 
