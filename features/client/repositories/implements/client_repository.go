@@ -22,7 +22,7 @@ func NewClientRepository(db *gorm.DB) repositories.ClientRepository {
 func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.Role, error) {
 	var role stores.Role
 
-	if err := repository.DB.First(&role, "role_name = 'Owner' AND role_type = 'cl'").Error; err != nil {
+	if err := repository.DB.Take(&role, "role_name = 'Owner' AND role_type = 'cl'").Error; err != nil {
 		return &stores.Role{}, err
 	}
 
@@ -113,11 +113,11 @@ func (repository ClientRepository) DeleteClientById(client *stores.Client) *gorm
 }
 
 func (repository ClientRepository) GetClientById(client *stores.Client, id string) *gorm.DB {
-	return repository.DB.First(&client, "id = ?", id)
+	return repository.DB.Take(&client, "id = ?", id)
 }
 
 func (repository ClientRepository) GetClientBySlug(client *stores.Client, slug string) *gorm.DB {
-	return repository.DB.First(&client, "client_slug = ?", slug)
+	return repository.DB.Take(&client, "client_slug = ?", slug)
 }
 
 func (repository ClientRepository) GetClientList(client *[]stores.Client, c *fiber.Ctx) (*utils.Pagination, error) {

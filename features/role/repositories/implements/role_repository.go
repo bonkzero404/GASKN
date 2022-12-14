@@ -32,7 +32,7 @@ func (repository RoleRepository) DeleteRoleById(role *stores.Role) *gorm.DB {
 }
 
 func (repository RoleRepository) GetRoleById(role *stores.Role, id string) *gorm.DB {
-	return repository.DB.First(&role, "id = ?", id)
+	return repository.DB.Take(&role, "id = ?", id)
 }
 
 func (repository RoleRepository) GetRoleList(role *[]stores.Role, c *fiber.Ctx) (*utils.Pagination, error) {

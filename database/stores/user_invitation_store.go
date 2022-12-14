@@ -18,9 +18,9 @@ type UserInvitation struct {
 	gorm.Model
 	ID               uuid.UUID      `gorm:"type:char(36);primary_key"`
 	UserId           uuid.UUID      `gorm:"type:char(36):index"`
-	User             User           `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	User             User           `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	ClientId         uuid.UUID      `gorm:"type:char(36):index"`
-	Client           Client         `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Client           Client         `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	UserActionCodeId uuid.UUID      `gorm:"type:char(36):index"`
 	UserActionCode   UserActionCode `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	RoleClientId     uuid.UUID      `gorm:"type:char(36):index"`

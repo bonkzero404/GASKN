@@ -22,11 +22,11 @@ func (repository UserActionCodeRepository) FindUserActionCode(
 	userId string,
 	code string,
 ) *gorm.DB {
-	return repository.DB.First(&userActivation, "user_id = ? AND code = ?", userId, code)
+	return repository.DB.Take(&userActivation, "user_id = ? AND code = ?", userId, code)
 }
 
 func (repository UserActionCodeRepository) FindActionCode(userActivation *stores.UserActionCode, code string) *gorm.DB {
-	return repository.DB.First(&userActivation, "code = ?", code)
+	return repository.DB.Take(&userActivation, "code = ?", code)
 }
 
 func (repository UserActionCodeRepository) FindExistsActionCode(userActionCode *stores.UserActionCode, userId string, actType stores.ActCodeType) *gorm.DB {

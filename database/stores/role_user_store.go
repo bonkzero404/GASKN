@@ -12,7 +12,7 @@ type RoleUser struct {
 	UserId   uuid.UUID `gorm:"type:char(36):index"`
 	RoleId   uuid.UUID `gorm:"type:char(36):index"`
 	User     User      `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Role     Role      `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Role     Role      `gorm:"references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	IsActive bool
 }
 
