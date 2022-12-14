@@ -73,5 +73,10 @@
     "locale": "id",
     "key": "route:client:user:invitation",
     "trans": "Pengguna dapat mengundang pengguna lain untuk bergabung dengan organisasi"
+  },
+  {
+    "locale": "id",
+    "key": "user:create",
+    "trans": "Pengguna dapat membuat akun untuk pengguna lain"
   }
 ]

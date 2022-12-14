@@ -13,20 +13,16 @@ type ApiRoute struct {
 	UserClientHandler handlers.UserClientHandler
 }
 
-type ApiRouteClient struct {
-	UserClientHandler handlers.UserClientHandler
-}
-
 func (handler *ApiRoute) Route(app fiber.Router) {
 	const endpointGroup string = "/user"
 
 	user := utils.GasknRouter{}
-	user.Set(app).Group(utils.SetupApiGroup() + endpointGroup)
+	user.Set(app).Group(utils.SetupApiGroup() + endpointGroup).SetGroupName("User")
 
 	user.Post(
 		"/register",
 		middleware.RateLimiter(5, 30),
-		handler.UserHandler.RegisterUser,
+		handler.UserHandler.CreateUser,
 	)
 
 	user.Post(
@@ -52,15 +48,39 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		middleware.RateLimiter(5, 30),
 		handler.UserHandler.UpdatePassword,
 	)
+
+	user.Post(
+		"/:CreateUser",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.UserHandler.CreateUser,
+	).
+		SetRouteName("CreateUser").
+		SetRouteDescriptionKeyLang("user:create").
+		Execute()
+
 }
 
-func (handler *ApiRouteClient) Route(app fiber.Router) {
+func (handler *ApiRoute) RouteClient(app fiber.Router) {
 	const endpointGroup string = "/user"
 
 	userClient := utils.GasknRouter{}
 	userClient.Set(app).
 		Group(utils.SetupSubApiGroup() + endpointGroup).
 		SetGroupName("Client/UserInvitation") // app.Group(utils.SetupSubApiGroup() + endpointGroup)
+
+	userClient.Post(
+		"/:CreateUser",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.UserHandler.CreateUser,
+	).
+		SetRouteName("CreateClientUser").
+		SetRouteDescriptionKeyLang("user:create").
+		SetRouteTenant(true).
+		Execute()
 
 	userClient.Post(
 		"/invitation",

@@ -31,7 +31,14 @@ func RegisterFeature(app *fiber.App) {
 	userInvitationRepository := implements.NewUserInvitationRepository(driver.DB)
 	userActionFactory := registerActionCodeFactory(userActionCodeRepository)
 
-	userService := implementsInteract.NewUser(userRepository, userActionCodeRepository, aggregateRepository, userActionFactory)
+	userService := implementsInteract.NewUser(
+		userRepository,
+		userActionCodeRepository,
+		aggregateRepository,
+		userActionFactory,
+		userInvitationRepository,
+	)
+
 	userHandler := handlers.NewUserHandler(userService)
 
 	repoUserRole := implementsRoleRepo.NewRoleRepository(driver.DB)
@@ -49,7 +56,7 @@ func RegisterFeature(app *fiber.App) {
 	)
 	userClientHandler := handlers.NewUserClientHandler(userClientService)
 
-	var routesInitTenant = ApiRouteClient{}
+	var routesInitTenant = ApiRoute{}
 
 	routesInit := ApiRoute{
 		UserHandler:       *userHandler,
@@ -62,9 +69,10 @@ func RegisterFeature(app *fiber.App) {
 	// If tenant is enabled
 	/////////////////////////
 	if config.Config("TENANCY") == "true" {
-		routesInitTenant = ApiRouteClient{
+		routesInitTenant = ApiRoute{
+			UserHandler:       *userHandler,
 			UserClientHandler: *userClientHandler,
 		}
-		routesInitTenant.Route(app)
+		routesInitTenant.RouteClient(app)
 	}
 }
