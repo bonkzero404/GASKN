@@ -113,11 +113,11 @@ func (repository ClientRepository) DeleteClientById(client *stores.Client) *gorm
 }
 
 func (repository ClientRepository) GetClientById(client *stores.Client, id string) *gorm.DB {
-	return repository.DB.Take(&client, "id = ?", id)
+	return repository.DB.Take(&client, "id = ? AND is_active = ?", id, true)
 }
 
 func (repository ClientRepository) GetClientBySlug(client *stores.Client, slug string) *gorm.DB {
-	return repository.DB.Take(&client, "client_slug = ?", slug)
+	return repository.DB.Take(&client, "client_slug = ? AND is_active = ?", slug, true)
 }
 
 func (repository ClientRepository) GetClientList(client *[]stores.Client, c *fiber.Ctx) (*utils.Pagination, error) {
@@ -131,7 +131,7 @@ func (repository ClientRepository) GetClientList(client *[]stores.Client, c *fib
 func (repository ClientRepository) GetClientListByUser(clientAssignment *[]stores.ClientAssignment, c *fiber.Ctx, userId string) (*utils.Pagination, error) {
 	var pagination utils.Pagination
 
-	err := repository.DB.Scopes(utils.Paginate(clientAssignment, &pagination, repository.DB, c)).Preload("Client").Find(&clientAssignment, "user_id = ?", userId).Error
+	err := repository.DB.Scopes(utils.Paginate(clientAssignment, &pagination, repository.DB, c)).Preload("Client", "is_active = ?", true).Find(&clientAssignment, "user_id = ?", userId).Error
 
 	return &pagination, err
 }

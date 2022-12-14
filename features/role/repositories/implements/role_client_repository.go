@@ -106,15 +106,15 @@ func (repository RoleClientRepository) CreateUserClientRole(userId uuid.UUID, ro
 
 func (repository RoleClientRepository) GetRoleClientById(roleClient *stores.RoleClient, id string, clientId string) *gorm.DB {
 	return repository.DB.
-		Preload("Client").
-		Preload("Role").
+		Preload("Client", "is_active = ?", true).
+		Preload("Role", "is_active = ?", true).
 		Take(&roleClient, "role_clients.id = ? and role_clients.client_id = ?", id, clientId)
 }
 
 func (repository RoleClientRepository) GetRoleClientByName(roleClient *stores.RoleClient, roleName string, clientId string) *gorm.DB {
 	return repository.DB.
 		Joins("left join roles on role_clients.role_id = roles.id").
-		Preload("Client").
+		Preload("Client", "is_active = ?", true).
 		First(&roleClient, "roles.role_name = ? and role_clients.client_id = ?", roleName, clientId)
 }
 
@@ -123,21 +123,21 @@ func (repository RoleClientRepository) GetRoleClientList(role *[]stores.Role, c 
 
 	err := repository.DB.Scopes(utils.Paginate(role, &pagination, repository.DB, c)).
 		Joins("left join role_clients on role_clients.role_id = roles.id").
-		Find(&role, "role_clients.client_id = ?", clientId).Error
+		Find(&role, "role_clients.client_id = ? AND roles.is_active = ?", clientId, true).Error
 
 	return &pagination, err
 }
 
 func (repository RoleClientRepository) GetRoleClientId(role *stores.RoleClient, roleId string, clientId string) *gorm.DB {
 	return repository.DB.
-		Preload("Client").
-		Preload("Role").
+		Preload("Client", "is_active = ?", true).
+		Preload("Role", "is_active = ?", true).
 		First(&role, "role_id = ? and client_id = ?", roleId, clientId)
 }
 
 func (repository RoleClientRepository) GetUserHasClient(clientAssignment *stores.ClientAssignment, userId string, clientId string) *gorm.DB {
 	return repository.DB.
-		Preload("Client").
-		Preload("User").
+		Preload("Client", "is_active = ?", true).
+		Preload("User", "is_active = ?", true).
 		Take(&clientAssignment, "user_id = ? and client_id = ?", userId, clientId)
 }
