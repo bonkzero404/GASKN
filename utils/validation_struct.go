@@ -10,6 +10,8 @@ import (
 	englishTranslation "github.com/go-playground/validator/v10/translations/en"
 	indoTranslation "github.com/go-playground/validator/v10/translations/id"
 	"github.com/gofiber/fiber/v2"
+
+	"gaskn/config"
 )
 
 func ValidateStruct(s interface{}, ctx *fiber.Ctx) []*dto.ErrorResponse {
@@ -39,8 +41,13 @@ func ValidateStruct(s interface{}, ctx *fiber.Ctx) []*dto.ErrorResponse {
 			return nil
 		}
 	} else {
+		var defaultLang = "en"
+
+		if config.Config("LANG") != "" {
+			defaultLang = config.Config("LANG")
+		}
 		uni := ut.New(enTrans, enTrans)
-		trans, _ = uni.GetTranslator("en")
+		trans, _ = uni.GetTranslator(defaultLang)
 		validate = validator.New()
 
 		err := englishTranslation.RegisterDefaultTranslations(validate, trans)
