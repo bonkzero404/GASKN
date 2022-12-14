@@ -2,26 +2,20 @@ package implements
 
 import (
 	"gaskn/database/stores"
-	factories2 "gaskn/features/user/factories"
+	"gaskn/features/user/factories"
 )
 
 type ActionFactory struct {
-	UserActivationServiceFactory factories2.UserActivationServiceFactory
-	UserForgotPassServiceFactory factories2.UserForgotPassServiceFactory
-	UserInvitationServiceFactory factories2.UserInvitationServiceFactory
-}
-
-type ActionFactoryInterface interface {
-	CreateActivation(user *stores.User) (*stores.UserActionCode, error)
-	CreateForgotPassword(user *stores.User) (*stores.UserActionCode, error)
-	CreateInvitation(user *stores.User, UrlFrontEndInvitation string, invitedBy string, role string, clientId string) (*stores.UserActionCode, error)
+	UserActivationServiceFactory factories.UserActivationServiceFactory
+	UserForgotPassServiceFactory factories.UserForgotPassServiceFactory
+	UserInvitationServiceFactory factories.UserInvitationServiceFactory
 }
 
 func NewActionFactory(
-	UserActivationServiceFactory factories2.UserActivationServiceFactory,
-	UserForgotPassServiceFactory factories2.UserForgotPassServiceFactory,
-	UserInvitationServiceFactory factories2.UserInvitationServiceFactory,
-) ActionFactoryInterface {
+	UserActivationServiceFactory factories.UserActivationServiceFactory,
+	UserForgotPassServiceFactory factories.UserForgotPassServiceFactory,
+	UserInvitationServiceFactory factories.UserInvitationServiceFactory,
+) factories.ActionFactory {
 	return &ActionFactory{
 		UserActivationServiceFactory: UserActivationServiceFactory,
 		UserForgotPassServiceFactory: UserForgotPassServiceFactory,

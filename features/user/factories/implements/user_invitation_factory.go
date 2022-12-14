@@ -11,19 +11,19 @@ import (
 	"gaskn/utils"
 )
 
-type UserInvitationServiceFactory struct {
+type UserInvitationFactory struct {
 	UserInvitationRepository repositories.UserActionCodeRepository
 }
 
-func NewUserInvitationServiceFactory(
+func NewUserInvitationFactory(
 	UserInvitationRepository repositories.UserActionCodeRepository,
 ) factories.UserInvitationServiceFactory {
-	return &UserInvitationServiceFactory{
+	return &UserInvitationFactory{
 		UserInvitationRepository: UserInvitationRepository,
 	}
 }
 
-func (service UserInvitationServiceFactory) CreateUserInvitation(user *stores.User, urlInvitation string, invitedBy string, role string, clientId string) (*stores.UserActionCode, error) {
+func (service UserInvitationFactory) CreateUserInvitation(user *stores.User, urlInvitation string, invitedBy string, role string, clientId string) (*stores.UserActionCode, error) {
 	codeGen := utils.StringWithCharset(32)
 
 	userInvitation := stores.UserActionCode{

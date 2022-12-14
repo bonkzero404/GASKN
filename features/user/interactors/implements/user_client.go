@@ -4,7 +4,7 @@ import (
 	"errors"
 	repoRole "gaskn/features/role/repositories"
 	interactRoleUserAssignment "gaskn/features/role_assignment/interactors"
-	"gaskn/features/user/factories/implements"
+	"gaskn/features/user/factories"
 	"gaskn/features/user/interactors"
 	"gaskn/features/user/repositories"
 	"time"
@@ -29,7 +29,7 @@ type UserClient struct {
 	UserInvitationRepository repositories.UserInvitationRepository
 	RepositoryAggregate      repositories.RepositoryAggregate
 	RoleClientRepository     repoRole.RoleClientRepository
-	ActionFactory            implements.ActionFactoryInterface
+	ActionFactory            factories.ActionFactory
 	RoleAssignment           interactRoleUserAssignment.RoleAssignment
 }
 
@@ -38,7 +38,7 @@ func NewUserClient(
 	UserActionCodeRepository repositories.UserActionCodeRepository,
 	UserInvitationRepository repositories.UserInvitationRepository,
 	RepositoryAggregate repositories.RepositoryAggregate,
-	Factory implements.ActionFactoryInterface,
+	Factory factories.ActionFactory,
 	RoleClientRepository repoRole.RoleClientRepository,
 	RoleAssignment interactRoleUserAssignment.RoleAssignment,
 ) interactors.UserClient {

@@ -2,7 +2,7 @@ package implements
 
 import (
 	"errors"
-	"gaskn/features/user/factories/implements"
+	"gaskn/features/user/factories"
 	"gaskn/features/user/interactors"
 	"gaskn/features/user/repositories"
 	"strings"
@@ -21,14 +21,14 @@ type User struct {
 	UserRepository           repositories.UserRepository
 	UserActionCodeRepository repositories.UserActionCodeRepository
 	RepositoryAggregate      repositories.RepositoryAggregate
-	ActionFactory            implements.ActionFactoryInterface
+	ActionFactory            factories.ActionFactory
 }
 
 func NewUser(
 	UserRepository repositories.UserRepository,
 	UserActionCodeRepository repositories.UserActionCodeRepository,
 	RepositoryAggregate repositories.RepositoryAggregate,
-	Factory implements.ActionFactoryInterface,
+	Factory factories.ActionFactory,
 ) interactors.User {
 	return &User{
 		UserRepository:           UserRepository,

@@ -11,17 +11,17 @@ import (
 	"gaskn/utils"
 )
 
-type UserForgotPassServiceFactory struct {
+type UserForgotPassFactory struct {
 	UserForgotPassRepository repositories.UserActionCodeRepository
 }
 
-func NewUserForgotPassServiceFactory(UserForgotPassRepository repositories.UserActionCodeRepository) factories.UserForgotPassServiceFactory {
-	return &UserForgotPassServiceFactory{
+func NewUserForgotPassFactory(UserForgotPassRepository repositories.UserActionCodeRepository) factories.UserForgotPassServiceFactory {
+	return &UserForgotPassFactory{
 		UserForgotPassRepository: UserForgotPassRepository,
 	}
 }
 
-func (service UserForgotPassServiceFactory) CreateUserForgotPass(user *stores.User) (*stores.UserActionCode, error) {
+func (service UserForgotPassFactory) CreateUserForgotPass(user *stores.User) (*stores.UserActionCode, error) {
 	codeGen := utils.StringWithCharset(32)
 
 	userActivate := stores.UserActionCode{

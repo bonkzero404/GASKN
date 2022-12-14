@@ -2,10 +2,11 @@ package user
 
 import (
 	"gaskn/driver"
-	implements5 "gaskn/features/role/repositories/implements"
-	implements6 "gaskn/features/role_assignment/interactors/implements"
-	implements4 "gaskn/features/user/factories/implements"
-	implements2 "gaskn/features/user/interactors/implements"
+	implementsRoleRepo "gaskn/features/role/repositories/implements"
+	implementsRoleAssignInteract "gaskn/features/role_assignment/interactors/implements"
+	"gaskn/features/user/factories"
+	implementsFactory "gaskn/features/user/factories/implements"
+	implementsInteract "gaskn/features/user/interactors/implements"
 	"gaskn/features/user/repositories"
 	"gaskn/features/user/repositories/implements"
 	"github.com/gofiber/fiber/v2"
@@ -14,22 +15,14 @@ import (
 	"gaskn/features/user/handlers"
 )
 
-/*
-*
-Service factory registration
-*/
-func registerActionCodeFactory(userActionCodeRepository repositories.UserActionCodeRepository) implements4.ActionFactoryInterface {
-	actFactory := implements4.NewUserActivationServiceFactory(userActionCodeRepository)
-	forgotPassFactory := implements4.NewUserForgotPassServiceFactory(userActionCodeRepository)
-	userInvitationFactory := implements4.NewUserInvitationServiceFactory(userActionCodeRepository)
+func registerActionCodeFactory(userActionCodeRepository repositories.UserActionCodeRepository) factories.ActionFactory {
+	actFactory := implementsFactory.NewUserActivationFactory(userActionCodeRepository)
+	forgotPassFactory := implementsFactory.NewUserForgotPassFactory(userActionCodeRepository)
+	userInvitationFactory := implementsFactory.NewUserInvitationFactory(userActionCodeRepository)
 
-	return implements4.NewActionFactory(actFactory, forgotPassFactory, userInvitationFactory)
+	return implementsFactory.NewActionFactory(actFactory, forgotPassFactory, userInvitationFactory)
 }
 
-/*
-*
-This function is for registering repository - service - handler
-*/
 func RegisterFeature(app *fiber.App) {
 
 	userRepository := implements.NewUserRepository(driver.DB)
@@ -38,14 +31,14 @@ func RegisterFeature(app *fiber.App) {
 	userInvitationRepository := implements.NewUserInvitationRepository(driver.DB)
 	userActionFactory := registerActionCodeFactory(userActionCodeRepository)
 
-	userService := implements2.NewUser(userRepository, userActionCodeRepository, aggregateRepository, userActionFactory)
+	userService := implementsInteract.NewUser(userRepository, userActionCodeRepository, aggregateRepository, userActionFactory)
 	userHandler := handlers.NewUserHandler(userService)
 
-	repoUserRole := implements5.NewRoleRepository(driver.DB)
-	repoUserRoleClient := implements5.NewRoleClientRepository(driver.DB)
-	interactAssign := implements6.NewRoleAssignment(repoUserRoleClient, repoUserRole)
+	repoUserRole := implementsRoleRepo.NewRoleRepository(driver.DB)
+	repoUserRoleClient := implementsRoleRepo.NewRoleClientRepository(driver.DB)
+	interactAssign := implementsRoleAssignInteract.NewRoleAssignment(repoUserRoleClient, repoUserRole)
 
-	userClientService := implements2.NewUserClient(
+	userClientService := implementsInteract.NewUserClient(
 		userRepository,
 		userActionCodeRepository,
 		userInvitationRepository,

@@ -11,19 +11,19 @@ import (
 	"gaskn/utils"
 )
 
-type UserActivationServiceFactory struct {
+type UserActivationFactory struct {
 	UserActivationRepository repositories.UserActionCodeRepository
 }
 
-func NewUserActivationServiceFactory(
+func NewUserActivationFactory(
 	UserActivationRepository repositories.UserActionCodeRepository,
 ) factories.UserActivationServiceFactory {
-	return &UserActivationServiceFactory{
+	return &UserActivationFactory{
 		UserActivationRepository: UserActivationRepository,
 	}
 }
 
-func (service UserActivationServiceFactory) CreateUserActivation(user *stores.User) (*stores.UserActionCode, error) {
+func (service UserActivationFactory) CreateUserActivation(user *stores.User) (*stores.UserActionCode, error) {
 	codeGen := utils.StringWithCharset(32)
 
 	userActivate := stores.UserActionCode{
