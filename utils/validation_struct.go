@@ -42,11 +42,20 @@ func ValidateStruct(s interface{}, ctx *fiber.Ctx) []*dto.ErrorResponse {
 		}
 	} else {
 		var defaultLang = "en"
+		var uni = ut.New(enTrans, enTrans)
 
 		if config.Config("LANG") != "" {
 			defaultLang = config.Config("LANG")
+
+			if config.Config("LANG") == "en" {
+				uni = ut.New(enTrans, enTrans)
+			}
+
+			if config.Config("LANG") == "id" {
+				uni = ut.New(idTrans, idTrans)
+			}
 		}
-		uni := ut.New(enTrans, enTrans)
+
 		trans, _ = uni.GetTranslator(defaultLang)
 		validate = validator.New()
 
