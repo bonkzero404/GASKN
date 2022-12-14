@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"gaskn/database/stores"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/utils"
 	"github.com/google/uuid"
 
 	"github.com/gofiber/fiber/v2"

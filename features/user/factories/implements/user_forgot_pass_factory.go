@@ -1,27 +1,27 @@
 package implements
 
 import (
-	"gaskn/features/user/factories"
-	"gaskn/features/user/repositories"
+	"github.com/bonkzero404/gaskn/features/user/factories"
+	"github.com/bonkzero404/gaskn/features/user/repositories"
 
 	"github.com/gofiber/fiber/v2"
 
-	"gaskn/database/stores"
-	responseDto "gaskn/dto"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/stores"
+	responseDto "github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/utils"
 )
 
-type UserForgotPassServiceFactory struct {
+type UserForgotPassFactory struct {
 	UserForgotPassRepository repositories.UserActionCodeRepository
 }
 
-func NewUserForgotPassServiceFactory(UserForgotPassRepository repositories.UserActionCodeRepository) factories.UserForgotPassServiceFactory {
-	return &UserForgotPassServiceFactory{
+func NewUserForgotPassFactory(UserForgotPassRepository repositories.UserActionCodeRepository) factories.UserForgotPassServiceFactory {
+	return &UserForgotPassFactory{
 		UserForgotPassRepository: UserForgotPassRepository,
 	}
 }
 
-func (service UserForgotPassServiceFactory) CreateUserForgotPass(user *stores.User) (*stores.UserActionCode, error) {
+func (service UserForgotPassFactory) CreateUserForgotPass(user *stores.User) (*stores.UserActionCode, error) {
 	codeGen := utils.StringWithCharset(32)
 
 	userActivate := stores.UserActionCode{

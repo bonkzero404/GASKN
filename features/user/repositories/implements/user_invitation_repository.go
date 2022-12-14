@@ -1,10 +1,10 @@
 package implements
 
 import (
-	"gaskn/features/user/repositories"
+	"github.com/bonkzero404/gaskn/features/user/repositories"
 	"gorm.io/gorm"
 
-	"gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/database/stores"
 )
 
 type UserInvitationRepository struct {
@@ -18,11 +18,11 @@ func NewUserInvitationRepository(db *gorm.DB) repositories.UserInvitationReposit
 }
 
 func (repository UserInvitationRepository) FindUserInvitation(userInvitation *stores.UserInvitation, userId string, clientId string) *gorm.DB {
-	return repository.DB.First(&userInvitation, "user_id = ? AND client_id = ?", userId, clientId)
+	return repository.DB.Take(&userInvitation, "user_id = ? AND client_id = ?", userId, clientId)
 }
 
 func (repository UserInvitationRepository) FindInvitationByActId(userInvitation *stores.UserInvitation, actId string) *gorm.DB {
-	return repository.DB.First(&userInvitation, "user_action_code_id = ?", actId)
+	return repository.DB.Take(&userInvitation, "user_action_code_id = ?", actId)
 }
 
 func (repository UserInvitationRepository) CreateUserInvitation(userInvitation *stores.UserInvitation) *gorm.DB {

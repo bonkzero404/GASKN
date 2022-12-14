@@ -2,8 +2,8 @@ package driver
 
 import (
 	"fmt"
-	"gaskn/config"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/config"
+	"github.com/bonkzero404/gaskn/utils"
 	"log"
 	"os"
 	"strconv"

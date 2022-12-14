@@ -1,29 +1,29 @@
 package implements
 
 import (
-	"gaskn/features/user/factories"
-	"gaskn/features/user/repositories"
+	"github.com/bonkzero404/gaskn/features/user/factories"
+	"github.com/bonkzero404/gaskn/features/user/repositories"
 
 	"github.com/gofiber/fiber/v2"
 
-	"gaskn/database/stores"
-	responseDto "gaskn/dto"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/stores"
+	responseDto "github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/utils"
 )
 
-type UserInvitationServiceFactory struct {
+type UserInvitationFactory struct {
 	UserInvitationRepository repositories.UserActionCodeRepository
 }
 
-func NewUserInvitationServiceFactory(
+func NewUserInvitationFactory(
 	UserInvitationRepository repositories.UserActionCodeRepository,
 ) factories.UserInvitationServiceFactory {
-	return &UserInvitationServiceFactory{
+	return &UserInvitationFactory{
 		UserInvitationRepository: UserInvitationRepository,
 	}
 }
 
-func (service UserInvitationServiceFactory) CreateUserInvitation(user *stores.User, urlInvitation string, invitedBy string, role string, clientId string) (*stores.UserActionCode, error) {
+func (service UserInvitationFactory) CreateUserInvitation(user *stores.User, urlInvitation string, invitedBy string, role string, clientId string) (*stores.UserActionCode, error) {
 	codeGen := utils.StringWithCharset(32)
 
 	userInvitation := stores.UserActionCode{

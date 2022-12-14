@@ -2,7 +2,7 @@ package seeders
 
 import (
 	"errors"
-	"gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/database/stores"
 
 	"gorm.io/gorm"
 )

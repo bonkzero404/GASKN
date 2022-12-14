@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"gaskn/dto"
+	"github.com/bonkzero404/gaskn/dto"
 
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/id"
@@ -10,6 +10,8 @@ import (
 	englishTranslation "github.com/go-playground/validator/v10/translations/en"
 	indoTranslation "github.com/go-playground/validator/v10/translations/id"
 	"github.com/gofiber/fiber/v2"
+
+	"github.com/bonkzero404/gaskn/config"
 )
 
 func ValidateStruct(s interface{}, ctx *fiber.Ctx) []*dto.ErrorResponse {
@@ -39,8 +41,22 @@ func ValidateStruct(s interface{}, ctx *fiber.Ctx) []*dto.ErrorResponse {
 			return nil
 		}
 	} else {
-		uni := ut.New(enTrans, enTrans)
-		trans, _ = uni.GetTranslator("en")
+		var defaultLang = "en"
+		var uni = ut.New(enTrans, enTrans)
+
+		if config.Config("LANG") != "" {
+			defaultLang = config.Config("LANG")
+
+			if config.Config("LANG") == "en" {
+				uni = ut.New(enTrans, enTrans)
+			}
+
+			if config.Config("LANG") == "id" {
+				uni = ut.New(idTrans, idTrans)
+			}
+		}
+
+		trans, _ = uni.GetTranslator(defaultLang)
 		validate = validator.New()
 
 		err := englishTranslation.RegisterDefaultTranslations(validate, trans)

@@ -1,11 +1,11 @@
 package auth
 
 import (
-	"gaskn/driver"
-	"gaskn/features/auth/handlers"
-	implements2 "gaskn/features/auth/interactors/implements"
-	roleRepo "gaskn/features/role/repositories/implements"
-	"gaskn/features/user/repositories/implements"
+	"github.com/bonkzero404/gaskn/driver"
+	"github.com/bonkzero404/gaskn/features/auth/handlers"
+	implements2 "github.com/bonkzero404/gaskn/features/auth/interactors/implements"
+	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories/implements"
+	"github.com/bonkzero404/gaskn/features/user/repositories/implements"
 
 	"github.com/gofiber/fiber/v2"
 )

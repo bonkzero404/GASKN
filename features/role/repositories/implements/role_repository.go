@@ -1,9 +1,9 @@
 package implements
 
 import (
-	"gaskn/database/stores"
-	"gaskn/features/role/repositories"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/features/role/repositories"
+	"github.com/bonkzero404/gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
@@ -32,7 +32,7 @@ func (repository RoleRepository) DeleteRoleById(role *stores.Role) *gorm.DB {
 }
 
 func (repository RoleRepository) GetRoleById(role *stores.Role, id string) *gorm.DB {
-	return repository.DB.First(&role, "id = ?", id)
+	return repository.DB.Take(&role, "id = ?", id)
 }
 
 func (repository RoleRepository) GetRoleList(role *[]stores.Role, c *fiber.Ctx) (*utils.Pagination, error) {

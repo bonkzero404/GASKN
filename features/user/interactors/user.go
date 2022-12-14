@@ -3,8 +3,8 @@ package interactors
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"gaskn/database/stores"
-	"gaskn/features/user/dto"
+	"github.com/bonkzero404/gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/features/user/dto"
 )
 
 type User interface {

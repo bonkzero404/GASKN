@@ -2,11 +2,11 @@ package implements
 
 import (
 	"errors"
-	repoRole "gaskn/features/role/repositories"
-	interactRoleUserAssignment "gaskn/features/role_assignment/interactors"
-	"gaskn/features/user/factories/implements"
-	"gaskn/features/user/interactors"
-	"gaskn/features/user/repositories"
+	repoRole "github.com/bonkzero404/gaskn/features/role/repositories"
+	interactRoleUserAssignment "github.com/bonkzero404/gaskn/features/role_assignment/interactors"
+	"github.com/bonkzero404/gaskn/features/user/factories"
+	"github.com/bonkzero404/gaskn/features/user/interactors"
+	"github.com/bonkzero404/gaskn/features/user/repositories"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -15,12 +15,12 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 
-	"gaskn/config"
-	"gaskn/database/stores"
-	responseDto "gaskn/dto"
-	dtoAssignment "gaskn/features/role_assignment/dto"
-	"gaskn/features/user/dto"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/config"
+	"github.com/bonkzero404/gaskn/database/stores"
+	responseDto "github.com/bonkzero404/gaskn/dto"
+	dtoAssignment "github.com/bonkzero404/gaskn/features/role_assignment/dto"
+	"github.com/bonkzero404/gaskn/features/user/dto"
+	"github.com/bonkzero404/gaskn/utils"
 )
 
 type UserClient struct {
@@ -29,7 +29,7 @@ type UserClient struct {
 	UserInvitationRepository repositories.UserInvitationRepository
 	RepositoryAggregate      repositories.RepositoryAggregate
 	RoleClientRepository     repoRole.RoleClientRepository
-	ActionFactory            implements.ActionFactoryInterface
+	ActionFactory            factories.ActionFactory
 	RoleAssignment           interactRoleUserAssignment.RoleAssignment
 }
 
@@ -38,7 +38,7 @@ func NewUserClient(
 	UserActionCodeRepository repositories.UserActionCodeRepository,
 	UserInvitationRepository repositories.UserInvitationRepository,
 	RepositoryAggregate repositories.RepositoryAggregate,
-	Factory implements.ActionFactoryInterface,
+	Factory factories.ActionFactory,
 	RoleClientRepository repoRole.RoleClientRepository,
 	RoleAssignment interactRoleUserAssignment.RoleAssignment,
 ) interactors.UserClient {

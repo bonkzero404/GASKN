@@ -1,9 +1,9 @@
 package auth
 
 import (
-	"gaskn/app/middleware"
-	"gaskn/features/auth/handlers"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/app/middleware"
+	"github.com/bonkzero404/gaskn/features/auth/handlers"
+	"github.com/bonkzero404/gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

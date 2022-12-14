@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"gaskn/config"
+	"github.com/bonkzero404/gaskn/config"
 	"log"
 
 	"github.com/go-playground/locales/en"
@@ -36,7 +36,12 @@ func Lang(ctx *fiber.Ctx, key string, params ...string) string {
 	} else if ctx.Query("lang") != "" && ctx.Query("lang") == "id" {
 		lng, _ = Trans.GetTranslator("id")
 	} else {
-		lng, _ = Trans.GetTranslator("en")
+		var defaultLang = "en"
+
+		if config.Config("LANG") != "" {
+			defaultLang = config.Config("LANG")
+		}
+		lng, _ = Trans.GetTranslator(defaultLang)
 	}
 
 	parseLang, _ := lng.T(key, params...)

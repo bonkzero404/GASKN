@@ -2,8 +2,8 @@ package utils
 
 import (
 	"bytes"
-	"gaskn/config"
-	"gaskn/dto"
+	"github.com/bonkzero404/gaskn/config"
+	"github.com/bonkzero404/gaskn/dto"
 	"html/template"
 	"log"
 	"strconv"

@@ -1,8 +1,8 @@
 package interactors
 
 import (
-	"gaskn/database/stores"
-	"gaskn/features/role_assignment/dto"
+	"github.com/bonkzero404/gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/features/role_assignment/dto"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )

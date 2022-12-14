@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"gaskn/config"
+	"github.com/bonkzero404/gaskn/config"
 )
 
 // SetupApiGroup /*

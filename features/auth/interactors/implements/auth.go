@@ -2,13 +2,13 @@ package implements
 
 import (
 	"errors"
-	"gaskn/database/stores"
-	responseDto "gaskn/dto"
-	"gaskn/features/auth/dto"
-	"gaskn/features/auth/interactors"
-	roleRepository "gaskn/features/role/repositories"
-	userInterface "gaskn/features/user/repositories"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/stores"
+	responseDto "github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/features/auth/dto"
+	"github.com/bonkzero404/gaskn/features/auth/interactors"
+	roleRepository "github.com/bonkzero404/gaskn/features/role/repositories"
+	userInterface "github.com/bonkzero404/gaskn/features/user/repositories"
+	"github.com/bonkzero404/gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"

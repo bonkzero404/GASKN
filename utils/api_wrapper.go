@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"gaskn/dto"
+	"github.com/bonkzero404/gaskn/dto"
 
 	"github.com/gofiber/fiber/v2"
 )

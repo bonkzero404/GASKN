@@ -3,9 +3,9 @@ package user
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"gaskn/app/middleware"
-	"gaskn/features/user/handlers"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/app/middleware"
+	"github.com/bonkzero404/gaskn/features/user/handlers"
+	"github.com/bonkzero404/gaskn/utils"
 )
 
 type ApiRoute struct {

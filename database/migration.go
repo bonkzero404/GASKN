@@ -1,8 +1,8 @@
 package database
 
 import (
-	"gaskn/database/stores"
-	"gaskn/driver"
+	"github.com/bonkzero404/gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/driver"
 	"log"
 )
 

@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/utils"
 	"time"
 
-	respModel "gaskn/dto"
+	respModel "github.com/bonkzero404/gaskn/dto"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"

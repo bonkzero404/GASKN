@@ -2,14 +2,14 @@ package implements
 
 import (
 	"errors"
-	"gaskn/config"
-	"gaskn/database/stores"
-	"gaskn/driver"
-	responseDto "gaskn/dto"
-	"gaskn/features/role/repositories"
-	"gaskn/features/role_assignment/dto"
-	"gaskn/features/role_assignment/interactors"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/config"
+	"github.com/bonkzero404/gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/driver"
+	responseDto "github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/features/role/repositories"
+	"github.com/bonkzero404/gaskn/features/role_assignment/dto"
+	"github.com/bonkzero404/gaskn/features/role_assignment/interactors"
+	"github.com/bonkzero404/gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"

@@ -1,4 +1,4 @@
-module gaskn
+module github.com/bonkzero404/gaskn
 
 go 1.19
 

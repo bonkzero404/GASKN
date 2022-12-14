@@ -2,33 +2,33 @@ package implements
 
 import (
 	"errors"
-	"gaskn/features/user/factories/implements"
-	"gaskn/features/user/interactors"
-	"gaskn/features/user/repositories"
+	"github.com/bonkzero404/gaskn/features/user/factories"
+	"github.com/bonkzero404/gaskn/features/user/interactors"
+	"github.com/bonkzero404/gaskn/features/user/repositories"
 	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
-	"gaskn/database/stores"
-	responseDto "gaskn/dto"
-	"gaskn/features/user/dto"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/stores"
+	responseDto "github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/features/user/dto"
+	"github.com/bonkzero404/gaskn/utils"
 )
 
 type User struct {
 	UserRepository           repositories.UserRepository
 	UserActionCodeRepository repositories.UserActionCodeRepository
 	RepositoryAggregate      repositories.RepositoryAggregate
-	ActionFactory            implements.ActionFactoryInterface
+	ActionFactory            factories.ActionFactory
 }
 
 func NewUser(
 	UserRepository repositories.UserRepository,
 	UserActionCodeRepository repositories.UserActionCodeRepository,
 	RepositoryAggregate repositories.RepositoryAggregate,
-	Factory implements.ActionFactoryInterface,
+	Factory factories.ActionFactory,
 ) interactors.User {
 	return &User{
 		UserRepository:           UserRepository,

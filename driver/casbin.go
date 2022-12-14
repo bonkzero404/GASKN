@@ -1,7 +1,7 @@
 package driver
 
 import (
-	"gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/database/stores"
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 )

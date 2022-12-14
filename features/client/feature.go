@@ -1,12 +1,12 @@
 package role
 
 import (
-	"gaskn/config"
-	"gaskn/driver"
-	"gaskn/features/client/handlers"
-	"gaskn/features/client/interactors/implements"
-	implements2 "gaskn/features/client/repositories/implements"
-	userRepo "gaskn/features/user/repositories/implements"
+	"github.com/bonkzero404/gaskn/config"
+	"github.com/bonkzero404/gaskn/driver"
+	"github.com/bonkzero404/gaskn/features/client/handlers"
+	"github.com/bonkzero404/gaskn/features/client/interactors/implements"
+	implements2 "github.com/bonkzero404/gaskn/features/client/repositories/implements"
+	userRepo "github.com/bonkzero404/gaskn/features/user/repositories/implements"
 
 	"github.com/gofiber/fiber/v2"
 )
