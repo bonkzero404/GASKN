@@ -2,9 +2,9 @@ package seeders
 
 import (
 	"errors"
-	"gaskn/config"
-	"gaskn/database/stores"
-	"gaskn/driver"
+	"github.com/bonkzero404/gaskn/config"
+	"github.com/bonkzero404/gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/driver"
 	"gorm.io/gorm"
 )
 

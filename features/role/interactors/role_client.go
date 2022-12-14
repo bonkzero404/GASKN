@@ -1,8 +1,8 @@
 package interactors
 
 import (
-	"gaskn/features/role/dto"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/features/role/dto"
+	"github.com/bonkzero404/gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

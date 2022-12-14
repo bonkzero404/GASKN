@@ -1,14 +1,14 @@
 package app
 
 import (
-	"gaskn/app/middleware"
-	"gaskn/config"
-	"gaskn/features/auth"
-	cl "gaskn/features/client"
-	"gaskn/features/role"
-	"gaskn/features/role_assignment"
-	"gaskn/features/user"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/app/middleware"
+	"github.com/bonkzero404/gaskn/config"
+	"github.com/bonkzero404/gaskn/features/auth"
+	cl "github.com/bonkzero404/gaskn/features/client"
+	"github.com/bonkzero404/gaskn/features/role"
+	"github.com/bonkzero404/gaskn/features/role_assignment"
+	"github.com/bonkzero404/gaskn/features/user"
+	"github.com/bonkzero404/gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"

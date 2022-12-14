@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"gaskn/config"
+	"github.com/bonkzero404/gaskn/config"
 	"log"
 
 	"github.com/go-playground/locales/en"

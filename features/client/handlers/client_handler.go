@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	responseDto "gaskn/dto"
-	"gaskn/features/client/dto"
-	"gaskn/features/client/interactors"
-	"gaskn/utils"
+	responseDto "github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/features/client/dto"
+	"github.com/bonkzero404/gaskn/features/client/interactors"
+	"github.com/bonkzero404/gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"

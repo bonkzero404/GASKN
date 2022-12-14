@@ -2,19 +2,19 @@ package implements
 
 import (
 	"errors"
-	"gaskn/features/user/factories"
-	"gaskn/features/user/interactors"
-	"gaskn/features/user/repositories"
+	"github.com/bonkzero404/gaskn/features/user/factories"
+	"github.com/bonkzero404/gaskn/features/user/interactors"
+	"github.com/bonkzero404/gaskn/features/user/repositories"
 	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
-	"gaskn/database/stores"
-	responseDto "gaskn/dto"
-	"gaskn/features/user/dto"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/stores"
+	responseDto "github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/features/user/dto"
+	"github.com/bonkzero404/gaskn/utils"
 )
 
 type User struct {

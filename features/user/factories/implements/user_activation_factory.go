@@ -1,14 +1,14 @@
 package implements
 
 import (
-	"gaskn/features/user/factories"
-	"gaskn/features/user/repositories"
+	"github.com/bonkzero404/gaskn/features/user/factories"
+	"github.com/bonkzero404/gaskn/features/user/repositories"
 
 	"github.com/gofiber/fiber/v2"
 
-	"gaskn/database/stores"
-	responseDto "gaskn/dto"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/stores"
+	responseDto "github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/utils"
 )
 
 type UserActivationFactory struct {

@@ -3,9 +3,9 @@ package role_assignment
 import (
 	"github.com/gofiber/fiber/v2"
 
-	"gaskn/app/middleware"
-	"gaskn/features/role_assignment/handlers"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/app/middleware"
+	"github.com/bonkzero404/gaskn/features/role_assignment/handlers"
+	"github.com/bonkzero404/gaskn/utils"
 )
 
 type ApiRouteClient struct {

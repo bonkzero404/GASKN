@@ -1,7 +1,7 @@
 package interactors
 
 import (
-	"gaskn/features/auth/dto"
+	"github.com/bonkzero404/gaskn/features/auth/dto"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"

@@ -1,10 +1,10 @@
 package implements
 
 import (
-	"gaskn/features/user/repositories"
+	"github.com/bonkzero404/gaskn/features/user/repositories"
 	"gorm.io/gorm"
 
-	"gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/database/stores"
 )
 
 type UserActionCodeRepository struct {

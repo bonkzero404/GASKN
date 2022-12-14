@@ -3,7 +3,7 @@ package repositories
 import (
 	"gorm.io/gorm"
 
-	"gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/database/stores"
 )
 
 type UserInvitationRepository interface {

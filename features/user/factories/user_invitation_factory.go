@@ -1,7 +1,7 @@
 package factories
 
 import (
-	"gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/database/stores"
 )
 
 type UserInvitationServiceFactory interface {

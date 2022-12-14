@@ -1,10 +1,10 @@
 package role_assignment
 
 import (
-	"gaskn/driver"
-	"gaskn/features/role/repositories/implements"
-	"gaskn/features/role_assignment/handlers"
-	implements2 "gaskn/features/role_assignment/interactors/implements"
+	"github.com/bonkzero404/gaskn/driver"
+	"github.com/bonkzero404/gaskn/features/role/repositories/implements"
+	"github.com/bonkzero404/gaskn/features/role_assignment/handlers"
+	implements2 "github.com/bonkzero404/gaskn/features/role_assignment/interactors/implements"
 
 	"github.com/gofiber/fiber/v2"
 )

@@ -2,7 +2,7 @@ package driver
 
 import (
 	"fmt"
-	"gaskn/config"
+	"github.com/bonkzero404/gaskn/config"
 	"strconv"
 )
 

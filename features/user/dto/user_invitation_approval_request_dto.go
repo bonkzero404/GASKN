@@ -1,6 +1,6 @@
 package dto
 
-import "gaskn/database/stores"
+import "github.com/bonkzero404/gaskn/database/stores"
 
 type UserInvitationApprovalRequest struct {
 	Code   string                      `json:"code" validate:"required"`

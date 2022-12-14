@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	appRoute "gaskn/app"
-	"gaskn/config"
-	"gaskn/database"
-	driver2 "gaskn/driver"
-	"gaskn/seeders"
-	"gaskn/utils"
+	appRoute "github.com/bonkzero404/gaskn/app"
+	"github.com/bonkzero404/gaskn/config"
+	"github.com/bonkzero404/gaskn/database"
+	driver2 "github.com/bonkzero404/gaskn/driver"
+	"github.com/bonkzero404/gaskn/seeders"
+	"github.com/bonkzero404/gaskn/utils"
 	"log"
 
 	"github.com/gofiber/fiber/v2"

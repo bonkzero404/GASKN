@@ -1,8 +1,8 @@
 package implements
 
 import (
-	"gaskn/database/stores"
-	"gaskn/features/user/repositories"
+	"github.com/bonkzero404/gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/features/user/repositories"
 )
 
 type RepositoryAggregate struct {

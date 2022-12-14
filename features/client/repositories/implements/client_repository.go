@@ -1,12 +1,12 @@
 package implements
 
 import (
-	"gaskn/features/client/repositories"
+	"github.com/bonkzero404/gaskn/features/client/repositories"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
-	"gaskn/database/stores"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/utils"
 )
 
 type ClientRepository struct {

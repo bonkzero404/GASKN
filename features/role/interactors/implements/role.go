@@ -1,12 +1,12 @@
 package implements
 
 import (
-	"gaskn/database/stores"
-	responseDto "gaskn/dto"
-	"gaskn/features/role/dto"
-	"gaskn/features/role/interactors"
-	"gaskn/features/role/repositories"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/stores"
+	responseDto "github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/features/role/dto"
+	"github.com/bonkzero404/gaskn/features/role/interactors"
+	"github.com/bonkzero404/gaskn/features/role/repositories"
+	"github.com/bonkzero404/gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

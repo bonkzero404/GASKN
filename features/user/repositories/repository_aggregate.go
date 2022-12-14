@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"gaskn/database/stores"
+	"github.com/bonkzero404/gaskn/database/stores"
 )
 
 type RepositoryAggregate interface {

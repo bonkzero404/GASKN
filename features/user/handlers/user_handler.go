@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"gaskn/database/stores"
-	responseDto "gaskn/dto"
-	"gaskn/features/user/dto"
-	"gaskn/features/user/interactors"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/stores"
+	responseDto "github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/features/user/dto"
+	"github.com/bonkzero404/gaskn/features/user/interactors"
+	"github.com/bonkzero404/gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 )

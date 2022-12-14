@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"gaskn/dto"
+	"github.com/bonkzero404/gaskn/dto"
 
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/id"
@@ -11,7 +11,7 @@ import (
 	indoTranslation "github.com/go-playground/validator/v10/translations/id"
 	"github.com/gofiber/fiber/v2"
 
-	"gaskn/config"
+	"github.com/bonkzero404/gaskn/config"
 )
 
 func ValidateStruct(s interface{}, ctx *fiber.Ctx) []*dto.ErrorResponse {

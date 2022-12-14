@@ -1,18 +1,18 @@
 package user
 
 import (
-	"gaskn/driver"
-	implementsRoleRepo "gaskn/features/role/repositories/implements"
-	implementsRoleAssignInteract "gaskn/features/role_assignment/interactors/implements"
-	"gaskn/features/user/factories"
-	implementsFactory "gaskn/features/user/factories/implements"
-	implementsInteract "gaskn/features/user/interactors/implements"
-	"gaskn/features/user/repositories"
-	"gaskn/features/user/repositories/implements"
+	"github.com/bonkzero404/gaskn/driver"
+	implementsRoleRepo "github.com/bonkzero404/gaskn/features/role/repositories/implements"
+	implementsRoleAssignInteract "github.com/bonkzero404/gaskn/features/role_assignment/interactors/implements"
+	"github.com/bonkzero404/gaskn/features/user/factories"
+	implementsFactory "github.com/bonkzero404/gaskn/features/user/factories/implements"
+	implementsInteract "github.com/bonkzero404/gaskn/features/user/interactors/implements"
+	"github.com/bonkzero404/gaskn/features/user/repositories"
+	"github.com/bonkzero404/gaskn/features/user/repositories/implements"
 	"github.com/gofiber/fiber/v2"
 
-	"gaskn/config"
-	"gaskn/features/user/handlers"
+	"github.com/bonkzero404/gaskn/config"
+	"github.com/bonkzero404/gaskn/features/user/handlers"
 )
 
 func registerActionCodeFactory(userActionCodeRepository repositories.UserActionCodeRepository) factories.ActionFactory {

@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"errors"
-	"gaskn/config"
-	"gaskn/database/stores"
-	driver2 "gaskn/driver"
-	"gaskn/dto"
-	"gaskn/utils"
+	"github.com/bonkzero404/gaskn/config"
+	"github.com/bonkzero404/gaskn/database/stores"
+	driver2 "github.com/bonkzero404/gaskn/driver"
+	"github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
