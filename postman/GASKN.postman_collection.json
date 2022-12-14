@@ -94,6 +94,47 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Create User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"full_name\": \"Susi Similikity\",\n    \"email\": \"susi@mail.com\",\n    \"phone\": \"+6281299932111\",\n    \"password\": \"welcome1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/client/{{ClientID}}/user/create",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"client",
+										"{{ClientID}}",
+										"user",
+										"create"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -244,6 +285,45 @@
 								"v1",
 								"user",
 								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Permission)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"full_name\": \"Joko Barong\",\n    \"email\": \"joko@mail.com\",\n    \"phone\": \"+6283331232111\",\n    \"password\": \"welcome1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/user/create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"create"
 							]
 						}
 					},
@@ -907,6 +987,132 @@
 			"name": "Role Assignment",
 			"item": [
 				{
+					"name": "Clients",
+					"item": [
+						{
+							"name": "Create Role Assignment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"role_id\": \"c1aaab78-5772-455b-8615-8263d5f2994a\",\n    \"route_feature\": \"/api/v1/client/:ClientId/features\",\n    \"method_feature\": \"GET\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/client/{{ClientID}}/role-assignment",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"client",
+										"{{ClientID}}",
+										"role-assignment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Role Assignment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"role_id\": \"c1aaab78-5772-455b-8615-8263d5f2994a\",\n    \"route_feature\": \"/api/v1/client/:ClientId/features\",\n    \"method_feature\": \"GET\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/client/{{ClientID}}/role-assignment",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"client",
+										"{{ClientID}}",
+										"role-assignment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Assign User to Role",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": \"c1d6c3b2-1449-4b8a-9f30-6730890213a1\",\n    \"role_id\": \"c1aaab78-5772-455b-8615-8263d5f2994a\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/client/{{ClientID}}/role-assignment/user",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"client",
+										"{{ClientID}}",
+										"role-assignment",
+										"user"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Create Role Assignment",
 					"request": {
 						"auth": {
@@ -923,7 +1129,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"role_id\": \"c1aaab78-5772-455b-8615-8263d5f2994a\",\n    \"route_feature\": \"/api/v1/client/:ClientId/features\",\n    \"method_feature\": \"GET\"\n}",
+							"raw": "{\n    \"role_id\": \"0ef90f8e-8381-4b83-9877-63dc09d2d753\",\n    \"route_feature\": \"/api/v1/features\",\n    \"method_feature\": \"GET\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -931,15 +1137,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/client/{{ClientID}}/role-assignment",
+							"raw": "{{url}}/api/v1/role-assignment",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"client",
-								"{{ClientID}}",
 								"role-assignment"
 							]
 						}
@@ -947,7 +1151,7 @@
 					"response": []
 				},
 				{
-					"name": "Delete Role Assignment",
+					"name": "Remove Role Assignment",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -963,7 +1167,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"role_id\": \"c1aaab78-5772-455b-8615-8263d5f2994a\",\n    \"route_feature\": \"/api/v1/client/:ClientId/features\",\n    \"method_feature\": \"GET\"\n}",
+							"raw": "{\n    \"role_id\": \"0ef90f8e-8381-4b83-9877-63dc09d2d753\",\n    \"route_feature\": \"/api/v1/features\",\n    \"method_feature\": \"GET\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -971,15 +1175,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/client/{{ClientID}}/role-assignment",
+							"raw": "{{url}}/api/v1/role-assignment",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"client",
-								"{{ClientID}}",
 								"role-assignment"
 							]
 						}
@@ -1003,7 +1205,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_id\": \"c1d6c3b2-1449-4b8a-9f30-6730890213a1\",\n    \"role_id\": \"c1aaab78-5772-455b-8615-8263d5f2994a\"\n}",
+							"raw": "{\n    \"user_id\": \"80778504-1696-4d6f-9b8f-ad5c19eea98d\",\n    \"role_id\": \"0ef90f8e-8381-4b83-9877-63dc09d2d753\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1011,15 +1213,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/client/{{ClientID}}/role-assignment/user",
+							"raw": "{{url}}/api/v1/role-assignment/user",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"client",
-								"{{ClientID}}",
 								"role-assignment",
 								"user"
 							]
