@@ -37,15 +37,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/user/invitation",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/user/invitation",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"user",
 										"invitation"
 									]
@@ -78,15 +74,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/user/invitation/acceptance",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/user/invitation/acceptance",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"user",
 										"invitation",
 										"acceptance"
@@ -120,15 +112,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/user/create",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/user/create",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"user",
 										"create"
 									]
@@ -159,13 +147,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/user/register",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/user/register",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"user",
 								"register"
 							]
@@ -188,13 +174,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/user/activation",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/user/activation",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"user",
 								"activation"
 							]
@@ -217,13 +201,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/user/activation/re-send",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/user/activation/re-send",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"user",
 								"activation",
 								"re-send"
@@ -247,13 +229,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/user/request-forgot-password",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/user/request-forgot-password",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"user",
 								"request-forgot-password"
 							]
@@ -276,13 +256,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/user/forgot-password",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/user/forgot-password",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"user",
 								"forgot-password"
 							]
@@ -315,13 +293,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/user/create",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/user/create",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"user",
 								"create"
 							]
@@ -353,7 +329,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"janedoe@mail.com\",\r\n    \"password\": \"welcome1\"\r\n}",
+							"raw": "{\r\n    \"email\": \"johndoe@mail.com\",\r\n    \"password\": \"welcome1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -361,13 +337,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/auth",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/auth",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"auth"
 							]
 						}
@@ -390,13 +364,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/v1/auth/me",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/auth/me",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"auth",
 								"me"
 							]
@@ -420,13 +392,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/v1/auth/refresh-token",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/auth/refresh-token",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"auth",
 								"refresh-token"
 							]
@@ -467,15 +437,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/role",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/role",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"role"
 									]
 								}
@@ -498,15 +464,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/role",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/role",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"role"
 									]
 								}
@@ -538,17 +500,19 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/role/037581b0-2190-4da8-b0b5-1f02cf9f6354",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/role/:roleId",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"role",
-										"037581b0-2190-4da8-b0b5-1f02cf9f6354"
+										":roleId"
+									],
+									"variable": [
+										{
+											"key": "roleId",
+											"value": "037581b0-2190-4da8-b0b5-1f02cf9f6354"
+										}
 									]
 								}
 							},
@@ -570,17 +534,19 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/role/037581b0-2190-4da8-b0b5-1f02cf9f6354",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/role/:roleId",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"role",
-										"037581b0-2190-4da8-b0b5-1f02cf9f6354"
+										":roleId"
+									],
+									"variable": [
+										{
+											"key": "roleId",
+											"value": "037581b0-2190-4da8-b0b5-1f02cf9f6354"
+										}
 									]
 								}
 							},
@@ -613,13 +579,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/role",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/role",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"role"
 							]
 						}
@@ -651,15 +615,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/role/f64fc2db-cfae-4462-81a9-258e9a061eef",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/role/:roleId",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"role",
-								"f64fc2db-cfae-4462-81a9-258e9a061eef"
+								":roleId"
+							],
+							"variable": [
+								{
+									"key": "roleId",
+									"value": "f64fc2db-cfae-4462-81a9-258e9a061eef"
+								}
 							]
 						}
 					},
@@ -681,13 +649,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/v1/role",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/role",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"role"
 							]
 						}
@@ -710,15 +676,19 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/v1/role/f64fc2db-cfae-4462-81a9-258e9a061eef",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/role/:roleId",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"role",
-								"f64fc2db-cfae-4462-81a9-258e9a061eef"
+								":roleId"
+							],
+							"variable": [
+								{
+									"key": "roleId",
+									"value": "f64fc2db-cfae-4462-81a9-258e9a061eef"
+								}
 							]
 						}
 					},
@@ -766,13 +736,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/client",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/client",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"client"
 							]
 						}
@@ -795,13 +763,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/v1/client/user",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/client/user",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"client",
 								"user"
 							]
@@ -834,15 +800,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/client/{{ClientID}}/update",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/update",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 							],
 							"path": [
-								"api",
-								"v1",
-								"client",
-								"{{ClientID}}",
 								"update"
 							]
 						}
@@ -873,15 +835,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/features",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/features",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"features"
 									]
 								}
@@ -904,15 +862,11 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/features/group",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/features/group",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"features",
 										"group"
 									]
@@ -938,13 +892,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/v1/features",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/features",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"features"
 							]
 						}
@@ -967,13 +919,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/api/v1/features/group",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/features/group",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"features",
 								"group"
 							]
@@ -1014,15 +964,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/role-assignment",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/role-assignment",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"role-assignment"
 									]
 								}
@@ -1054,15 +1000,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/role-assignment",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/role-assignment",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"role-assignment"
 									]
 								}
@@ -1094,15 +1036,11 @@
 									}
 								},
 								"url": {
-									"raw": "{{url}}/api/v1/client/{{ClientID}}/role-assignment/user",
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/role-assignment/user",
 									"host": [
-										"{{url}}"
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
 									],
 									"path": [
-										"api",
-										"v1",
-										"client",
-										"{{ClientID}}",
 										"role-assignment",
 										"user"
 									]
@@ -1137,13 +1075,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/role-assignment",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/role-assignment",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"role-assignment"
 							]
 						}
@@ -1175,13 +1111,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/role-assignment",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/role-assignment",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"role-assignment"
 							]
 						}
@@ -1213,13 +1147,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/v1/role-assignment/user",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/role-assignment/user",
 							"host": [
-								"{{url}}"
+								"{{url}}{{urlWrap}}{{urlVersion}}"
 							],
 							"path": [
-								"api",
-								"v1",
 								"role-assignment",
 								"user"
 							]
@@ -1264,6 +1196,21 @@
 		{
 			"key": "ClientID",
 			"value": "bb4b8097-b5f2-4ba7-84d6-b43c8e943401",
+			"type": "string"
+		},
+		{
+			"key": "urlWrap",
+			"value": "/api",
+			"type": "string"
+		},
+		{
+			"key": "urlVersion",
+			"value": "/v1",
+			"type": "string"
+		},
+		{
+			"key": "urlClient",
+			"value": "/client/",
 			"type": "string"
 		}
 	]
