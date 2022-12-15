@@ -1,6 +1,7 @@
 package role
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/bonkzero404/gaskn/app/middleware"
@@ -17,7 +18,7 @@ type ApiRouteClient struct {
 }
 
 func (handler *ApiRoute) Route(app fiber.Router) {
-	const endpointGroup string = "/client"
+	var endpointGroup = "/" + config.Config("API_CLIENT")
 
 	client := utils.GasknRouter{}
 	client.Set(app).Group(utils.SetupApiGroup() + endpointGroup)
