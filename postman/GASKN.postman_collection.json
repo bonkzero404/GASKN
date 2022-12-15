@@ -736,12 +736,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/client",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}",
 							"host": [
-								"{{url}}{{urlWrap}}{{urlVersion}}"
-							],
-							"path": [
-								"client"
+								"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}"
 							]
 						}
 					},
@@ -763,13 +760,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/client/user",
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}user",
 							"host": [
-								"{{url}}{{urlWrap}}{{urlVersion}}"
-							],
-							"path": [
-								"client",
-								"user"
+								"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}user"
 							]
 						}
 					},
