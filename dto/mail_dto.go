@@ -4,7 +4,7 @@ type Mail struct {
 	From         string
 	To           []string
 	Subject      string
-	BodyParam    map[string]interface{}
+	BodyParam    any
 	TemplateHtml string
 	Attachment   string
 }

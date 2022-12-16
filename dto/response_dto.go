@@ -3,10 +3,10 @@ package dto
 import "fmt"
 
 type Response struct {
-	Valid bool        `json:"valid"`
-	Meta  Meta        `json:"meta"`
-	Error interface{} `json:"errors"`
-	Data  interface{} `json:"data"`
+	Valid bool `json:"valid"`
+	Meta  Meta `json:"meta"`
+	Error any  `json:"errors"`
+	Data  any  `json:"data"`
 }
 
 type Meta struct {
@@ -18,9 +18,9 @@ type Meta struct {
 }
 
 type Errors struct {
-	Message string      `json:"message"`
-	Cause   string      `json:"cause"`
-	Inputs  interface{} `json:"inputs"`
+	Message string `json:"message"`
+	Cause   string `json:"cause"`
+	Inputs  any    `json:"inputs"`
 }
 
 type ErrorResponse struct {

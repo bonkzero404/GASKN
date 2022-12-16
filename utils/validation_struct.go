@@ -14,7 +14,7 @@ import (
 	"github.com/bonkzero404/gaskn/config"
 )
 
-func ValidateStruct(s interface{}, ctx *fiber.Ctx) []*dto.ErrorResponse {
+func ValidateStruct(s any, ctx *fiber.Ctx) []*dto.ErrorResponse {
 	var errors []*dto.ErrorResponse
 	var validate *validator.Validate
 	var trans ut.Translator

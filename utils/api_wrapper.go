@@ -7,7 +7,7 @@ import (
 )
 
 // ApiWrapper /*
-func ApiWrapper(ctx *fiber.Ctx, code int, status string, data interface{}, errors interface{}) error {
+func ApiWrapper(ctx *fiber.Ctx, code int, status string, data any, errors any) error {
 	meta := dto.Meta{
 		Route:  ctx.Route().Path,
 		Method: ctx.Method(),
@@ -51,11 +51,11 @@ func ApiUnauthorized(ctx *fiber.Ctx, errors dto.Errors) error {
 	return ApiWrapper(ctx, fiber.StatusUnauthorized, "error_unauthorized", nil, errors)
 }
 
-func ApiCreated(ctx *fiber.Ctx, data interface{}) error {
+func ApiCreated(ctx *fiber.Ctx, data any) error {
 	return ApiWrapper(ctx, fiber.StatusCreated, "success_created", data, nil)
 }
 
-func ApiOk(ctx *fiber.Ctx, data interface{}) error {
+func ApiOk(ctx *fiber.Ctx, data any) error {
 	return ApiWrapper(ctx, fiber.StatusOK, "success_ok", data, nil)
 }
 

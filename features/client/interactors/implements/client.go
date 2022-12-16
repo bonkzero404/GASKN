@@ -50,13 +50,13 @@ func (interact Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, use
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key") {
-			return &dto.ClientResponse{}, &responseDto.ApiErrorResponse{
+			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    utils.Lang(c, "client:err:duplicate"),
 			}
 		}
 
-		return &dto.ClientResponse{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, err.Error()),
 		}
@@ -75,7 +75,7 @@ func (interact Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, use
 		role.RoleName,
 		clientStore.ClientName,
 	); !g {
-		return &dto.ClientResponse{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, err.Error()),
 		}
@@ -91,7 +91,7 @@ func (interact Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, use
 		role.RoleName,
 		clientStore.ClientName,
 	); !p {
-		return &dto.ClientResponse{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, err.Error()),
 		}
@@ -117,7 +117,7 @@ func (interact Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (*d
 	errCheckClient := interact.ClientRepository.GetClientById(&clientStore, clientId).Error
 
 	if errCheckClient != nil {
-		return &dto.ClientResponse{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "client:err:read-exists"),
 		}
@@ -131,7 +131,7 @@ func (interact Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (*d
 	err := interact.ClientRepository.UpdateClientById(&clientStore).Error
 
 	if err != nil {
-		return &dto.ClientResponse{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, "global:err:failed-unknown"),
 		}

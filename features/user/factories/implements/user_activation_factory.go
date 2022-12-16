@@ -33,7 +33,7 @@ func (service UserActivationFactory) CreateUserActivation(user *stores.User) (*s
 	}
 
 	if err := service.UserActivationRepository.CreateUserActionCode(&userActivate).Error; err != nil {
-		return &stores.UserActionCode{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}

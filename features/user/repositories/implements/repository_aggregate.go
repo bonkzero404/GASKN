@@ -22,13 +22,13 @@ func NewRepositoryAggregate(
 
 func (repository RepositoryAggregate) CreateUser(user *stores.User, userActivate *stores.UserActionCode) (*stores.User, error) {
 	if err := repository.UserRepository.CreateUser(user).Error; err != nil {
-		return &stores.User{}, err
+		return nil, err
 	}
 
 	userActivate.UserId = user.ID
 
 	if err := repository.UserActionCodeRepository.CreateUserActionCode(userActivate).Error; err != nil {
-		return &stores.User{}, err
+		return nil, err
 	}
 
 	return user, nil
@@ -38,13 +38,13 @@ func (repository RepositoryAggregate) UpdateUserActivation(id string, stat bool)
 	var user stores.User
 
 	if err := repository.UserRepository.FindUserById(&user, id).Error; err != nil {
-		return &stores.User{}, err
+		return nil, err
 	}
 
 	user.IsActive = stat
 
 	if err := repository.UserRepository.UpdateUserIsActive(&user).Error; err != nil {
-		return &stores.User{}, err
+		return nil, err
 	}
 
 	return &user, nil
@@ -54,13 +54,13 @@ func (repository RepositoryAggregate) UpdatePassword(id string, password string)
 	var user stores.User
 
 	if err := repository.UserRepository.FindUserById(&user, id).Error; err != nil {
-		return &stores.User{}, err
+		return nil, err
 	}
 
 	user.Password = password
 
 	if err := repository.UserRepository.UpdatePassword(&user).Error; err != nil {
-		return &stores.User{}, err
+		return nil, err
 	}
 
 	return &user, nil
@@ -70,13 +70,13 @@ func (repository RepositoryAggregate) UpdateActionCodeUsed(userId string, code s
 	var userAct stores.UserActionCode
 
 	if err := repository.UserActionCodeRepository.FindUserActionCode(&userAct, userId, code).Error; err != nil {
-		return &stores.UserActionCode{}, err
+		return nil, err
 	}
 
 	userAct.IsUsed = true
 
 	if err := repository.UserActionCodeRepository.UpdateActionCodeUsed(&userAct).Error; err != nil {
-		return &stores.UserActionCode{}, err
+		return nil, err
 	}
 
 	return &userAct, nil

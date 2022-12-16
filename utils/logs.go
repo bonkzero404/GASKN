@@ -59,7 +59,7 @@ func getLastLineWithSeek(filepath string, lineFromBottom int) string {
 }
 
 //goland:noinspection GoUnhandledErrorResult
-func WriteRequestToLog(ctx *fiber.Ctx, ptr string, statusCode int, resp interface{}) {
+func WriteRequestToLog(ctx *fiber.Ctx, ptr string, statusCode int, resp any) {
 
 	if config.Config("ENABLE_LOG") == "true" {
 		logFormat := ptr +

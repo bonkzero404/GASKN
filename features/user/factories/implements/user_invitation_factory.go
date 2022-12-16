@@ -33,7 +33,7 @@ func (service UserInvitationFactory) CreateUserInvitation(user *stores.User, url
 	}
 
 	if err := service.UserInvitationRepository.CreateUserActionCode(&userInvitation).Error; err != nil {
-		return &stores.UserActionCode{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}

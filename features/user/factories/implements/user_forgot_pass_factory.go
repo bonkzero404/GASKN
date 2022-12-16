@@ -31,7 +31,7 @@ func (service UserForgotPassFactory) CreateUserForgotPass(user *stores.User) (*s
 	}
 
 	if err := service.UserForgotPassRepository.CreateUserActionCode(&userActivate).Error; err != nil {
-		return &stores.UserActionCode{}, &responseDto.ApiErrorResponse{
+		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}

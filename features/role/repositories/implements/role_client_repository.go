@@ -38,7 +38,7 @@ func (repository RoleClientRepository) CreateRoleClient(role *stores.Role, clien
 	// Create CLient
 	if err := tx.Create(&role).Error; err != nil {
 		tx.Rollback()
-		return &stores.Role{}, err
+		return nil, err
 	}
 
 	roleClient := stores.RoleClient{
@@ -50,7 +50,7 @@ func (repository RoleClientRepository) CreateRoleClient(role *stores.Role, clien
 
 	if err := tx.Create(&roleClient).Error; err != nil {
 		tx.Rollback()
-		return &stores.Role{}, err
+		return nil, err
 	}
 
 	return role, tx.Commit().Error

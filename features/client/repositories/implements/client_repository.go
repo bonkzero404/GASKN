@@ -23,7 +23,7 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 	var role stores.Role
 
 	if err := repository.DB.Take(&role, "role_name = 'Owner' AND role_type = 'cl'").Error; err != nil {
-		return &stores.Role{}, err
+		return nil, err
 	}
 
 	tx := repository.DB.Begin()
@@ -35,13 +35,13 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 	}()
 
 	if err := tx.Error; err != nil {
-		return &stores.Role{}, err
+		return nil, err
 	}
 
 	// Create CLient
 	if err := tx.Create(&client).Error; err != nil {
 		tx.Rollback()
-		return &stores.Role{}, err
+		return nil, err
 	}
 
 	// Set Role
@@ -55,7 +55,7 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 	// Create Role
 	if err := tx.Create(&roleUser).Error; err != nil {
 		tx.Rollback()
-		return &stores.Role{}, err
+		return nil, err
 	}
 
 	// Set Role User with Client
@@ -68,7 +68,7 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 	// Create Role
 	if err := tx.Create(&roleUserClient).Error; err != nil {
 		tx.Rollback()
-		return &stores.Role{}, err
+		return nil, err
 	}
 
 	// Set Role Client
@@ -82,7 +82,7 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 	// Create Role Client
 	if err := tx.Create(&roleClient).Error; err != nil {
 		tx.Rollback()
-		return &stores.Role{}, err
+		return nil, err
 	}
 
 	// Set user to client assignment
@@ -94,7 +94,7 @@ func (repository ClientRepository) CreateClient(client *stores.Client) (*stores.
 
 	if err := tx.Create(&clientAssignment).Error; err != nil {
 		tx.Rollback()
-		return &stores.Role{}, err
+		return nil, err
 	}
 
 	return &role, tx.Commit().Error
