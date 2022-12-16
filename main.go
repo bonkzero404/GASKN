@@ -34,7 +34,9 @@ func main() {
 	driver2.InitCasbin()
 
 	// Handling global cors
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: config.Config("ALLOW_ORIGINS"),
+	}))
 
 	// Securing with helmet
 	app.Use(helmet.New())
