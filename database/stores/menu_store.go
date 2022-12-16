@@ -7,6 +7,7 @@ import (
 
 type MenuType string
 
+//goland:noinspection GoUnusedConst,GoUnusedConst
 const (
 	MenuBO MenuType = "BO" // BackOffice Type
 	MenuCL MenuType = "CL" // Client Type

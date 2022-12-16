@@ -20,6 +20,7 @@ func CreateSqlLog() io.Writer {
 	return multiOutput
 }
 
+//goland:noinspection GoUnhandledErrorResult,GoUnhandledErrorResult,GoUnhandledErrorResult,GoUnusedFunction
 func getLastLineWithSeek(filepath string, lineFromBottom int) string {
 	fileHandle, err := os.Open(filepath)
 
@@ -57,6 +58,7 @@ func getLastLineWithSeek(filepath string, lineFromBottom int) string {
 	return line
 }
 
+//goland:noinspection GoUnhandledErrorResult
 func WriteRequestToLog(ctx *fiber.Ctx, ptr string, statusCode int, resp interface{}) {
 
 	if config.Config("ENABLE_LOG") == "true" {
@@ -113,9 +115,9 @@ func WriteRequestToLog(ctx *fiber.Ctx, ptr string, statusCode int, resp interfac
 }
 
 func reverseString(str string) string {
-	byte_str := []rune(str)
-	for i, j := 0, len(byte_str)-1; i < j; i, j = i+1, j-1 {
-		byte_str[i], byte_str[j] = byte_str[j], byte_str[i]
+	byteStr := []rune(str)
+	for i, j := 0, len(byteStr)-1; i < j; i, j = i+1, j-1 {
+		byteStr[i], byteStr[j] = byteStr[j], byteStr[i]
 	}
-	return string(byte_str)
+	return string(byteStr)
 }

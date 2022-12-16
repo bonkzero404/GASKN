@@ -9,14 +9,15 @@ import (
 
 type ActCodeType string
 
-/*
-*
-This constant is used to create a string enumeration type to
-distinguish the type of user who is activating or requesting
-forgotten passwords
-*/
+// ACTIVATION_CODE /*
+//
+//goland:noinspection GoSnakeCaseUsage
 const ACTIVATION_CODE ActCodeType = "ACTIVATION_CODE"
+
+//goland:noinspection GoSnakeCaseUsage
 const FORGOT_PASSWORD ActCodeType = "FORGOT_PASSWORD"
+
+//goland:noinspection GoSnakeCaseUsage
 const INVITATION_CODE ActCodeType = "INVITATION_CODE"
 
 // UserActionCode /*

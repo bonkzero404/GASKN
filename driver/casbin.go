@@ -110,6 +110,7 @@ func RemovePolicy(roleId string, clientId string, routeEndpoint string, httpMeth
 	return true, nil
 }
 
+//goland:noinspection GoUnusedExportedFunction
 func RemoveGroupingPolicy(userId string, roleId string, clientId string) (bool, error) {
 	if g, err := Enforcer.RemoveGroupingPolicy(userId, roleId, clientId); !g {
 		return false, err

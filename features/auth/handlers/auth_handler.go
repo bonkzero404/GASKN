@@ -55,10 +55,7 @@ func (service *AuthHandler) Authentication(c *fiber.Ctx) error {
 	return utils.ApiOk(c, response)
 }
 
-/*
-*
-Get user profile
-*/
+// GetProfile /*
 func (service *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
@@ -78,10 +75,7 @@ func (service *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	return utils.ApiOk(c, response)
 }
 
-/*
-*
-Refresh token
-*/
+// RefreshToken /*
 func (service *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 
