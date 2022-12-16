@@ -36,12 +36,12 @@ func (interact Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.MenuRe
 		var getMenu = stores.Menu{}
 
 		// Check menu if exists
-		errGetMenu := interact.MenuRepository.GetMenuById(&getMenu, req.ParentId)
+		errGetMenu := interact.MenuRepository.GetMenuById(&getMenu, req.ParentId).Error
 
 		if errGetMenu != nil {
 			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, "blabla"),
+				Message:    utils.Lang(c, "menu:err:menu-not-found"),
 			}
 		}
 
