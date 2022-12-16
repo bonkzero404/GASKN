@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -32,6 +33,12 @@ func Config(key string) string {
 		fmt.Print("Error loading .env file")
 	}
 
+	var env = os.Getenv(key)
+
+	env = strings.Trim(env, "\"")
+	env = strings.Trim(env, "'")
+	env = strings.Trim(env, "`")
+
 	// Take env file parameters
-	return os.Getenv(key)
+	return env
 }
