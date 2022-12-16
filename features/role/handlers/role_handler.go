@@ -10,12 +10,12 @@ import (
 )
 
 type RoleHandler struct {
-	RoleService interactors.Role
+	Role interactors.Role
 }
 
 func NewRoleHandler(roleService interactors.Role) *RoleHandler {
 	return &RoleHandler{
-		RoleService: roleService,
+		Role: roleService,
 	}
 }
 
@@ -39,7 +39,7 @@ func (handler *RoleHandler) CreateRole(c *fiber.Ctx) error {
 		})
 	}
 
-	response, err := handler.RoleService.CreateRole(c, &request)
+	response, err := handler.Role.CreateRole(c, &request)
 
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
@@ -54,7 +54,7 @@ func (handler *RoleHandler) CreateRole(c *fiber.Ctx) error {
 }
 
 func (handler *RoleHandler) GetRoleList(c *fiber.Ctx) error {
-	response, err := handler.RoleService.GetRoleList(c)
+	response, err := handler.Role.GetRoleList(c)
 
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
@@ -90,7 +90,7 @@ func (handler *RoleHandler) UpdateRole(c *fiber.Ctx) error {
 
 	roleId := c.Params("id")
 
-	response, err := handler.RoleService.UpdateRole(c, roleId, &request)
+	response, err := handler.Role.UpdateRole(c, roleId, &request)
 
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
@@ -107,7 +107,7 @@ func (handler *RoleHandler) UpdateRole(c *fiber.Ctx) error {
 func (handler *RoleHandler) DeleteRole(c *fiber.Ctx) error {
 	roleId := c.Params("id")
 
-	response, err := handler.RoleService.DeleteRoleById(c, roleId)
+	response, err := handler.Role.DeleteRoleById(c, roleId)
 
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)

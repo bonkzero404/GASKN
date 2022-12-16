@@ -5,9 +5,11 @@ import (
 	"gorm.io/gorm"
 )
 
+type MenuType string
+
 const (
-	MenuSA string = "sub"
-	MenuCL string = "link"
+	MenuBO MenuType = "BO" // BackOffice Type
+	MenuCL MenuType = "CL" // Client Type
 )
 
 // Menu /*
@@ -18,7 +20,7 @@ type Menu struct {
 	MenuName        string    `gorm:"type:varchar(100);index;not null"`
 	MenuDescription string    `gorm:"type:text"`
 	MenuUrl         string    `gorm:"type:text"`
-	MenuType        string    `gorm:"type:char(4)"`
+	MenuType        MenuType  `gorm:"type:char(2);index"`
 	IsActive        bool
 }
 

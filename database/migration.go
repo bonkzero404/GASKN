@@ -20,6 +20,7 @@ func MigrateDB() {
 		&stores.UserInvitation{},
 		&stores.PermissionRule{},
 		&stores.PermissionRuleDetail{},
+		&stores.Menu{},
 	)
 	if err != nil {
 		log.Println(err)
