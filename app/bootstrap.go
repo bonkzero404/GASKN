@@ -10,7 +10,6 @@ import (
 	"github.com/bonkzero404/gaskn/features/role_assignment"
 	"github.com/bonkzero404/gaskn/features/user"
 	"github.com/bonkzero404/gaskn/utils"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 )
@@ -76,6 +75,7 @@ func extrasFeature(app *fiber.App) {
 
 // Bootstrap /*
 func Bootstrap(app *fiber.App) {
+
 	// Monitor app
 	app.Get("/monitor", monitor.New())
 

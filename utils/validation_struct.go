@@ -1,69 +1,99 @@
 package utils
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/dto"
+	"regexp"
 
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/id"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	englishTranslation "github.com/go-playground/validator/v10/translations/en"
-	indoTranslation "github.com/go-playground/validator/v10/translations/id"
 	"github.com/gofiber/fiber/v2"
-
-	"github.com/bonkzero404/gaskn/config"
 )
 
-func ValidateStruct(s any, ctx *fiber.Ctx) []*dto.ErrorResponse {
-	var errors []*dto.ErrorResponse
-	var validate *validator.Validate
+func FilterParamContext(val string, locales ...string) string {
+	for _, v := range locales {
+		if v == val {
+			return v
+		}
+	}
+
+	if config.Config("LANG") != "" {
+		return config.Config("LANG")
+	}
+
+	return "en"
+}
+
+func setLanguage(ctx *fiber.Ctx, validate *validator.Validate) ut.Translator {
 	var trans ut.Translator
 
 	enTrans := en.New()
 	idTrans := id.New()
 
-	if ctx.Query("lang") != "" && ctx.Query("lang") == "en" {
-		uni := ut.New(enTrans, enTrans)
-		trans, _ = uni.GetTranslator("en")
-		validate = validator.New()
+	uni := ut.New(enTrans, enTrans, idTrans)
 
-		err := englishTranslation.RegisterDefaultTranslations(validate, trans)
-		if err != nil {
-			return nil
-		}
-	} else if ctx.Query("lang") != "" && ctx.Query("lang") == "id" {
-		uni := ut.New(idTrans, idTrans)
-		trans, _ = uni.GetTranslator("id")
-		validate = validator.New()
+	var lng = FilterParamContext(ctx.Query("lang"), "en", "id")
+	trans, _ = uni.GetTranslator(lng)
 
-		err := indoTranslation.RegisterDefaultTranslations(validate, trans)
-		if err != nil {
-			return nil
-		}
-	} else {
-		var defaultLang = "en"
-		var uni = ut.New(enTrans, enTrans)
+	_ = englishTranslation.RegisterDefaultTranslations(validate, trans)
 
-		if config.Config("LANG") != "" {
-			defaultLang = config.Config("LANG")
+	return trans
+}
 
-			if config.Config("LANG") == "en" {
-				uni = ut.New(enTrans, enTrans)
+func registerTagLanguage(
+	validate *validator.Validate,
+	translator ut.Translator,
+	tag string,
+	f validator.Func,
+	message string,
+) {
+	_ = validate.RegisterValidation(tag, f)
+
+	_ = validate.RegisterTranslation(tag, translator,
+		func(ut ut.Translator) error {
+			return ut.Add(tag, message, false)
+		},
+		func(ut ut.Translator, fe validator.FieldError) string {
+			fld, _ := ut.T(fe.Field())
+			t, err := ut.T(fe.Tag(), fld)
+			if err != nil {
+				return fe.(error).Error()
 			}
+			return t
+		},
+	)
+}
 
-			if config.Config("LANG") == "id" {
-				uni = ut.New(idTrans, idTrans)
-			}
-		}
+func setCustomTagLanguage(
+	ctx *fiber.Ctx,
+	validate *validator.Validate,
+	translator ut.Translator,
+	tag string,
+	f validator.Func,
+) {
+	var s string
+	var lng = FilterParamContext(ctx.Query("lang"), "en", "id")
 
-		trans, _ = uni.GetTranslator(defaultLang)
-		validate = validator.New()
+	var t ut.Translator
+	t, _ = Trans.GetTranslator(lng)
 
-		err := englishTranslation.RegisterDefaultTranslations(validate, trans)
-		if err != nil {
-			return nil
-		}
-	}
+	parseLang, _ := t.T(tag, s)
+
+	registerTagLanguage(validate, translator, tag, f, parseLang)
+
+}
+
+func ValidateStruct(s any, ctx *fiber.Ctx) []*dto.ErrorResponse {
+	var errors []*dto.ErrorResponse
+	var validate = validator.New()
+
+	var trans = setLanguage(ctx, validate)
+
+	// Register custom tags
+	setCustomTagLanguage(ctx, validate, trans, "alphanum_extra", ValidateAlphanumExtra)
 
 	err := validate.Struct(s)
 
@@ -78,4 +108,10 @@ func ValidateStruct(s any, ctx *fiber.Ctx) []*dto.ErrorResponse {
 		}
 	}
 	return errors
+}
+
+func ValidateAlphanumExtra(val validator.FieldLevel) bool {
+	isAlphaNumCustom := regexp.MustCompile(`^[-_' a-zA-Z0-9]+$`).MatchString(val.Field().String())
+
+	return isAlphaNumCustom
 }

@@ -1,0 +1,7 @@
+[
+  {
+    "locale": "en",
+    "key": "alphanum_extra",
+    "trans": "{0} Can only contain alphanumeric characters with spacing, _, ', -"
+  }
+]

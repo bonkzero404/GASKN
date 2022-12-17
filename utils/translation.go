@@ -31,18 +31,9 @@ func SetupLang() {
 func Lang(ctx *fiber.Ctx, key string, params ...string) string {
 	var lng ut.Translator
 
-	if ctx.Query("lang") != "" && ctx.Query("lang") == "en" {
-		lng, _ = Trans.GetTranslator("en")
-	} else if ctx.Query("lang") != "" && ctx.Query("lang") == "id" {
-		lng, _ = Trans.GetTranslator("id")
-	} else {
-		var defaultLang = "en"
+	var locale = FilterParamContext(ctx.Query("lang"), "en", "id")
 
-		if config.Config("LANG") != "" {
-			defaultLang = config.Config("LANG")
-		}
-		lng, _ = Trans.GetTranslator(defaultLang)
-	}
+	lng, _ = Trans.GetTranslator(locale)
 
 	parseLang, _ := lng.T(key, params...)
 
