@@ -43,13 +43,7 @@ func setLanguage(ctx *fiber.Ctx, validate *validator.Validate) ut.Translator {
 	return trans
 }
 
-func registerTagLanguage(
-	validate *validator.Validate,
-	translator ut.Translator,
-	tag string,
-	f validator.Func,
-	message string,
-) {
+func registerTagLanguage(validate *validator.Validate, translator ut.Translator, tag string, f validator.Func, message string) {
 	_ = validate.RegisterValidation(tag, f)
 
 	_ = validate.RegisterTranslation(tag, translator,
@@ -67,13 +61,7 @@ func registerTagLanguage(
 	)
 }
 
-func setCustomTagLanguage(
-	ctx *fiber.Ctx,
-	validate *validator.Validate,
-	translator ut.Translator,
-	tag string,
-	f validator.Func,
-) {
+func setCustomTagLanguage(ctx *fiber.Ctx, validate *validator.Validate, translator ut.Translator, tag string, f validator.Func) {
 	var s string
 	var lng = FilterParamContext(ctx.Query("lang"), "en", "id")
 
