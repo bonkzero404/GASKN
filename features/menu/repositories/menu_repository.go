@@ -9,4 +9,6 @@ type MenuRepository interface {
 	CreateMenu(menu *stores.Menu) *gorm.DB
 
 	GetMenuById(menu *stores.Menu, id string) *gorm.DB
+
+	GetMenuAllByType(menu *[]stores.Menu, menuType stores.MenuType) *gorm.DB
 }

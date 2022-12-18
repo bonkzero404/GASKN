@@ -32,4 +32,37 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		SetRouteDescriptionKeyLang("blabla").
 		Execute()
 
+	menu.Get(
+		"/",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.MenuHandler.GetMenuAll,
+	).
+		SetRouteName("GetAllMenu").
+		SetRouteDescriptionKeyLang("blabla").
+		Execute()
+
+	menu.Get(
+		"/sa",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.MenuHandler.GetMenuSa,
+	).
+		SetRouteName("GetAllMenuSa").
+		SetRouteDescriptionKeyLang("blabla").
+		Execute()
+
+	menu.Get(
+		"/client",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.MenuHandler.GetMenuClient,
+	).
+		SetRouteName("GetAllMenuClient").
+		SetRouteDescriptionKeyLang("blabla").
+		Execute()
+
 }

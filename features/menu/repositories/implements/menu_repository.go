@@ -23,3 +23,11 @@ func (repository MenuRepository) CreateMenu(menu *stores.Menu) *gorm.DB {
 func (repository MenuRepository) GetMenuById(menu *stores.Menu, id string) *gorm.DB {
 	return repository.DB.Take(&menu, "id = ?", id)
 }
+
+func (repository MenuRepository) GetMenuAllByType(menu *[]stores.Menu, menuType stores.MenuType) *gorm.DB {
+	if menuType == "" {
+		return repository.DB.Find(&menu)
+	}
+
+	return repository.DB.Find(&menu, "menu_type = ?", menuType)
+}

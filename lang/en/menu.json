@@ -2,6 +2,16 @@
   {
     "locale": "en",
     "key": "menu:err:menu-not-found",
-    "trans": "Menu tidak ada"
+    "trans": "Menu does not exists"
+  },
+  {
+    "locale": "en",
+    "key": "menu:err:create",
+    "trans": "Menu failed to create"
+  },
+  {
+    "locale": "en",
+    "key": "menu:err:load",
+    "trans": "Menu failed to load"
   }
 ]

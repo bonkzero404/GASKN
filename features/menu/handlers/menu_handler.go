@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/bonkzero404/gaskn/database/stores"
 	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/menu/dto"
 	"github.com/bonkzero404/gaskn/features/menu/interactors"
@@ -43,11 +44,59 @@ func (handler *MenuHandler) CreateMenu(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "role:err:create-failed"),
+			Message: utils.Lang(c, "menu:err:create"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
 	return utils.ApiCreated(c, response)
+}
+
+func (handler *MenuHandler) GetMenuAll(c *fiber.Ctx) error {
+	mode := handler.Menu.ValidationMenuMode(c)
+	response, err := handler.Menu.GetMenuAllByType("", mode)
+
+	if err != nil {
+		re := err.(*responseDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
+			Message: utils.Lang(c, "menu:err:load"),
+			Cause:   err.Error(),
+			Inputs:  nil,
+		})
+	}
+
+	return utils.ApiOk(c, response)
+}
+
+func (handler *MenuHandler) GetMenuSa(c *fiber.Ctx) error {
+	mode := handler.Menu.ValidationMenuMode(c)
+	response, err := handler.Menu.GetMenuAllByType(stores.MenuBO, mode)
+
+	if err != nil {
+		re := err.(*responseDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
+			Message: utils.Lang(c, "menu:err:load"),
+			Cause:   err.Error(),
+			Inputs:  nil,
+		})
+	}
+
+	return utils.ApiOk(c, response)
+}
+
+func (handler *MenuHandler) GetMenuClient(c *fiber.Ctx) error {
+	mode := handler.Menu.ValidationMenuMode(c)
+	response, err := handler.Menu.GetMenuAllByType(stores.MenuCL, mode)
+
+	if err != nil {
+		re := err.(*responseDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
+			Message: utils.Lang(c, "menu:err:load"),
+			Cause:   err.Error(),
+			Inputs:  nil,
+		})
+	}
+
+	return utils.ApiOk(c, response)
 }

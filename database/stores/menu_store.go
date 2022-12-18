@@ -22,6 +22,7 @@ type Menu struct {
 	MenuDescription string    `gorm:"type:text"`
 	MenuUrl         string    `gorm:"type:text"`
 	MenuType        MenuType  `gorm:"type:char(2);index"`
+	Sort            int
 	IsActive        bool
 }
 
