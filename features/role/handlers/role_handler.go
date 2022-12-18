@@ -22,21 +22,8 @@ func NewRoleHandler(roleService interactors.Role) *RoleHandler {
 func (handler *RoleHandler) CreateRole(c *fiber.Ctx) error {
 	var request dto.RoleRequest
 
-	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:body-parser"),
-			Cause:   err.Error(),
-			Inputs:  nil,
-		})
-	}
-
-	errors := utils.ValidateStruct(request, c)
-	if errors != nil {
-		return utils.ApiErrorValidation(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:validate"),
-			Cause:   utils.Lang(c, "global:err:validate-cause"),
-			Inputs:  errors,
-		})
+	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
+		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	response, err := handler.Role.CreateRole(c, &request)
@@ -71,21 +58,8 @@ func (handler *RoleHandler) GetRoleList(c *fiber.Ctx) error {
 func (handler *RoleHandler) UpdateRole(c *fiber.Ctx) error {
 	var request dto.RoleRequest
 
-	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:body-parser"),
-			Cause:   err.Error(),
-			Inputs:  nil,
-		})
-	}
-
-	errors := utils.ValidateStruct(request, c)
-	if errors != nil {
-		return utils.ApiErrorValidation(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:validate"),
-			Cause:   utils.Lang(c, "global:err:validate-cause"),
-			Inputs:  errors,
-		})
+	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
+		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	roleId := c.Params("id")

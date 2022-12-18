@@ -10,7 +10,7 @@
     "trans": "Menu gagal dibuat"
   },
   {
-    "locale": "en",
+    "locale": "id",
     "key": "menu:err:load",
     "trans": "Menu gagal dimuat"
   }

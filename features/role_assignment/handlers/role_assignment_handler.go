@@ -22,21 +22,8 @@ func NewRoleAssignmentHandler(RoleAssignmentService interactors.RoleAssignment) 
 func (service *RoleAssignmentHandler) CreateRoleAssignment(c *fiber.Ctx) error {
 	var request dto.RoleAssignmentRequest
 
-	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:body-parser"),
-			Cause:   err.Error(),
-			Inputs:  nil,
-		})
-	}
-
-	errors := utils.ValidateStruct(request, c)
-	if errors != nil {
-		return utils.ApiErrorValidation(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:validate"),
-			Cause:   utils.Lang(c, "global:err:validate-cause"),
-			Inputs:  errors,
-		})
+	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
+		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	response, err := service.RoleAssignmentService.CreateRoleAssignment(c, &request)
@@ -56,21 +43,8 @@ func (service *RoleAssignmentHandler) CreateRoleAssignment(c *fiber.Ctx) error {
 func (service *RoleAssignmentHandler) RemoveRoleAssignment(c *fiber.Ctx) error {
 	var request dto.RoleAssignmentRequest
 
-	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:body-parser"),
-			Cause:   err.Error(),
-			Inputs:  nil,
-		})
-	}
-
-	errors := utils.ValidateStruct(request, c)
-	if errors != nil {
-		return utils.ApiErrorValidation(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:validate"),
-			Cause:   utils.Lang(c, "global:err:validate-cause"),
-			Inputs:  errors,
-		})
+	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
+		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	response, err := service.RoleAssignmentService.RemoveRoleAssignment(c, &request)
@@ -90,21 +64,8 @@ func (service *RoleAssignmentHandler) RemoveRoleAssignment(c *fiber.Ctx) error {
 func (service *RoleAssignmentHandler) AssignUserPermitToRole(c *fiber.Ctx) error {
 	var request dto.RoleUserAssignment
 
-	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:body-parser"),
-			Cause:   err.Error(),
-			Inputs:  nil,
-		})
-	}
-
-	errors := utils.ValidateStruct(request, c)
-	if errors != nil {
-		return utils.ApiErrorValidation(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:validate"),
-			Cause:   utils.Lang(c, "global:err:validate-cause"),
-			Inputs:  errors,
-		})
+	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
+		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	response, err := service.RoleAssignmentService.AssignUserPermitToRole(c, &request)

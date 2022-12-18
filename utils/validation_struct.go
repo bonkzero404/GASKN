@@ -5,6 +5,7 @@ import (
 	"github.com/bonkzero404/gaskn/dto"
 	"regexp"
 
+	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/id"
 	ut "github.com/go-playground/universal-translator"
@@ -72,6 +73,27 @@ func setCustomTagLanguage(ctx *fiber.Ctx, validate *validator.Validate, translat
 
 	registerTagLanguage(validate, translator, tag, f, parseLang)
 
+}
+
+func ValidateRequest(ctx *fiber.Ctx, request any) (bool, responseDto.Errors) {
+	if err := ctx.BodyParser(&request); err != nil {
+		return true, responseDto.Errors{
+			Message: Lang(ctx, "global:err:body-parser"),
+			Cause:   err.Error(),
+			Inputs:  nil,
+		}
+	}
+
+	errors := ValidateStruct(request, ctx)
+	if errors != nil {
+		return true, responseDto.Errors{
+			Message: Lang(ctx, "global:err:validate"),
+			Cause:   Lang(ctx, "global:err:validate-cause"),
+			Inputs:  errors,
+		}
+	}
+
+	return false, responseDto.Errors{}
 }
 
 func ValidateStruct(s any, ctx *fiber.Ctx) []*dto.ErrorResponse {

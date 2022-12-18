@@ -28,21 +28,8 @@ func (service *UserHandler) CreateUser(c *fiber.Ctx) error {
 		routeInternal = true
 	}
 
-	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:body-parser"),
-			Cause:   err.Error(),
-			Inputs:  nil,
-		})
-	}
-
-	errors := utils.ValidateStruct(request, c)
-	if errors != nil {
-		return utils.ApiErrorValidation(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:validate"),
-			Cause:   utils.Lang(c, "global:err:validate-cause"),
-			Inputs:  errors,
-		})
+	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
+		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	response, err := service.UserService.CreateUser(c, &request, routeInternal)
@@ -62,21 +49,8 @@ func (service *UserHandler) CreateUser(c *fiber.Ctx) error {
 func (service *UserHandler) UserActivation(c *fiber.Ctx) error {
 	var request dto.UserActivationRequest
 
-	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:body-parser"),
-			Cause:   err.Error(),
-			Inputs:  nil,
-		})
-	}
-
-	errors := utils.ValidateStruct(request, c)
-	if errors != nil {
-		return utils.ApiErrorValidation(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:validate"),
-			Cause:   utils.Lang(c, "global:err:validate-cause"),
-			Inputs:  errors,
-		})
+	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
+		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	response, err := service.UserService.UserActivation(c, request.Code)
@@ -96,21 +70,8 @@ func (service *UserHandler) UserActivation(c *fiber.Ctx) error {
 func (service *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 	var request dto.UserReActivationRequest
 
-	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:body-parser"),
-			Cause:   err.Error(),
-			Inputs:  nil,
-		})
-	}
-
-	errors := utils.ValidateStruct(request, c)
-	if errors != nil {
-		return utils.ApiErrorValidation(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:validate"),
-			Cause:   utils.Lang(c, "global:err:validate-cause"),
-			Inputs:  errors,
-		})
+	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
+		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	response, err := service.UserService.CreateUserActivation(c, request.Email, stores.ACTIVATION_CODE)
@@ -130,21 +91,8 @@ func (service *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 func (service *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 	var request dto.UserForgotPassRequest
 
-	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:body-parser"),
-			Cause:   err.Error(),
-			Inputs:  nil,
-		})
-	}
-
-	errors := utils.ValidateStruct(request, c)
-	if errors != nil {
-		return utils.ApiErrorValidation(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:validate"),
-			Cause:   utils.Lang(c, "global:err:validate-cause"),
-			Inputs:  errors,
-		})
+	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
+		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	response, err := service.UserService.CreateUserActivation(c, request.Email, stores.FORGOT_PASSWORD)
@@ -164,21 +112,8 @@ func (service *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 func (service *UserHandler) UpdatePassword(c *fiber.Ctx) error {
 	var request dto.UserForgotPassActRequest
 
-	if err := c.BodyParser(&request); err != nil {
-		return utils.ApiUnprocessableEntity(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:body-parser"),
-			Cause:   err.Error(),
-			Inputs:  nil,
-		})
-	}
-
-	errors := utils.ValidateStruct(request, c)
-	if errors != nil {
-		return utils.ApiErrorValidation(c, responseDto.Errors{
-			Message: utils.Lang(c, "global:err:validate"),
-			Cause:   utils.Lang(c, "global:err:validate-cause"),
-			Inputs:  errors,
-		})
+	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
+		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	response, err := service.UserService.UpdatePassword(c, &request)
