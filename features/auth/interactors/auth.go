@@ -1,6 +1,7 @@
 package interactors
 
 import (
+	"github.com/bonkzero404/gaskn/database/stores"
 	"github.com/bonkzero404/gaskn/features/auth/dto"
 
 	"github.com/gofiber/fiber/v2"
@@ -8,6 +9,8 @@ import (
 )
 
 type UserAuth interface {
+	SetTokenResponse(c *fiber.Ctx, user *stores.User) (*dto.UserAuthResponse, error)
+
 	Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error)
 
 	GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileResponse, error)

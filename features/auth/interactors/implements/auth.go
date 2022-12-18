@@ -30,6 +30,30 @@ func NewAuth(
 	}
 }
 
+func (service Auth) SetTokenResponse(c *fiber.Ctx, user *stores.User) (*dto.UserAuthResponse, error) {
+	token, exp, errToken := utils.CreateToken(user.ID.String())
+
+	if errToken != nil {
+		return nil, &responseDto.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, "auth:err:err-token"),
+		}
+	}
+
+	// Set response message to succeed
+	response := dto.UserAuthResponse{
+		ID:       user.ID.String(),
+		FullName: user.FullName,
+		Email:    user.Email,
+		Phone:    user.Phone,
+		IsActive: user.IsActive,
+		Token:    token,
+		Exp:      exp,
+	}
+
+	return &response, nil
+}
+
 // Authenticate /*
 func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error) {
 	var user stores.User
@@ -73,27 +97,13 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 		}
 	}
 
-	token, exp, errToken := utils.CreateToken(user.ID.String())
+	response, errResp := service.SetTokenResponse(c, &user)
 
-	if errToken != nil {
-		return nil, &responseDto.ApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "auth:err:err-token"),
-		}
+	if errResp != nil {
+		return nil, errResp
 	}
 
-	// Set response message to succeed
-	response := dto.UserAuthResponse{
-		ID:       user.ID.String(),
-		FullName: user.FullName,
-		Email:    user.Email,
-		Phone:    user.Phone,
-		IsActive: user.IsActive,
-		Token:    token,
-		Exp:      exp,
-	}
-
-	return &response, nil
+	return response, nil
 }
 
 // GetProfile /*
@@ -143,24 +153,11 @@ func (service Auth) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserA
 		}
 	}
 
-	token, exp, errToken := utils.CreateToken(user.ID.String())
-	if errToken != nil {
-		return nil, &responseDto.ApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "auth:err:err-token"),
-		}
+	response, errResp := service.SetTokenResponse(c, &user)
+
+	if errResp != nil {
+		return nil, errResp
 	}
 
-	// Set response message
-	response := dto.UserAuthResponse{
-		ID:       user.ID.String(),
-		FullName: user.FullName,
-		Email:    user.Email,
-		Phone:    user.Phone,
-		IsActive: user.IsActive,
-		Token:    token,
-		Exp:      exp,
-	}
-
-	return &response, nil
+	return response, nil
 }
