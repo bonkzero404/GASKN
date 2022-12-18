@@ -20,6 +20,46 @@ func CreateSqlLog() io.Writer {
 	return multiOutput
 }
 
+func sanitizeSensitiveData(bytes []byte) string {
+	var dataParse = make(map[string]interface{})
+	_ = json.Unmarshal(bytes, &dataParse)
+
+	if dataParse["email"] != nil {
+		dataParse["email"] = "*****"
+	}
+
+	if dataParse["password"] != nil {
+		dataParse["password"] = "*****"
+	}
+
+	if dataParse["repeat_password"] != nil {
+		dataParse["repeat_password"] = "*****"
+	}
+
+	if dataParse["phone"] != nil {
+		dataParse["phone"] = "*****"
+	}
+
+	if dataParse["email"] != nil {
+		dataParse["email"] = "*****"
+	}
+
+	if dataParse["token"] != nil {
+		dataParse["token"] = "*****"
+	}
+
+	if dataParse["key"] != nil {
+		dataParse["key"] = "*****"
+	}
+
+	if dataParse["secret_key"] != nil {
+		dataParse["secret_key"] = "*****"
+	}
+
+	res, _ := json.Marshal(dataParse)
+	return string(res)
+}
+
 //goland:noinspection GoUnhandledErrorResult,GoUnhandledErrorResult,GoUnhandledErrorResult,GoUnusedFunction
 func getLastLineWithSeek(filepath string, lineFromBottom int) string {
 	fileHandle, err := os.Open(filepath)
@@ -88,76 +128,16 @@ func WriteRequestToLog(ctx *fiber.Ctx, ptr string, statusCode int, resp any) {
 				bytes, err := json.Marshal(helper)
 				if err == nil {
 					// Sanitize some input body
-					var dataParse = make(map[string]interface{})
-					json.Unmarshal(bytes, &dataParse)
-
-					if dataParse["password"] != nil {
-						dataParse["password"] = "*****"
-					}
-
-					if dataParse["repeat_password"] != nil {
-						dataParse["repeat_password"] = "*****"
-					}
-
-					if dataParse["phone"] != nil {
-						dataParse["phone"] = "*****"
-					}
-
-					if dataParse["email"] != nil {
-						dataParse["email"] = "*****"
-					}
-
-					if dataParse["key"] != nil {
-						dataParse["key"] = "*****"
-					}
-
-					if dataParse["secret_key"] != nil {
-						dataParse["secret_key"] = "*****"
-					}
-
-					// Save to json string
-					res, _ := json.Marshal(dataParse)
-					logFormat = logFormat + " PAYLOAD=" + string(res)
+					var dataSanitize = sanitizeSensitiveData(bytes)
+					logFormat = logFormat + " PAYLOAD=" + dataSanitize
 				}
 			}
 		}
 
 		bytes, err := json.Marshal(resp)
 		if err == nil {
-			var dataParse = make(map[string]interface{})
-			json.Unmarshal(bytes, &dataParse)
-
-			if dataParse["password"] != nil {
-				dataParse["password"] = "*****"
-			}
-
-			if dataParse["repeat_password"] != nil {
-				dataParse["repeat_password"] = "*****"
-			}
-
-			if dataParse["phone"] != nil {
-				dataParse["phone"] = "*****"
-			}
-
-			if dataParse["email"] != nil {
-				dataParse["email"] = "*****"
-			}
-
-			if dataParse["token"] != nil {
-				dataParse["token"] = "*****"
-			}
-
-			if dataParse["key"] != nil {
-				dataParse["key"] = "*****"
-			}
-
-			if dataParse["secret_key"] != nil {
-				dataParse["secret_key"] = "*****"
-			}
-
-			// Save to json string
-			res, _ := json.Marshal(dataParse)
-			logFormat = logFormat + " RESPONSE=" + string(res)
+			var dataSanitize = sanitizeSensitiveData(bytes)
+			logFormat = logFormat + " RESPONSE=" + dataSanitize
 		}
 
 		if config.Config("ENABLE_WRITE_TO_FILE_LOG") == "true" {
