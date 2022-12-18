@@ -87,14 +87,77 @@ func WriteRequestToLog(ctx *fiber.Ctx, ptr string, statusCode int, resp any) {
 			if err == nil {
 				bytes, err := json.Marshal(helper)
 				if err == nil {
-					logFormat = logFormat + " PAYLOAD=" + string(bytes)
+					// Sanitize some input body
+					var dataParse = make(map[string]interface{})
+					json.Unmarshal(bytes, &dataParse)
+
+					if dataParse["password"] != nil {
+						dataParse["password"] = "*****"
+					}
+
+					if dataParse["repeat_password"] != nil {
+						dataParse["repeat_password"] = "*****"
+					}
+
+					if dataParse["phone"] != nil {
+						dataParse["phone"] = "*****"
+					}
+
+					if dataParse["email"] != nil {
+						dataParse["email"] = "*****"
+					}
+
+					if dataParse["key"] != nil {
+						dataParse["key"] = "*****"
+					}
+
+					if dataParse["secret_key"] != nil {
+						dataParse["secret_key"] = "*****"
+					}
+
+					// Save to json string
+					res, _ := json.Marshal(dataParse)
+					logFormat = logFormat + " PAYLOAD=" + string(res)
 				}
 			}
 		}
 
 		bytes, err := json.Marshal(resp)
 		if err == nil {
-			logFormat = logFormat + " RESPONSE=" + string(bytes)
+			var dataParse = make(map[string]interface{})
+			json.Unmarshal(bytes, &dataParse)
+
+			if dataParse["password"] != nil {
+				dataParse["password"] = "*****"
+			}
+
+			if dataParse["repeat_password"] != nil {
+				dataParse["repeat_password"] = "*****"
+			}
+
+			if dataParse["phone"] != nil {
+				dataParse["phone"] = "*****"
+			}
+
+			if dataParse["email"] != nil {
+				dataParse["email"] = "*****"
+			}
+
+			if dataParse["token"] != nil {
+				dataParse["token"] = "*****"
+			}
+
+			if dataParse["key"] != nil {
+				dataParse["key"] = "*****"
+			}
+
+			if dataParse["secret_key"] != nil {
+				dataParse["secret_key"] = "*****"
+			}
+
+			// Save to json string
+			res, _ := json.Marshal(dataParse)
+			logFormat = logFormat + " RESPONSE=" + string(res)
 		}
 
 		if config.Config("ENABLE_WRITE_TO_FILE_LOG") == "true" {
