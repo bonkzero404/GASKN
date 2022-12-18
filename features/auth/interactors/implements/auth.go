@@ -31,7 +31,7 @@ func NewAuth(
 }
 
 func (service Auth) SetTokenResponse(c *fiber.Ctx, user *stores.User) (*dto.UserAuthResponse, error) {
-	token, exp, errToken := utils.CreateToken(user.ID.String())
+	token, exp, errToken := utils.CreateToken(user.ID.String(), user.FullName)
 
 	if errToken != nil {
 		return nil, &responseDto.ApiErrorResponse{
