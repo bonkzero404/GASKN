@@ -1,6 +1,7 @@
 package implements
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
 	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/role/dto"
@@ -36,7 +37,7 @@ func (interact Role) CreateRole(c *fiber.Ctx, role *dto.RoleRequest) (*dto.RoleR
 	if err != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 
@@ -86,7 +87,7 @@ func (interact Role) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleRequest) 
 	if errCheckRole != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role:err:read-exists"),
+			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -99,7 +100,7 @@ func (interact Role) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleRequest) 
 	if err != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 
@@ -122,7 +123,7 @@ func (interact Role) DeleteRoleById(c *fiber.Ctx, id string) (*dto.RoleResponse,
 	if errCheckRole != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role:err:read-exists"),
+			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -131,7 +132,7 @@ func (interact Role) DeleteRoleById(c *fiber.Ctx, id string) (*dto.RoleResponse,
 	if err != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 

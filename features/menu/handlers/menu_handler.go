@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
 	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/menu/dto"
@@ -31,7 +32,7 @@ func (handler *MenuHandler) CreateMenu(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "menu:err:create"),
+			Message: utils.Lang(c, config.MenuErrCreate),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -47,7 +48,7 @@ func (handler *MenuHandler) GetMenuAll(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "menu:err:load"),
+			Message: utils.Lang(c, config.MenuErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -63,7 +64,7 @@ func (handler *MenuHandler) GetMenuSa(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "menu:err:load"),
+			Message: utils.Lang(c, config.MenuErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -79,7 +80,7 @@ func (handler *MenuHandler) GetMenuClient(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "menu:err:load"),
+			Message: utils.Lang(c, config.MenuErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

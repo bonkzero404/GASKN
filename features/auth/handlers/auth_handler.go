@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/auth/dto"
 	"github.com/bonkzero404/gaskn/features/auth/interactors"
@@ -33,7 +34,7 @@ func (service *AuthHandler) Authentication(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "auth:err:auth-failed"),
+			Message: utils.Lang(c, config.GlobalErrAuthFailed),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -53,7 +54,7 @@ func (service *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "auth:err:get-profile"),
+			Message: utils.Lang(c, config.GlobalErrUnknown),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -71,7 +72,7 @@ func (service *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "auth:err:get-refresh-token"),
+			Message: utils.Lang(c, config.AuthErruserNotActive),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

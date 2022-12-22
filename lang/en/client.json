@@ -21,7 +21,7 @@
   },
   {
     "locale": "en",
-    "key": "client:err:update:-failed",
+    "key": "client:err:update:failed",
     "trans": "Failed to update client"
   },
   {

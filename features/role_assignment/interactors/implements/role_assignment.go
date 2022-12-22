@@ -40,7 +40,7 @@ func (interact RoleAssignment) CheckExistsRoleAssignment(c *fiber.Ctx, clientIdU
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "role:err:read-exists"),
+			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -59,7 +59,7 @@ func (interact RoleAssignment) CheckExistsRoleUserAssignment(c *fiber.Ctx, userI
 	if errors.Is(errRoleUserClient, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "role:err:read-exists"),
+			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -75,19 +75,21 @@ func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 	if clientId != "" && !strings.Contains(req.RouteFeature, config.Config("API_CLIENT_PARAM")) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:not-allowed"),
+			Message:    utils.Lang(c, config.GlobalErrNotAllowed),
 		}
 	}
 
 	if clientId != "" && (errRoleUuid != nil || errClientIdUuid != nil) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:invalid-format"),
+			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
-	} else if errRoleUuid != nil {
+	}
+
+	if errRoleUuid != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:invalid-format"),
+			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
 	}
 
@@ -110,7 +112,7 @@ func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 		); !save {
 			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, "role-assign:err:failed-unknown"),
+				Message:    utils.Lang(c, config.RoleAssignErrUnknown),
 			}
 		}
 
@@ -131,7 +133,7 @@ func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 	if errExistsRole != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role:err:read-exists"),
+			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -146,7 +148,7 @@ func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 	); !save {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role-assign:err:failed-unknown"),
+			Message:    utils.Lang(c, config.RoleAssignErrUnknown),
 		}
 	}
 
@@ -167,12 +169,14 @@ func (interact RoleAssignment) RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 	if clientId != "" && (errRoleUuid != nil || errClientIdUuid != nil) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:invalid-format"),
+			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
-	} else if errRoleUuid != nil {
+	}
+
+	if errRoleUuid != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:invalid-format"),
+			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
 	}
 
@@ -191,7 +195,7 @@ func (interact RoleAssignment) RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 		); !remove {
 			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, "role-assign:err:failed-remove-permit"),
+				Message:    utils.Lang(c, config.RoleAssignErrRemovePermit),
 			}
 		}
 
@@ -212,7 +216,7 @@ func (interact RoleAssignment) RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 	if errExistsRole != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role:err:read-exists"),
+			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -224,7 +228,7 @@ func (interact RoleAssignment) RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 	); !remove {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role-assign:err:failed-remove-permit"),
+			Message:    utils.Lang(c, config.RoleAssignErrRemovePermit),
 		}
 	}
 
@@ -237,7 +241,7 @@ func (interact RoleAssignment) RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 	return &saveResponse, nil
 }
 
-func (interact RoleAssignment) AssignUserPermitToRole(c *fiber.Ctx, req *dto.RoleUserAssignment) (*dto.RoleAssignmentResponse, error) {
+func (interact RoleAssignment) AssignUserPermission(c *fiber.Ctx, req *dto.RoleUserAssignment) (*dto.RoleAssignmentResponse, error) {
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 	clientIdUuid, errClientIdUuid := uuid.Parse(clientId)
 	userIdUuid, errUserUuid := uuid.Parse(req.UserId)
@@ -246,12 +250,14 @@ func (interact RoleAssignment) AssignUserPermitToRole(c *fiber.Ctx, req *dto.Rol
 	if clientId != "" && (errRoleUuid != nil || errClientIdUuid != nil || errUserUuid != nil) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:invalid-format"),
+			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
-	} else if errRoleUuid != nil || errUserUuid != nil {
+	}
+
+	if errRoleUuid != nil || errUserUuid != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:invalid-format"),
+			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
 	}
 
@@ -262,7 +268,7 @@ func (interact RoleAssignment) AssignUserPermitToRole(c *fiber.Ctx, req *dto.Rol
 	if errRole != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role:err:read-exists"),
+			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -273,7 +279,7 @@ func (interact RoleAssignment) AssignUserPermitToRole(c *fiber.Ctx, req *dto.Rol
 	if errRoleUser == nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role-assign:err:exists"),
+			Message:    utils.Lang(c, config.RoleAssignErrAlreadyExists),
 		}
 	}
 
@@ -290,7 +296,7 @@ func (interact RoleAssignment) AssignUserPermitToRole(c *fiber.Ctx, req *dto.Rol
 		if !saveUserRoleClient {
 			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, "role-assign:err:failed"),
+				Message:    utils.Lang(c, config.RoleAssignErrFailed),
 			}
 		}
 
@@ -304,7 +310,7 @@ func (interact RoleAssignment) AssignUserPermitToRole(c *fiber.Ctx, req *dto.Rol
 		); !save {
 			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, "role-assign:err:failed-unknown"),
+				Message:    utils.Lang(c, config.RoleAssignErrUnknown),
 			}
 		}
 
@@ -322,7 +328,7 @@ func (interact RoleAssignment) AssignUserPermitToRole(c *fiber.Ctx, req *dto.Rol
 	if !saveUserRoleClient {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role-assign:err:failed"),
+			Message:    utils.Lang(c, config.RoleAssignErrFailed),
 		}
 	}
 
@@ -339,7 +345,7 @@ func (interact RoleAssignment) AssignUserPermitToRole(c *fiber.Ctx, req *dto.Rol
 	); !save {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role-assign:err:failed-unknown"),
+			Message:    utils.Lang(c, config.RoleAssignErrUnknown),
 		}
 	}
 

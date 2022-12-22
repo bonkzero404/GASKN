@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/client/dto"
 	"github.com/bonkzero404/gaskn/features/client/interactors"
@@ -57,7 +58,7 @@ func (service *ClientHandler) UpdateClient(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "client:err:update:-failed"),
+			Message: utils.Lang(c, config.ClientErrUpdate),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -76,7 +77,7 @@ func (service *ClientHandler) GetClientByUser(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "role:err:read-failed"),
+			Message: utils.Lang(c, config.ClientErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

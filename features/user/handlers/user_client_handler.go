@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/user/dto"
 	"github.com/bonkzero404/gaskn/features/user/interactors"
@@ -36,7 +37,7 @@ func (service *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "user:err:create-invitation"),
+			Message: utils.Lang(c, config.UserErrCreateActivation),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -58,7 +59,7 @@ func (service *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
 		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, "user:err:activation-failed"),
+			Message: utils.Lang(c, config.UserErrActivationFailed),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

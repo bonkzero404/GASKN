@@ -73,7 +73,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:user-not-found"),
+			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
 	}
 
@@ -81,7 +81,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 	if !user.IsActive {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "user:err:user-not-active"),
+			Message:    utils.Lang(c, config.UserErrNotActive),
 		}
 	}
 
@@ -91,7 +91,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 	if errors.Is(errUserInvitedBy, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:user-not-found"),
+			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
 	}
 
@@ -101,7 +101,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "role:err:read-exists"),
+			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -181,7 +181,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 
 	return nil, &responseDto.ApiErrorResponse{
 		StatusCode: fiber.StatusUnprocessableEntity,
-		Message:    utils.Lang(c, "user:err:user-invited"),
+		Message:    utils.Lang(c, config.UserErrInvited),
 	}
 }
 
@@ -202,14 +202,14 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:user-not-found"),
+			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
 	}
 
 	if !user.IsActive {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "user:err:activate-already-active"),
+			Message:    utils.Lang(c, config.UserErrAlreadyActive),
 		}
 	}
 
@@ -218,7 +218,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:activation-not-found"),
+			Message:    utils.Lang(c, config.UserErrActivationNotFound),
 		}
 	}
 
@@ -227,7 +227,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	if userAct.ExpiredAt.Before(t) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
-			Message:    utils.Lang(c, "user:err:activation-expired"),
+			Message:    utils.Lang(c, config.UserErrActivationExpired),
 		}
 	}
 
@@ -236,7 +236,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	if errors.Is(errInvitation, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:activation-not-found"),
+			Message:    utils.Lang(c, config.UserErrActivationNotFound),
 		}
 	}
 
@@ -246,7 +246,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "role:err:read-exists"),
+			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -293,7 +293,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 				RoleId: roleClient.RoleId.String(),
 			}
 
-			_, errAssignPermit := interact.RoleAssignment.AssignUserPermitToRole(c, assignPermit)
+			_, errAssignPermit := interact.RoleAssignment.AssignUserPermission(c, assignPermit)
 
 			if errAssignPermit != nil {
 				return nil, &responseDto.ApiErrorResponse{
@@ -315,7 +315,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	} else {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "user:err:activation-not-found"),
+			Message:    utils.Lang(c, config.UserErrActivationNotFound),
 		}
 	}
 }

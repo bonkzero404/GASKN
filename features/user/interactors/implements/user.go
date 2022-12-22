@@ -74,13 +74,13 @@ func (interact User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isInt
 		if strings.Contains(err.Error(), "duplicate key") {
 			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, "user:err:register-failed"),
+				Message:    utils.Lang(c, config.UserErrRegister),
 			}
 		}
 
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 
@@ -147,7 +147,7 @@ func (interact User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateR
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:activation-not-found"),
+			Message:    utils.Lang(c, config.UserErrActivationNotFound),
 		}
 	}
 
@@ -156,14 +156,14 @@ func (interact User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateR
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:user-not-found"),
+			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
 	}
 
 	if user.IsActive {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "user:err:activate-already-active"),
+			Message:    utils.Lang(c, config.UserErrAlreadyActive),
 		}
 	}
 
@@ -172,7 +172,7 @@ func (interact User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateR
 	if userAct.ExpiredAt.Before(t) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
-			Message:    utils.Lang(c, "user:err:activation-expired"),
+			Message:    utils.Lang(c, config.UserErrActivationExpired),
 		}
 	}
 
@@ -209,14 +209,14 @@ func (interact User) CreateUserActivation(c *fiber.Ctx, email string, actType st
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:user-not-found"),
+			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
 	}
 
 	if user.IsActive && actType == stores.ACTIVATION_CODE {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "user:err:activate-already-active"),
+			Message:    utils.Lang(c, config.UserErrAlreadyActive),
 		}
 	}
 
@@ -236,7 +236,7 @@ func (interact User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotP
 	if forgotPassReq.Password != forgotPassReq.RepeatPassword {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "user:err:pass-match"),
+			Message:    utils.Lang(c, config.UserErrPassMatch),
 		}
 	}
 
@@ -245,7 +245,7 @@ func (interact User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotP
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:user-not-found"),
+			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
 	}
 
@@ -254,14 +254,14 @@ func (interact User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotP
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    utils.Lang(c, "user:err:activation-not-found"),
+			Message:    utils.Lang(c, config.UserErrActivationNotFound),
 		}
 	}
 
 	if userAct.IsUsed {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "user:err:pass-code-used"),
+			Message:    utils.Lang(c, config.UserErrCodeAlreadyUsed),
 		}
 	}
 
@@ -270,7 +270,7 @@ func (interact User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotP
 	if userAct.ExpiredAt.Before(t) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
-			Message:    utils.Lang(c, "user:err:activation-expired"),
+			Message:    utils.Lang(c, config.UserErrActivationExpired),
 		}
 	}
 

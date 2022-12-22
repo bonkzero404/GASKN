@@ -51,7 +51,7 @@ func (interact RoleClient) CreateRoleClient(c *fiber.Ctx, roleDto *dto.RoleReque
 		if err != nil {
 			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, "global:err:failed-unknown"),
+				Message:    utils.Lang(c, config.GlobalErrUnknown),
 			}
 		}
 
@@ -67,7 +67,7 @@ func (interact RoleClient) CreateRoleClient(c *fiber.Ctx, roleDto *dto.RoleReque
 
 	return nil, &responseDto.ApiErrorResponse{
 		StatusCode: fiber.StatusUnprocessableEntity,
-		Message:    utils.Lang(c, "role:err:read-available"),
+		Message:    utils.Lang(c, config.RoleErrAlreadyExists),
 	}
 }
 
@@ -115,7 +115,7 @@ func (interact RoleClient) UpdateRoleClient(c *fiber.Ctx, id string) (*dto.RoleR
 	if errRoleClient != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role:err:read-exists"),
+			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -129,7 +129,7 @@ func (interact RoleClient) UpdateRoleClient(c *fiber.Ctx, id string) (*dto.RoleR
 	if err != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 
@@ -157,7 +157,7 @@ func (interact RoleClient) DeleteRoleClientById(c *fiber.Ctx, id string) (*dto.R
 	if errRoleClient != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "role:err:read-exists"),
+			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -171,7 +171,7 @@ func (interact RoleClient) DeleteRoleClientById(c *fiber.Ctx, id string) (*dto.R
 	if err != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 

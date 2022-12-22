@@ -52,7 +52,7 @@ func (interact Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, use
 		if strings.Contains(err.Error(), "duplicate key") {
 			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, "client:err:duplicate"),
+				Message:    utils.Lang(c, config.ClientErrDuplicate),
 			}
 		}
 
@@ -119,7 +119,7 @@ func (interact Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (*d
 	if errCheckClient != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "client:err:read-exists"),
+			Message:    utils.Lang(c, config.ClientErrAlreadyExists),
 		}
 	}
 
@@ -133,7 +133,7 @@ func (interact Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (*d
 	if err != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 

@@ -1,6 +1,7 @@
 package implements
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
 	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/menu/dto"
@@ -42,7 +43,7 @@ func (interact Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.MenuRe
 		if errGetMenu != nil {
 			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, "menu:err:menu-not-found"),
+				Message:    utils.Lang(c, config.MenuErrNotFound),
 			}
 		}
 
@@ -55,7 +56,7 @@ func (interact Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.MenuRe
 	if errSaveMenu != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 

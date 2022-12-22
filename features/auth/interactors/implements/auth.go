@@ -2,6 +2,7 @@ package implements
 
 import (
 	"errors"
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
 	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/auth/dto"
@@ -36,7 +37,7 @@ func (service Auth) SetTokenResponse(c *fiber.Ctx, user *stores.User) (*dto.User
 	if errToken != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "auth:err:err-token"),
+			Message:    utils.Lang(c, config.AuthErrToken),
 		}
 	}
 
@@ -66,7 +67,7 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
-			Message:    utils.Lang(c, "auth:err:invalid-auth"),
+			Message:    utils.Lang(c, config.AuthErrGetProfile),
 		}
 	}
 
@@ -74,7 +75,7 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 	if errUser != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, config.AuthErrRefreshToken),
 		}
 	}
 
@@ -82,7 +83,7 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 	if !user.IsActive {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
-			Message:    utils.Lang(c, "auth:err:user-not-active"),
+			Message:    utils.Lang(c, config.AuthErruserNotActive),
 		}
 	}
 
@@ -93,7 +94,7 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 	if !match {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
-			Message:    utils.Lang(c, "auth:err:invalid-auth"),
+			Message:    utils.Lang(c, config.AuthErrInvalid),
 		}
 	}
 
@@ -118,7 +119,7 @@ func (service Auth) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileRes
 	if errUser != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 
@@ -149,7 +150,7 @@ func (service Auth) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserA
 	if errUser != nil {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, "global:err:failed-unknown"),
+			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 
