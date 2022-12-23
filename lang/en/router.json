@@ -86,11 +86,6 @@
   },
   {
     "locale": "en",
-    "key": "route:menu:create",
-    "trans": "Users can create menu"
-  },
-  {
-    "locale": "en",
     "key": "route:menu:get:all",
     "trans": "Users can get all of menu"
   },
