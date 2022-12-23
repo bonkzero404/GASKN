@@ -33,13 +33,16 @@ func checkPolicy(casbinRule *stores.PermissionRule) (*stores.PermissionRule, err
 	return casbinRule, nil
 }
 
-func addDetailRule(casbinRuleId uint, userName string, roleName string, clientName string) (bool, error) {
+func addDetailRule(casbinRuleId uint, userName string, roleName string, clientName string, groupName string, routeName string, descriptionKey string) (bool, error) {
 	db := DB
 	casbinRuleDetail := stores.PermissionRuleDetail{
-		PermissionRuleId: casbinRuleId,
-		UserName:         userName,
-		RoleName:         roleName,
-		ClientName:       clientName,
+		PermissionRuleId:   casbinRuleId,
+		UserName:           userName,
+		RoleName:           roleName,
+		ClientName:         clientName,
+		GroupName:          groupName,
+		RouteName:          routeName,
+		DescriptionKeyLang: descriptionKey,
 	}
 
 	errCreateDetail := db.Create(&casbinRuleDetail).Error
@@ -66,7 +69,7 @@ func AddGroupingPolicy(userId string, roleId string, clientId string, userName s
 	dataRule, err := checkPolicy(&casbinRule)
 
 	if err == nil {
-		_, errCreateDetail := addDetailRule(dataRule.ID, userName, roleName, clientName)
+		_, errCreateDetail := addDetailRule(dataRule.ID, userName, roleName, clientName, "", "", "")
 
 		if errCreateDetail != nil {
 			return false, errCreateDetail
@@ -76,7 +79,7 @@ func AddGroupingPolicy(userId string, roleId string, clientId string, userName s
 	return true, nil
 }
 
-func AddPolicy(roleId string, clientId string, routeEndpoint string, httpMethod string, userName string, roleName string, clientName string) (bool, error) {
+func AddPolicy(roleId string, clientId string, routeEndpoint string, httpMethod string, userName string, roleName string, clientName string, groupName string, routeName string, descriptionKey string) (bool, error) {
 	if g, err := Enforcer.AddPolicy(roleId, clientId, routeEndpoint, httpMethod); !g {
 		return false, err
 	}
@@ -92,7 +95,7 @@ func AddPolicy(roleId string, clientId string, routeEndpoint string, httpMethod 
 	dataRule, err := checkPolicy(&casbinRule)
 
 	if err == nil {
-		_, errCreateDetail := addDetailRule(dataRule.ID, userName, roleName, clientName)
+		_, errCreateDetail := addDetailRule(dataRule.ID, userName, roleName, clientName, groupName, routeName, descriptionKey)
 
 		if errCreateDetail != nil {
 			return false, errCreateDetail

@@ -109,6 +109,9 @@ func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 			"",
 			existsResp.Role.RoleName,
 			existsResp.Client.ClientName,
+			req.RouteGroup,
+			req.RouteName,
+			req.DescriptionKeyLang,
 		); !save {
 			return nil, &responseDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
@@ -145,6 +148,9 @@ func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 		"",
 		role.RoleName,
 		"",
+		req.RouteGroup,
+		req.RouteName,
+		req.DescriptionKeyLang,
 	); !save {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,

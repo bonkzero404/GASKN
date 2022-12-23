@@ -90,6 +90,9 @@ func (interact Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, use
 		"",
 		role.RoleName,
 		clientStore.ClientName,
+		"",
+		"",
+		"",
 	); !p {
 		return nil, &responseDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,

@@ -33,7 +33,7 @@ func RegisterFeature(app *fiber.App) {
 		routesInitTenant = ApiRoute{
 			RoleAssignmentHandler: *RoleAssignmentHandler,
 		}
-		routesInitTenant.Route(app)
+		routesInitTenant.RouteClient(app)
 	}
 
 }

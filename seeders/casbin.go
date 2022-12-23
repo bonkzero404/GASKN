@@ -43,6 +43,9 @@ func CreateCasbinPermission(db *gorm.DB) error {
 		"",
 		config.Config("ADMIN_ROLENAME"),
 		"",
+		"",
+		"",
+		"",
 	); !p {
 		return err
 	}
