@@ -24,10 +24,10 @@ func (repository MenuRepository) GetMenuById(menu *stores.Menu, id string) *gorm
 	return repository.DB.Take(&menu, "id = ?", id)
 }
 
-func (repository MenuRepository) GetMenuAllByType(menu *[]stores.Menu, menuType stores.MenuType) *gorm.DB {
+func (repository MenuRepository) GetMenuAllByType(menu *[]stores.Menu, menuType stores.MenuType, sort string) *gorm.DB {
 	if menuType == "" {
-		return repository.DB.Find(&menu)
+		return repository.DB.Order("sort " + sort).Find(&menu)
 	}
 
-	return repository.DB.Find(&menu, "menu_type = ?", menuType)
+	return repository.DB.Order("sort "+sort).Find(&menu, "menu_type = ?", menuType)
 }

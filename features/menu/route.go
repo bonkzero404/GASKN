@@ -2,12 +2,17 @@ package menu
 
 import (
 	"github.com/bonkzero404/gaskn/app/middleware"
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/features/menu/handlers"
 	"github.com/bonkzero404/gaskn/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
 type ApiRoute struct {
+	MenuHandler handlers.MenuHandler
+}
+
+type ApiRouteClient struct {
 	MenuHandler handlers.MenuHandler
 }
 
@@ -29,7 +34,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		handler.MenuHandler.CreateMenu,
 	).
 		SetRouteName("CreateMenu").
-		SetRouteDescriptionKeyLang("blabla").
+		SetRouteDescriptionKeyLang(config.RouteMenuCreate).
 		Execute()
 
 	menu.Get(
@@ -40,7 +45,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		handler.MenuHandler.GetMenuAll,
 	).
 		SetRouteName("GetAllMenu").
-		SetRouteDescriptionKeyLang("blabla").
+		SetRouteDescriptionKeyLang(config.RouteMenuGetAll).
 		Execute()
 
 	menu.Get(
@@ -51,7 +56,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		handler.MenuHandler.GetMenuSa,
 	).
 		SetRouteName("GetAllMenuSa").
-		SetRouteDescriptionKeyLang("blabla").
+		SetRouteDescriptionKeyLang(config.RouteMenuGetAllSa).
 		Execute()
 
 	menu.Get(
@@ -62,7 +67,29 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		handler.MenuHandler.GetMenuClient,
 	).
 		SetRouteName("GetAllMenuClient").
-		SetRouteDescriptionKeyLang("blabla").
+		SetRouteDescriptionKeyLang(config.RouteMenuGetAllCl).
 		Execute()
 
+}
+
+func (handler *ApiRouteClient) Route(app fiber.Router) {
+	const endpointGroup string = "/menu"
+
+	var menuClient = utils.GasknRouter{}
+
+	menuClient.Set(app).
+		Group(utils.SetupSubApiGroup() + endpointGroup).
+		SetGroupName("Client/Menu")
+
+	menuClient.Get(
+		"/",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.MenuHandler.GetMenuClient,
+	).
+		SetRouteName("GetClientMenu").
+		SetRouteDescriptionKeyLang(config.RouteMenuGetAllCl).
+		SetRouteTenant(true).
+		Execute()
 }

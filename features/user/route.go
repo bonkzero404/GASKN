@@ -1,6 +1,7 @@
 package user
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/bonkzero404/gaskn/app/middleware"
@@ -78,7 +79,7 @@ func (handler *ApiRoute) RouteClient(app fiber.Router) {
 		handler.UserHandler.CreateUser,
 	).
 		SetRouteName("CreateClientUser").
-		SetRouteDescriptionKeyLang("user:create").
+		SetRouteDescriptionKeyLang(config.RouteUserCreate).
 		SetRouteTenant(true).
 		Execute()
 
@@ -90,7 +91,7 @@ func (handler *ApiRoute) RouteClient(app fiber.Router) {
 		handler.UserClientHandler.CreateUserInvitation,
 	).
 		SetRouteName("CreateClientUserInvitation").
-		SetRouteDescriptionKeyLang("route:client:user:invitation").
+		SetRouteDescriptionKeyLang(config.RouteClientUserInvitation).
 		SetRouteTenant(true).
 		Execute()
 

@@ -1,6 +1,7 @@
 package role_assignment
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/bonkzero404/gaskn/app/middleware"
@@ -29,7 +30,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		handler.RoleAssignmentHandler.CreateRoleAssignment,
 	).
 		SetRouteName("CreateRoleAssignment").
-		SetRouteDescriptionKeyLang("route:client:role:assignment:add").
+		SetRouteDescriptionKeyLang(config.RouteClientRoleAssignmentAdd).
 		Execute()
 
 	role.Delete(
@@ -40,7 +41,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		handler.RoleAssignmentHandler.RemoveRoleAssignment,
 	).
 		SetRouteName("RemoveRoleAssignment").
-		SetRouteDescriptionKeyLang("route:client:role:assignment:remove").
+		SetRouteDescriptionKeyLang(config.RouteCLientRoleAssignmentDelete).
 		Execute()
 
 	role.Post(
@@ -51,7 +52,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		handler.RoleAssignmentHandler.AssignUserPermission,
 	).
 		SetRouteName("CreateUserRoleAssignment").
-		SetRouteDescriptionKeyLang("route:client:role:assignment:assign").
+		SetRouteDescriptionKeyLang(config.RouteClientRoleAssignment).
 		Execute()
 }
 
@@ -72,7 +73,7 @@ func (handler *ApiRoute) RouteClient(app fiber.Router) {
 		handler.RoleAssignmentHandler.CreateRoleAssignment,
 	).
 		SetRouteName("CreateClientRoleAssignment").
-		SetRouteDescriptionKeyLang("route:client:role:assignment:add").
+		SetRouteDescriptionKeyLang(config.RouteClientRoleAssignmentAdd).
 		SetRouteTenant(true).
 		Execute()
 
@@ -84,7 +85,7 @@ func (handler *ApiRoute) RouteClient(app fiber.Router) {
 		handler.RoleAssignmentHandler.RemoveRoleAssignment,
 	).
 		SetRouteName("RemoveClientRoleAssignment").
-		SetRouteDescriptionKeyLang("route:client:role:assignment:remove").
+		SetRouteDescriptionKeyLang(config.RouteCLientRoleAssignmentDelete).
 		SetRouteTenant(true).
 		Execute()
 
@@ -96,7 +97,7 @@ func (handler *ApiRoute) RouteClient(app fiber.Router) {
 		handler.RoleAssignmentHandler.AssignUserPermission,
 	).
 		SetRouteName("CreateUserClientRoleAssignment").
-		SetRouteDescriptionKeyLang("route:client:role:assignment:assign").
+		SetRouteDescriptionKeyLang(config.RouteClientRoleAssignment).
 		SetRouteTenant(true).
 		Execute()
 }

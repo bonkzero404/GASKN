@@ -11,6 +11,8 @@ import (
 const (
 	ModeList string = "list"
 	ModeTree string = "tree"
+	SortAsc  string = "asc"
+	SortDesc string = "desc"
 )
 
 type Menu interface {
@@ -20,5 +22,7 @@ type Menu interface {
 
 	ValidationMenuMode(c *fiber.Ctx) string
 
-	GetMenuAllByType(t stores.MenuType, mode string) ([]dto.MenuListResponse, error)
+	ValidationMenuSort(c *fiber.Ctx) string
+
+	GetMenuAllByType(t stores.MenuType, mode string, sort string) ([]dto.MenuListResponse, error)
 }

@@ -76,7 +76,32 @@
   },
   {
     "locale": "en",
-    "key": "user:create",
+    "key": "route:user:create",
     "trans": "Users can create accounts for other users"
+  },
+  {
+    "locale": "en",
+    "key": "route:menu:create",
+    "trans": "Users can create menu"
+  },
+  {
+    "locale": "en",
+    "key": "route:menu:create",
+    "trans": "Users can create menu"
+  },
+  {
+    "locale": "en",
+    "key": "route:menu:get:all",
+    "trans": "Users can get all of menu"
+  },
+  {
+    "locale": "en",
+    "key": "route:menu:get:all:sa",
+    "trans": "Users can get all of menu from Super Administrator"
+  },
+  {
+    "locale": "en",
+    "key": "route:menu:get:all:cl",
+    "trans": "Users can get all of menu from Client"
   }
 ]

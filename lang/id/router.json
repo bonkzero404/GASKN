@@ -76,7 +76,27 @@
   },
   {
     "locale": "id",
-    "key": "user:create",
+    "key": "route:user:create",
     "trans": "Pengguna dapat membuat akun untuk pengguna lain"
+  },
+  {
+    "locale": "id",
+    "key": "route:menu:create",
+    "trans": "Pengguna dapat membuat menu"
+  },
+  {
+    "locale": "id",
+    "key": "route:menu:get:all",
+    "trans": "Pengguna dapat menampilkan semua menu"
+  },
+  {
+    "locale": "id",
+    "key": "route:menu:get:all:sa",
+    "trans": "Pengguna dapat menampilkan semua menu dari Super Administrator"
+  },
+  {
+    "locale": "id",
+    "key": "route:menu:get:all:cl",
+    "trans": "Pengguna dapat menampilkan semua menu dari Client"
   }
 ]

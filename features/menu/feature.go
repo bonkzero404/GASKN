@@ -1,6 +1,7 @@
 package menu
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/driver"
 	"github.com/bonkzero404/gaskn/features/menu/handlers"
 	interact "github.com/bonkzero404/gaskn/features/menu/interactors/implements"
@@ -13,10 +14,22 @@ func RegisterFeature(app *fiber.App) {
 	menuInteract := interact.NewMenu(menuRepo)
 	MenuHandler := handlers.NewMenuHandler(menuInteract)
 
+	var routesInitTenant = ApiRouteClient{}
+
 	routesInit := ApiRoute{
 		MenuHandler: *MenuHandler,
 	}
 
 	routesInit.Route(app)
+
+	/////////////////////////
+	// If tenant is enabled
+	/////////////////////////
+	if config.Config("TENANCY") == "true" {
+		routesInitTenant = ApiRouteClient{
+			MenuHandler: *MenuHandler,
+		}
+		routesInitTenant.Route(app)
+	}
 
 }

@@ -104,11 +104,25 @@ func (interact Menu) ValidationMenuMode(c *fiber.Ctx) string {
 	return interactors.ModeTree
 }
 
-func (interact Menu) GetMenuAllByType(t stores.MenuType, mode string) ([]dto.MenuListResponse, error) {
+func (interact Menu) ValidationMenuSort(c *fiber.Ctx) string {
+	sort := c.Query("sort")
+
+	if sort == interactors.SortAsc {
+		return interactors.SortAsc
+	}
+
+	if sort == interactors.SortDesc {
+		return interactors.SortDesc
+	}
+
+	return interactors.SortAsc
+}
+
+func (interact Menu) GetMenuAllByType(t stores.MenuType, mode string, sort string) ([]dto.MenuListResponse, error) {
 	var menuLists []stores.Menu
 	var resp []dto.MenuListResponse
 
-	errResult := interact.MenuRepository.GetMenuAllByType(&menuLists, t).Error
+	errResult := interact.MenuRepository.GetMenuAllByType(&menuLists, t, sort).Error
 
 	if errResult != nil {
 		return nil, &responseDto.ApiErrorResponse{

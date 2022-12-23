@@ -43,7 +43,8 @@ func (handler *MenuHandler) CreateMenu(c *fiber.Ctx) error {
 
 func (handler *MenuHandler) GetMenuAll(c *fiber.Ctx) error {
 	mode := handler.Menu.ValidationMenuMode(c)
-	response, err := handler.Menu.GetMenuAllByType("", mode)
+	sort := handler.Menu.ValidationMenuSort(c)
+	response, err := handler.Menu.GetMenuAllByType("", mode, sort)
 
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
@@ -59,7 +60,8 @@ func (handler *MenuHandler) GetMenuAll(c *fiber.Ctx) error {
 
 func (handler *MenuHandler) GetMenuSa(c *fiber.Ctx) error {
 	mode := handler.Menu.ValidationMenuMode(c)
-	response, err := handler.Menu.GetMenuAllByType(stores.MenuBO, mode)
+	sort := handler.Menu.ValidationMenuSort(c)
+	response, err := handler.Menu.GetMenuAllByType(stores.MenuBO, mode, sort)
 
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
@@ -75,7 +77,8 @@ func (handler *MenuHandler) GetMenuSa(c *fiber.Ctx) error {
 
 func (handler *MenuHandler) GetMenuClient(c *fiber.Ctx) error {
 	mode := handler.Menu.ValidationMenuMode(c)
-	response, err := handler.Menu.GetMenuAllByType(stores.MenuCL, mode)
+	sort := handler.Menu.ValidationMenuSort(c)
+	response, err := handler.Menu.GetMenuAllByType(stores.MenuCL, mode, sort)
 
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)

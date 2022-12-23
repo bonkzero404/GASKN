@@ -1,6 +1,7 @@
 package role
 
 import (
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/bonkzero404/gaskn/app/middleware"
@@ -34,7 +35,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		handler.RoleHandler.CreateRole,
 	).
 		SetRouteName("CreateRole").
-		SetRouteDescriptionKeyLang("route:role:add").
+		SetRouteDescriptionKeyLang(config.RouteRoleAdd).
 		Execute()
 
 	role.Get(
@@ -45,7 +46,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		handler.RoleHandler.GetRoleList,
 	).
 		SetRouteName("GetRoleLists").
-		SetRouteDescriptionKeyLang("route:role:list").
+		SetRouteDescriptionKeyLang(config.RouteRoleList).
 		Execute()
 
 	role.Put(
@@ -56,7 +57,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		handler.RoleHandler.UpdateRole,
 	).
 		SetRouteName("UpdateRole").
-		SetRouteDescriptionKeyLang("route:role:update").
+		SetRouteDescriptionKeyLang(config.RouteRoleUpdate).
 		Execute()
 
 	role.Delete(
@@ -67,7 +68,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		handler.RoleHandler.DeleteRole,
 	).
 		SetRouteName("DeleteRole").
-		SetRouteDescriptionKeyLang("route:role:delete").
+		SetRouteDescriptionKeyLang(config.RouteRoleDelete).
 		Execute()
 
 }
@@ -90,7 +91,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.RoleClientHandler.CreateClientRole,
 	).
 		SetRouteName("CreateClientRole").
-		SetRouteDescriptionKeyLang("route:client:role:add").
+		SetRouteDescriptionKeyLang(config.RouteClientRoleAdd).
 		SetRouteTenant(true).
 		Execute()
 
@@ -102,7 +103,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.RoleClientHandler.GetRoleClientList,
 	).
 		SetRouteName("GetClientRoleList").
-		SetRouteDescriptionKeyLang("route:client:role:list").
+		SetRouteDescriptionKeyLang(config.RouteClientRoleList).
 		SetRouteTenant(true).
 		Execute()
 
@@ -114,7 +115,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.RoleClientHandler.UpdateRoleClient,
 	).
 		SetRouteName("UpdateClientRole").
-		SetRouteDescriptionKeyLang("route:client:role:update").
+		SetRouteDescriptionKeyLang(config.RouteClientRoleUpdate).
 		SetRouteTenant(true).
 		Execute()
 
@@ -126,7 +127,7 @@ func (handler *ApiRouteClient) Route(app fiber.Router) {
 		handler.RoleClientHandler.DeleteRoleClient,
 	).
 		SetRouteName("DeleteClientRole").
-		SetRouteDescriptionKeyLang("route:client:role:delete").
+		SetRouteDescriptionKeyLang(config.RouteClientRoleDelete).
 		SetRouteTenant(true).
 		Execute()
 
