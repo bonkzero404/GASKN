@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -15,22 +14,24 @@ type RouteFeature struct {
 }
 
 type FeatureLists struct {
-	Group       string   `json:"group"`
-	Method      string   `json:"method"`
-	Endpoint    string   `json:"endpoint"`
-	Name        string   `json:"name"`
-	Description string   `json:"description"`
-	Params      []string `json:"params"`
-	Tenant      bool     `json:"tenant"`
+	Group              string   `json:"group"`
+	Method             string   `json:"method"`
+	Endpoint           string   `json:"endpoint"`
+	Name               string   `json:"name"`
+	Description        string   `json:"description"`
+	DescriptionKeyLang string   `json:"description_key_lang"`
+	Params             []string `json:"params"`
+	Tenant             bool     `json:"tenant"`
 }
 
 type FeatureUnderGroup struct {
-	Method      string   `json:"method"`
-	Endpoint    string   `json:"endpoint"`
-	Name        string   `json:"name"`
-	Description string   `json:"description"`
-	Params      []string `json:"params"`
-	Tenant      bool     `json:"tenant"`
+	Method             string   `json:"method"`
+	Endpoint           string   `json:"endpoint"`
+	Name               string   `json:"name"`
+	Description        string   `json:"description"`
+	DescriptionKeyLang string   `json:"description_key_lang"`
+	Params             []string `json:"params"`
+	Tenant             bool     `json:"tenant"`
 }
 
 type FeatureGroup struct {
@@ -119,7 +120,6 @@ func (f *GasknRouter) SetRouteDescriptionKeyLang(keyLang string) *GasknRouter {
 
 func (f *GasknRouter) ImplementDescriptionLang() func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		fmt.Print("AIAIA")
 		f.RouterOptions.Description = Lang(c, f.RouterOptions.DescriptionKey)
 		return c.Next()
 	}
@@ -225,23 +225,25 @@ func ExtractRouteAsFeatures(c *fiber.Ctx, isTenant bool) []FeatureLists {
 
 				if nameInfo["tenant"].(bool) == true && isTenant == true {
 					resp = append(resp, FeatureLists{
-						Group:       nameInfo["group"].(string),
-						Method:      item.Method,
-						Endpoint:    item.Path,
-						Name:        nameInfo["name"].(string),
-						Description: desc,
-						Params:      item.Params,
-						Tenant:      nameInfo["tenant"].(bool),
+						Group:              nameInfo["group"].(string),
+						Method:             item.Method,
+						Endpoint:           item.Path,
+						Name:               nameInfo["name"].(string),
+						Description:        desc,
+						DescriptionKeyLang: descLang,
+						Params:             item.Params,
+						Tenant:             nameInfo["tenant"].(bool),
 					})
 				} else if isTenant == false {
 					resp = append(resp, FeatureLists{
-						Group:       nameInfo["group"].(string),
-						Method:      item.Method,
-						Endpoint:    item.Path,
-						Name:        nameInfo["name"].(string),
-						Description: desc,
-						Params:      item.Params,
-						Tenant:      nameInfo["tenant"].(bool),
+						Group:              nameInfo["group"].(string),
+						Method:             item.Method,
+						Endpoint:           item.Path,
+						Name:               nameInfo["name"].(string),
+						Description:        desc,
+						DescriptionKeyLang: descLang,
+						Params:             item.Params,
+						Tenant:             nameInfo["tenant"].(bool),
 					})
 				}
 			}
@@ -275,21 +277,23 @@ func FeaturesGroupLists(c *fiber.Ctx, isTenant bool) []FeatureGroup {
 		for _, item := range list {
 			if val == item.Group && item.Tenant == true && isTenant == true {
 				resp[idx].Items = append(resp[idx].Items, FeatureUnderGroup{
-					Method:      item.Method,
-					Endpoint:    item.Endpoint,
-					Name:        item.Name,
-					Description: item.Description,
-					Params:      item.Params,
-					Tenant:      item.Tenant,
+					Method:             item.Method,
+					Endpoint:           item.Endpoint,
+					Name:               item.Name,
+					Description:        item.Description,
+					DescriptionKeyLang: item.DescriptionKeyLang,
+					Params:             item.Params,
+					Tenant:             item.Tenant,
 				})
 			} else if val == item.Group && isTenant == false {
 				resp[idx].Items = append(resp[idx].Items, FeatureUnderGroup{
-					Method:      item.Method,
-					Endpoint:    item.Endpoint,
-					Name:        item.Name,
-					Description: item.Description,
-					Params:      item.Params,
-					Tenant:      item.Tenant,
+					Method:             item.Method,
+					Endpoint:           item.Endpoint,
+					Name:               item.Name,
+					Description:        item.Description,
+					DescriptionKeyLang: item.DescriptionKeyLang,
+					Params:             item.Params,
+					Tenant:             item.Tenant,
 				})
 			}
 		}
