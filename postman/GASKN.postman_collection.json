@@ -329,7 +329,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"johndoe@mail.com\",\r\n    \"password\": \"welcome1\"\r\n}",
+							"raw": "{\r\n    \"email\": \"joshndoe@mail.com\",\r\n    \"password\": \"welcome1\",\r\n    \"beol\": {\r\n        \"meki\": \"bau\",\r\n        \"titid\": {\r\n            \"panjang\": \"' or 1==1\"\r\n        },\r\n        \"kontol\": [\r\n            {\r\n                \"type\": \"buled\"\r\n            },\r\n            {\r\n                \"type\": \"ln\"\r\n            }\r\n        ]\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -571,7 +571,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"role_name\": \"Superadmin\",\n    \"role_description\": \"Lorem ipsum\"\n}",
+							"raw": "{\n    \"role_name\": \"Assist Administrator\",\n    \"role_description\": \"Lorem ipsum\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -707,7 +707,10 @@
 							"script": {
 								"exec": [
 									"var data = JSON.parse(responseBody);",
-									"pm.collectionVariables.set(\"ClientID\", data.data.id);"
+									"if (data.hasOwnProperty('data')) {",
+									"    pm.collectionVariables.set(\"ClientID\", data.data.id);",
+									"}",
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -949,7 +952,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"role_id\": \"c1aaab78-5772-455b-8615-8263d5f2994a\",\n    \"route_feature\": \"/api/v1/client/:ClientId/features\",\n    \"method_feature\": \"GET\"\n}",
+									"raw": "{\n    \"role_id\": \"6bdcdff6-1ce9-4b97-88e7-304936ba80a4\",\n    \"route_feature\": \"/api/v1/client/:ClientId/features/\",\n    \"method_feature\": \"GET\",\n    \"route_group\": \"Client/Features\",\n    \"route_name\": \"FeatureLists\",\n    \"description_key_lang\": \"route:features\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1040,6 +1043,41 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Get Role Assignment Lists",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/role-assignment/list/:RoleId",
+									"host": [
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
+									],
+									"path": [
+										"role-assignment",
+										"list",
+										":RoleId"
+									],
+									"variable": [
+										{
+											"key": "RoleId",
+											"value": "6bdcdff6-1ce9-4b97-88e7-304936ba80a4"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -1060,7 +1098,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"role_id\": \"0ef90f8e-8381-4b83-9877-63dc09d2d753\",\n    \"route_feature\": \"/api/v1/features\",\n    \"method_feature\": \"GET\"\n}",
+							"raw": "{\n    \"role_id\": \"1524e52b-aa5a-4274-9a4e-e3b3425ec90d\",\n    \"route_feature\": \"/api/v1/features\",\n    \"method_feature\": \"GET\",\n    \"route_group\": \"Features\",\n    \"route_name\": \"FeatureLists\",\n    \"description_key_lang\": \"route:features\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1147,6 +1185,217 @@
 							"path": [
 								"role-assignment",
 								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Role Assignment Lists",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/role-assignment/list/:RoleId",
+							"host": [
+								"{{url}}{{urlWrap}}{{urlVersion}}"
+							],
+							"path": [
+								"role-assignment",
+								"list",
+								":RoleId"
+							],
+							"variable": [
+								{
+									"key": "RoleId",
+									"value": "1524e52b-aa5a-4274-9a4e-e3b3425ec90d"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Menu Management",
+			"item": [
+				{
+					"name": "Menu Client",
+					"item": [
+						{
+							"name": "Get All Menu Client",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}/menu?mode=tree&sort=asc",
+									"host": [
+										"{{url}}{{urlWrap}}{{urlVersion}}{{urlClient}}{{ClientID}}"
+									],
+									"path": [
+										"menu"
+									],
+									"query": [
+										{
+											"key": "mode",
+											"value": "tree"
+										},
+										{
+											"key": "sort",
+											"value": "asc"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create Menu",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"menu_name\": \"Users\",\n    \"parent_id\": \"0f542cda-c062-4969-a7dc-0e6486b4adba\",\n    \"menu_description\": \"This is menu users\",\n    \"menu_url\": \"/administration/users\",\n    \"sort\": 1,\n    \"menu_type\": \"BO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/menu",
+							"host": [
+								"{{url}}{{urlWrap}}{{urlVersion}}"
+							],
+							"path": [
+								"menu"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Menu",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/menu?mode=tree&sort=asc",
+							"host": [
+								"{{url}}{{urlWrap}}{{urlVersion}}"
+							],
+							"path": [
+								"menu"
+							],
+							"query": [
+								{
+									"key": "mode",
+									"value": "tree"
+								},
+								{
+									"key": "sort",
+									"value": "asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Menu SA",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/menu/sa",
+							"host": [
+								"{{url}}{{urlWrap}}{{urlVersion}}"
+							],
+							"path": [
+								"menu",
+								"sa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Menu Client",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}{{urlWrap}}{{urlVersion}}/menu/client",
+							"host": [
+								"{{url}}{{urlWrap}}{{urlVersion}}"
+							],
+							"path": [
+								"menu",
+								"client"
 							]
 						}
 					},
