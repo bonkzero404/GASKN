@@ -82,3 +82,19 @@ func (service *RoleAssignmentHandler) AssignUserPermission(c *fiber.Ctx) error {
 
 	return utils.ApiCreated(c, response)
 }
+
+func (service *RoleAssignmentHandler) GetPermissionByRole(c *fiber.Ctx) error {
+
+	response, err := service.RoleAssignmentService.GetPermissionListByRole(c)
+
+	if err != nil {
+		re := err.(*responseDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
+			Message: utils.Lang(c, config.RoleAssignErrLoad),
+			Cause:   err.Error(),
+			Inputs:  nil,
+		})
+	}
+
+	return utils.ApiCreated(c, response)
+}

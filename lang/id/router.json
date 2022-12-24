@@ -71,6 +71,11 @@
   },
   {
     "locale": "id",
+    "key": "route:client:role:assignment:load",
+    "trans": "Pengguna bisa menampilkan semua penetapan peran"
+  },
+  {
+    "locale": "id",
     "key": "route:client:user:invitation",
     "trans": "Pengguna dapat mengundang pengguna lain untuk bergabung dengan organisasi"
   },

@@ -18,5 +18,10 @@
     "locale": "en",
     "key": "role-assign:err:failed",
     "trans": "Failed to assign user to role"
+  },
+  {
+    "locale": "en",
+    "key": "role-assign:err:load",
+    "trans": "Failed to load data role assignment"
   }
 ]

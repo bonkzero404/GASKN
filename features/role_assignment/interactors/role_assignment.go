@@ -17,4 +17,6 @@ type RoleAssignment interface {
 	RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleAssignmentRequest) (*dto.RoleAssignmentResponse, error)
 
 	AssignUserPermission(c *fiber.Ctx, req *dto.RoleUserAssignment) (*dto.RoleAssignmentResponse, error)
+
+	GetPermissionListByRole(c *fiber.Ctx) (*[]dto.RoleAssignmentListResponse, error)
 }

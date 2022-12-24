@@ -6,7 +6,7 @@ import (
 	"github.com/bonkzero404/gaskn/features/role/repositories/implements"
 	"github.com/bonkzero404/gaskn/features/role_assignment/handlers"
 	implements2 "github.com/bonkzero404/gaskn/features/role_assignment/interactors/implements"
-
+	repository "github.com/bonkzero404/gaskn/features/role_assignment/repositories/implements"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -14,8 +14,9 @@ import (
 func RegisterFeature(app *fiber.App) {
 	roleRepository := implements.NewRoleRepository(driver.DB)
 	roleClientRepository := implements.NewRoleClientRepository(driver.DB)
+	roleAssignmentRepository := repository.NewRoleAssignmentRepository(driver.DB)
 
-	roleAssignmentService := implements2.NewRoleAssignment(roleClientRepository, roleRepository)
+	roleAssignmentService := implements2.NewRoleAssignment(roleClientRepository, roleRepository, roleAssignmentRepository)
 	RoleAssignmentHandler := handlers.NewRoleAssignmentHandler(roleAssignmentService)
 
 	var routesInitTenant = ApiRoute{}

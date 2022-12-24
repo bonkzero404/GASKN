@@ -54,6 +54,17 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 		SetRouteName("CreateUserRoleAssignment").
 		SetRouteDescriptionKeyLang(config.RouteClientRoleAssignment).
 		Execute()
+
+	role.Get(
+		"/list/:RoleId",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.RoleAssignmentHandler.GetPermissionByRole,
+	).
+		SetRouteName("GetPermissionRoleAssignment").
+		SetRouteDescriptionKeyLang(config.RouteClientRoleViewAssignment).
+		Execute()
 }
 
 func (handler *ApiRoute) RouteClient(app fiber.Router) {
@@ -98,6 +109,18 @@ func (handler *ApiRoute) RouteClient(app fiber.Router) {
 	).
 		SetRouteName("CreateUserClientRoleAssignment").
 		SetRouteDescriptionKeyLang(config.RouteClientRoleAssignment).
+		SetRouteTenant(true).
+		Execute()
+
+	roleClient.Get(
+		"/list/:RoleId",
+		middleware.Authenticate(),
+		middleware.RateLimiter(5, 30),
+		middleware.Permission(),
+		handler.RoleAssignmentHandler.GetPermissionByRole,
+	).
+		SetRouteName("GetPermissionClientRoleAssignment").
+		SetRouteDescriptionKeyLang(config.RouteClientRoleViewAssignment).
 		SetRouteTenant(true).
 		Execute()
 }

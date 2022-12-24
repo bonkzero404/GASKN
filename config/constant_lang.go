@@ -39,6 +39,7 @@ const RoleAssignErrUnknown = "role-assign:err:failed-unknown"
 const RoleAssignErrRemovePermit = "role-assign:err:failed-remove-permit"
 const RoleAssignErrAlreadyExists = "role-assign:err:exists"
 const RoleAssignErrFailed = "role-assign:err:failed"
+const RoleAssignErrLoad = "role-assign:err:load"
 
 /** USER */
 
@@ -68,6 +69,7 @@ const RouteClientRoleDelete = "route:client:role:delete"
 const RouteClientRoleAssignmentAdd = "route:client:role:assignment:add"
 const RouteCLientRoleAssignmentDelete = "route:client:role:assignment:remove"
 const RouteClientRoleAssignment = "route:client:role:assignment:assign"
+const RouteClientRoleViewAssignment = "route:client:role:assignment:load"
 const RouteUserCreate = "route:user:create"
 const RouteClientUserInvitation = "route:client:user:invitation"
 const RouteMenuCreate = "route:menu:create"

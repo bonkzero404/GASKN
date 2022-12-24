@@ -71,6 +71,11 @@
   },
   {
     "locale": "en",
+    "key": "route:client:role:assignment:load",
+    "trans": "Users can view all role assignments"
+  },
+  {
+    "locale": "en",
     "key": "route:client:user:invitation",
     "trans": "User can invite other users to join organizations"
   },

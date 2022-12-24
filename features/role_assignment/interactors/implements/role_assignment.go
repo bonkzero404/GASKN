@@ -9,6 +9,7 @@ import (
 	"github.com/bonkzero404/gaskn/features/role/repositories"
 	"github.com/bonkzero404/gaskn/features/role_assignment/dto"
 	"github.com/bonkzero404/gaskn/features/role_assignment/interactors"
+	repositories2 "github.com/bonkzero404/gaskn/features/role_assignment/repositories"
 	"github.com/bonkzero404/gaskn/utils"
 	"strings"
 
@@ -18,17 +19,20 @@ import (
 )
 
 type RoleAssignment struct {
-	RoleClientRepository repositories.RoleClientRepository
-	RoleRepository       repositories.RoleRepository
+	RoleClientRepository     repositories.RoleClientRepository
+	RoleRepository           repositories.RoleRepository
+	RoleAssignmentRepository repositories2.RoleAssignmentRepository
 }
 
 func NewRoleAssignment(
 	RoleClientRepository repositories.RoleClientRepository,
 	RoleRepository repositories.RoleRepository,
+	RoleAssignmentRepository repositories2.RoleAssignmentRepository,
 ) interactors.RoleAssignment {
 	return &RoleAssignment{
-		RoleClientRepository: RoleClientRepository,
-		RoleRepository:       RoleRepository,
+		RoleClientRepository:     RoleClientRepository,
+		RoleRepository:           RoleRepository,
+		RoleAssignmentRepository: RoleAssignmentRepository,
 	}
 }
 
@@ -362,4 +366,48 @@ func (interact RoleAssignment) AssignUserPermission(c *fiber.Ctx, req *dto.RoleU
 	}
 
 	return &saveResponse, nil
+}
+
+func (interact RoleAssignment) GetPermissionListByRole(c *fiber.Ctx) (*[]dto.RoleAssignmentListResponse, error) {
+	var clientId = c.Params(config.Config("API_CLIENT_PARAM"))
+	var roleId = c.Params("RoleId")
+	var permissionRule []stores.PermissionRuleDetail
+	var resp []dto.RoleAssignmentListResponse
+
+	if roleId == "" {
+		return nil, &responseDto.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
+		}
+	}
+
+	if clientId == "" {
+		clientId = "*"
+	}
+
+	err := interact.RoleAssignmentRepository.GetPermissionByRole(&permissionRule, roleId, clientId).Error
+
+	if err != nil {
+		return nil, &responseDto.ApiErrorResponse{
+			StatusCode: fiber.StatusUnprocessableEntity,
+			Message:    utils.Lang(c, config.RoleAssignErrLoad),
+		}
+	}
+
+	for _, item := range permissionRule {
+		resp = append(resp, dto.RoleAssignmentListResponse{
+			ID:           item.ID.String(),
+			PermissionId: item.PermissionRuleId,
+			RoleId:       item.PermissionRule.V0,
+			ClientName:   item.ClientName,
+			RoleName:     item.RoleName,
+			GroupName:    item.GroupName,
+			RouteName:    item.RouteName,
+			Description:  utils.Lang(c, item.DescriptionKeyLang),
+			Route:        item.PermissionRule.V2,
+			Method:       item.PermissionRule.V3,
+		})
+	}
+
+	return &resp, nil
 }

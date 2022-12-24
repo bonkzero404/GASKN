@@ -18,5 +18,10 @@
     "locale": "id",
     "key": "role-assign:err:failed",
     "trans": "Gagal menetapkan pengguna ke peran"
+  },
+  {
+    "locale": "id",
+    "key": "role-assign:err:load",
+    "trans": "Gagal memuat data penetapan peran"
   }
 ]

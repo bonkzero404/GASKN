@@ -4,6 +4,7 @@ import (
 	"github.com/bonkzero404/gaskn/driver"
 	implementsRoleRepo "github.com/bonkzero404/gaskn/features/role/repositories/implements"
 	implementsRoleAssignInteract "github.com/bonkzero404/gaskn/features/role_assignment/interactors/implements"
+	roleAssignRepo "github.com/bonkzero404/gaskn/features/role_assignment/repositories/implements"
 	"github.com/bonkzero404/gaskn/features/user/factories"
 	implementsFactory "github.com/bonkzero404/gaskn/features/user/factories/implements"
 	implementsInteract "github.com/bonkzero404/gaskn/features/user/interactors/implements"
@@ -29,6 +30,7 @@ func RegisterFeature(app *fiber.App) {
 	userActionCodeRepository := implements.NewUserActionCodeRepository(driver.DB)
 	aggregateRepository := implements.NewRepositoryAggregate(userRepository, userActionCodeRepository)
 	userInvitationRepository := implements.NewUserInvitationRepository(driver.DB)
+	roleAssignmentRepository := roleAssignRepo.NewRoleAssignmentRepository(driver.DB)
 	userActionFactory := registerActionCodeFactory(userActionCodeRepository)
 
 	userService := implementsInteract.NewUser(
@@ -43,7 +45,7 @@ func RegisterFeature(app *fiber.App) {
 
 	repoUserRole := implementsRoleRepo.NewRoleRepository(driver.DB)
 	repoUserRoleClient := implementsRoleRepo.NewRoleClientRepository(driver.DB)
-	interactAssign := implementsRoleAssignInteract.NewRoleAssignment(repoUserRoleClient, repoUserRole)
+	interactAssign := implementsRoleAssignInteract.NewRoleAssignment(repoUserRoleClient, repoUserRole, roleAssignmentRepository)
 
 	userClientService := implementsInteract.NewUserClient(
 		userRepository,
