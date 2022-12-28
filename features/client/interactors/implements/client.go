@@ -4,7 +4,7 @@ import (
 	"github.com/bonkzero404/gaskn/driver"
 	"github.com/bonkzero404/gaskn/features/client/interactors"
 	"github.com/bonkzero404/gaskn/features/client/repositories"
-	userContract "github.com/bonkzero404/gaskn/features/user/repositories"
+	userRepo "github.com/bonkzero404/gaskn/features/user/repositories"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,19 +13,19 @@ import (
 
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
-	responseDto "github.com/bonkzero404/gaskn/dto"
+	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/client/dto"
 	"github.com/bonkzero404/gaskn/utils"
 )
 
 type Client struct {
 	ClientRepository repositories.ClientRepository
-	UserRepository   userContract.UserRepository
+	UserRepository   userRepo.UserRepository
 }
 
 func NewClient(
 	clientRepository repositories.ClientRepository,
-	UserRepository userContract.UserRepository,
+	UserRepository userRepo.UserRepository,
 ) interactors.Client {
 	return &Client{
 		ClientRepository: clientRepository,
@@ -33,7 +33,7 @@ func NewClient(
 	}
 }
 
-func (interact Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, userId string) (*dto.ClientResponse, error) {
+func (repository Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, userId string) (*dto.ClientResponse, error) {
 	pUuid, _ := uuid.Parse(userId)
 	clientRoute := config.Config("API_WRAP") + "/" + config.Config("API_VERSION") + "/" + config.Config("API_CLIENT") + "/:" + config.Config("API_CLIENT_PARAM")
 
@@ -46,17 +46,17 @@ func (interact Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, use
 	}
 
 	// Create client
-	role, err := interact.ClientRepository.CreateClient(&clientStore)
+	role, err := repository.ClientRepository.CreateClient(&clientStore)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key") {
-			return nil, &responseDto.ApiErrorResponse{
+			return nil, &globalDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    utils.Lang(c, config.ClientErrDuplicate),
 			}
 		}
 
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, err.Error()),
 		}
@@ -64,7 +64,7 @@ func (interact Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, use
 
 	// Get User By Id
 	var user = stores.User{}
-	interact.UserRepository.FindUserById(&user, pUuid.String())
+	repository.UserRepository.FindUserById(&user, pUuid.String())
 
 	// Crete group policy
 	if g, err := driver.AddGroupingPolicy(
@@ -75,7 +75,7 @@ func (interact Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, use
 		role.RoleName,
 		clientStore.ClientName,
 	); !g {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, err.Error()),
 		}
@@ -94,7 +94,7 @@ func (interact Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, use
 		"",
 		"",
 	); !p {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, err.Error()),
 		}
@@ -111,16 +111,16 @@ func (interact Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, use
 	return &roleResponse, nil
 }
 
-func (interact Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (*dto.ClientResponse, error) {
+func (repository Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (*dto.ClientResponse, error) {
 	// Check role if exists
 	var clientStore stores.Client
 
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
-	errCheckClient := interact.ClientRepository.GetClientById(&clientStore, clientId).Error
+	errCheckClient := repository.ClientRepository.GetClientById(&clientStore, clientId).Error
 
 	if errCheckClient != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.ClientErrAlreadyExists),
 		}
@@ -131,10 +131,10 @@ func (interact Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (*d
 	clientStore.ClientSlug = slug.Make(client.ClientName)
 	clientStore.IsActive = true
 
-	err := interact.ClientRepository.UpdateClientById(&clientStore).Error
+	err := repository.ClientRepository.UpdateClientById(&clientStore).Error
 
 	if err != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
@@ -151,14 +151,14 @@ func (interact Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (*d
 	return &clientResponse, nil
 }
 
-func (interact Client) GetClientByUser(c *fiber.Ctx, userId string) (*utils.Pagination, error) {
+func (repository Client) GetClientByUser(c *fiber.Ctx, userId string) (*utils.Pagination, error) {
 	var clientAssignment []stores.ClientAssignment
 	var resp []dto.ClientResponse
 
-	res, err := interact.ClientRepository.GetClientListByUser(&clientAssignment, c, userId)
+	res, err := repository.ClientRepository.GetClientListByUser(&clientAssignment, c, userId)
 
 	if err != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}

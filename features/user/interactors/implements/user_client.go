@@ -2,8 +2,8 @@ package implements
 
 import (
 	"errors"
-	repoRole "github.com/bonkzero404/gaskn/features/role/repositories"
-	interactRoleUserAssignment "github.com/bonkzero404/gaskn/features/role_assignment/interactors"
+	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories"
+	roleAssignInteract "github.com/bonkzero404/gaskn/features/role_assignment/interactors"
 	"github.com/bonkzero404/gaskn/features/user/factories"
 	"github.com/bonkzero404/gaskn/features/user/interactors"
 	"github.com/bonkzero404/gaskn/features/user/repositories"
@@ -17,8 +17,8 @@ import (
 
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
-	responseDto "github.com/bonkzero404/gaskn/dto"
-	dtoAssignment "github.com/bonkzero404/gaskn/features/role_assignment/dto"
+	globalDto "github.com/bonkzero404/gaskn/dto"
+	roleAssignDto "github.com/bonkzero404/gaskn/features/role_assignment/dto"
 	"github.com/bonkzero404/gaskn/features/user/dto"
 	"github.com/bonkzero404/gaskn/utils"
 )
@@ -28,9 +28,9 @@ type UserClient struct {
 	UserActionCodeRepository repositories.UserActionCodeRepository
 	UserInvitationRepository repositories.UserInvitationRepository
 	RepositoryAggregate      repositories.RepositoryAggregate
-	RoleClientRepository     repoRole.RoleClientRepository
+	RoleClientRepository     roleRepo.RoleClientRepository
 	ActionFactory            factories.ActionFactory
-	RoleAssignment           interactRoleUserAssignment.RoleAssignment
+	RoleAssignment           roleAssignInteract.RoleAssignment
 }
 
 func NewUserClient(
@@ -39,8 +39,8 @@ func NewUserClient(
 	UserInvitationRepository repositories.UserInvitationRepository,
 	RepositoryAggregate repositories.RepositoryAggregate,
 	Factory factories.ActionFactory,
-	RoleClientRepository repoRole.RoleClientRepository,
-	RoleAssignment interactRoleUserAssignment.RoleAssignment,
+	RoleClientRepository roleRepo.RoleClientRepository,
+	RoleAssignment roleAssignInteract.RoleAssignment,
 ) interactors.UserClient {
 	return &UserClient{
 		UserRepository:           UserRepository,
@@ -53,7 +53,7 @@ func NewUserClient(
 	}
 }
 
-func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvitationRequest, invitedByUser string) (*dto.UserInvitationResponse, error) {
+func (repository UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvitationRequest, invitedByUser string) (*dto.UserInvitationResponse, error) {
 	var user stores.User
 	var userInviteBy stores.User
 	// var userInvitation stores.UserInvitation
@@ -68,10 +68,10 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 	uuidClientId, _ := uuid.Parse(clientId)
 
 	// Check user if exists
-	errUser := interact.UserRepository.FindUserByEmail(&user, req.Email).Error
+	errUser := repository.UserRepository.FindUserByEmail(&user, req.Email).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
@@ -79,37 +79,37 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 
 	// Check user if not active
 	if !user.IsActive {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.UserErrNotActive),
 		}
 	}
 
 	// Check user invited
-	errUserInvitedBy := interact.UserRepository.FindUserById(&userInviteBy, invitedByUser).Error
+	errUserInvitedBy := repository.UserRepository.FindUserById(&userInviteBy, invitedByUser).Error
 
 	if errors.Is(errUserInvitedBy, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
 	}
 
 	// Check role Client
-	errRoleClient := interact.RoleClientRepository.GetRoleClientId(&roleClient, req.RoleId, clientId).Error
+	errRoleClient := repository.RoleClientRepository.GetRoleClientId(&roleClient, req.RoleId, clientId).Error
 
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
 	// Check action code by user if exists
-	errActionCode := interact.UserActionCodeRepository.FindExistsActionCode(&userActionCode, user.ID.String(), stores.INVITATION_CODE).Error
+	errActionCode := repository.UserActionCodeRepository.FindExistsActionCode(&userActionCode, user.ID.String(), stores.INVITATION_CODE).Error
 
 	if errActionCode != nil {
-		actCode, errActFactory := interact.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName, roleClient.Role.RoleName, clientId)
+		actCode, errActFactory := repository.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName, roleClient.Role.RoleName, clientId)
 
 		if errActFactory != nil {
 			return nil, errActFactory
@@ -126,7 +126,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 			Status:           stores.PENDING,
 		}
 
-		errInvitation := interact.UserInvitationRepository.CreateUserInvitation(&userInvitationNew)
+		errInvitation := repository.UserInvitationRepository.CreateUserInvitation(&userInvitationNew)
 
 		if errInvitation.Error != nil {
 			return nil, errInvitation.Error
@@ -146,7 +146,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 
 	// Check if expired can re-create invitation
 	if userActionCode.ExpiredAt.Before(t) {
-		actCode, errActFactory := interact.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName, roleClient.Role.RoleName, clientId)
+		actCode, errActFactory := repository.ActionFactory.CreateInvitation(&user, req.Url, userInviteBy.FullName, roleClient.Role.RoleName, clientId)
 
 		if errActFactory != nil {
 			return nil, errActFactory
@@ -163,7 +163,7 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 			Status:           stores.PENDING,
 		}
 
-		errInvitation := interact.UserInvitationRepository.CreateUserInvitation(&userInvitationNew)
+		errInvitation := repository.UserInvitationRepository.CreateUserInvitation(&userInvitationNew)
 
 		if errInvitation.Error != nil {
 			return nil, errInvitation.Error
@@ -179,13 +179,13 @@ func (interact UserClient) CreateUserInvitation(c *fiber.Ctx, req *dto.UserInvit
 		return &resp, nil
 	}
 
-	return nil, &responseDto.ApiErrorResponse{
+	return nil, &globalDto.ApiErrorResponse{
 		StatusCode: fiber.StatusUnprocessableEntity,
 		Message:    utils.Lang(c, config.UserErrInvited),
 	}
 }
 
-func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accept stores.StatusInvitationType) (*dto.UserInvitationResponse, error) {
+func (repository UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accept stores.StatusInvitationType) (*dto.UserInvitationResponse, error) {
 	token := c.Locals("user").(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
 	userId := claims["id"].(string)
@@ -197,26 +197,26 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
-	errUser := interact.UserRepository.FindUserById(&user, userId).Error
+	errUser := repository.UserRepository.FindUserById(&user, userId).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
 	}
 
 	if !user.IsActive {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.UserErrAlreadyActive),
 		}
 	}
 
-	errAct := interact.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), code).Error
+	errAct := repository.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.UserErrActivationNotFound),
 		}
@@ -225,26 +225,26 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 	t := time.Now()
 
 	if userAct.ExpiredAt.Before(t) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
 			Message:    utils.Lang(c, config.UserErrActivationExpired),
 		}
 	}
 
-	errInvitation := interact.UserInvitationRepository.FindInvitationByActId(&userInvitation, userAct.ID.String()).Error
+	errInvitation := repository.UserInvitationRepository.FindInvitationByActId(&userInvitation, userAct.ID.String()).Error
 
 	if errors.Is(errInvitation, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.UserErrActivationNotFound),
 		}
 	}
 
 	// Check role Client
-	errRoleClient := interact.RoleClientRepository.GetRoleClientById(&roleClient, userInvitation.RoleClientId.String(), clientId).Error
+	errRoleClient := repository.RoleClientRepository.GetRoleClientById(&roleClient, userInvitation.RoleClientId.String(), clientId).Error
 
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
@@ -264,16 +264,16 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 			Status:           accept,
 		}
 
-		errUserInvite := interact.UserInvitationRepository.UpdateUserInvitation(&userInvitationUpdate).Error
+		errUserInvite := repository.UserInvitationRepository.UpdateUserInvitation(&userInvitationUpdate).Error
 
 		if errUserInvite != nil {
-			return nil, &responseDto.ApiErrorResponse{
+			return nil, &globalDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    errUserInvite.Error(),
 			}
 		}
 
-		_, err := interact.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), code)
+		_, err := repository.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), code)
 		if err != nil {
 			return nil, err
 		}
@@ -286,17 +286,17 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 				IsActive: true,
 			}
 
-			interact.UserInvitationRepository.CreateClientAssignment(&clientAssign)
+			repository.UserInvitationRepository.CreateClientAssignment(&clientAssign)
 
-			var assignPermit = &dtoAssignment.RoleUserAssignment{
+			var assignPermit = &roleAssignDto.RoleUserAssignment{
 				UserId: user.ID.String(),
 				RoleId: roleClient.RoleId.String(),
 			}
 
-			_, errAssignPermit := interact.RoleAssignment.AssignUserPermission(c, assignPermit)
+			_, errAssignPermit := repository.RoleAssignment.AssignUserPermission(c, assignPermit)
 
 			if errAssignPermit != nil {
-				return nil, &responseDto.ApiErrorResponse{
+				return nil, &globalDto.ApiErrorResponse{
 					StatusCode: fiber.StatusUnprocessableEntity,
 					Message:    errAssignPermit.Error(),
 				}
@@ -313,7 +313,7 @@ func (interact UserClient) UserInviteAcceptance(c *fiber.Ctx, code string, accep
 		return &resp, nil
 
 	} else {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.UserErrActivationNotFound),
 		}

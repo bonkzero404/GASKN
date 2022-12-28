@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/bonkzero404/gaskn/database/stores"
-	responseDto "github.com/bonkzero404/gaskn/dto"
+	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/user/dto"
 	"github.com/bonkzero404/gaskn/features/user/interactors"
 	"github.com/bonkzero404/gaskn/utils"
@@ -20,7 +20,7 @@ func NewUserHandler(userService interactors.User) *UserHandler {
 	}
 }
 
-func (service *UserHandler) CreateUser(c *fiber.Ctx) error {
+func (interact *UserHandler) CreateUser(c *fiber.Ctx) error {
 	var request dto.UserCreateRequest
 	var routeInternal = false
 
@@ -32,11 +32,11 @@ func (service *UserHandler) CreateUser(c *fiber.Ctx) error {
 		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := service.UserService.CreateUser(c, &request, routeInternal)
+	response, err := interact.UserService.CreateUser(c, &request, routeInternal)
 
 	if err != nil {
-		re := err.(*responseDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
+		re := err.(*globalDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
 			Message: utils.Lang(c, "user:err:create-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -46,18 +46,18 @@ func (service *UserHandler) CreateUser(c *fiber.Ctx) error {
 	return utils.ApiCreated(c, response)
 }
 
-func (service *UserHandler) UserActivation(c *fiber.Ctx) error {
+func (interact *UserHandler) UserActivation(c *fiber.Ctx) error {
 	var request dto.UserActivationRequest
 
 	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
 		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := service.UserService.UserActivation(c, request.Code)
+	response, err := interact.UserService.UserActivation(c, request.Code)
 
 	if err != nil {
-		re := err.(*responseDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
+		re := err.(*globalDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
 			Message: utils.Lang(c, "user:err:activation-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -67,18 +67,18 @@ func (service *UserHandler) UserActivation(c *fiber.Ctx) error {
 	return utils.ApiCreated(c, response)
 }
 
-func (service *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
+func (interact *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 	var request dto.UserReActivationRequest
 
 	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
 		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := service.UserService.CreateUserActivation(c, request.Email, stores.ACTIVATION_CODE)
+	response, err := interact.UserService.CreateUserActivation(c, request.Email, stores.ACTIVATION_CODE)
 
 	if err != nil {
-		re := err.(*responseDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
+		re := err.(*globalDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
 			Message: utils.Lang(c, "user:err:re-activation-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -88,18 +88,18 @@ func (service *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 	return utils.ApiCreated(c, response)
 }
 
-func (service *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
+func (interact *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 	var request dto.UserForgotPassRequest
 
 	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
 		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := service.UserService.CreateUserActivation(c, request.Email, stores.FORGOT_PASSWORD)
+	response, err := interact.UserService.CreateUserActivation(c, request.Email, stores.FORGOT_PASSWORD)
 
 	if err != nil {
-		re := err.(*responseDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
+		re := err.(*globalDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
 			Message: utils.Lang(c, "user:err:forgot-pass-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -109,18 +109,18 @@ func (service *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error {
 	return utils.ApiCreated(c, response)
 }
 
-func (service *UserHandler) UpdatePassword(c *fiber.Ctx) error {
+func (interact *UserHandler) UpdatePassword(c *fiber.Ctx) error {
 	var request dto.UserForgotPassActRequest
 
 	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
 		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := service.UserService.UpdatePassword(c, &request)
+	response, err := interact.UserService.UpdatePassword(c, &request)
 
 	if err != nil {
-		re := err.(*responseDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
+		re := err.(*globalDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
 			Message: utils.Lang(c, "user:err:update-pass-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,

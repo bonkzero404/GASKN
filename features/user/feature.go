@@ -2,12 +2,12 @@ package user
 
 import (
 	"github.com/bonkzero404/gaskn/driver"
-	implementsRoleRepo "github.com/bonkzero404/gaskn/features/role/repositories/implements"
-	implementsRoleAssignInteract "github.com/bonkzero404/gaskn/features/role_assignment/interactors/implements"
+	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories/implements"
+	roleAssignInteract "github.com/bonkzero404/gaskn/features/role_assignment/interactors/implements"
 	roleAssignRepo "github.com/bonkzero404/gaskn/features/role_assignment/repositories/implements"
 	"github.com/bonkzero404/gaskn/features/user/factories"
-	implementsFactory "github.com/bonkzero404/gaskn/features/user/factories/implements"
-	implementsInteract "github.com/bonkzero404/gaskn/features/user/interactors/implements"
+	factory "github.com/bonkzero404/gaskn/features/user/factories/implements"
+	userInteract "github.com/bonkzero404/gaskn/features/user/interactors/implements"
 	"github.com/bonkzero404/gaskn/features/user/repositories"
 	"github.com/bonkzero404/gaskn/features/user/repositories/implements"
 	"github.com/gofiber/fiber/v2"
@@ -17,11 +17,11 @@ import (
 )
 
 func registerActionCodeFactory(userActionCodeRepository repositories.UserActionCodeRepository) factories.ActionFactory {
-	actFactory := implementsFactory.NewUserActivationFactory(userActionCodeRepository)
-	forgotPassFactory := implementsFactory.NewUserForgotPassFactory(userActionCodeRepository)
-	userInvitationFactory := implementsFactory.NewUserInvitationFactory(userActionCodeRepository)
+	actFactory := factory.NewUserActivationFactory(userActionCodeRepository)
+	forgotPassFactory := factory.NewUserForgotPassFactory(userActionCodeRepository)
+	userInvitationFactory := factory.NewUserInvitationFactory(userActionCodeRepository)
 
-	return implementsFactory.NewActionFactory(actFactory, forgotPassFactory, userInvitationFactory)
+	return factory.NewActionFactory(actFactory, forgotPassFactory, userInvitationFactory)
 }
 
 func RegisterFeature(app *fiber.App) {
@@ -33,7 +33,7 @@ func RegisterFeature(app *fiber.App) {
 	roleAssignmentRepository := roleAssignRepo.NewRoleAssignmentRepository(driver.DB)
 	userActionFactory := registerActionCodeFactory(userActionCodeRepository)
 
-	userService := implementsInteract.NewUser(
+	user := userInteract.NewUser(
 		userRepository,
 		userActionCodeRepository,
 		aggregateRepository,
@@ -41,13 +41,13 @@ func RegisterFeature(app *fiber.App) {
 		userInvitationRepository,
 	)
 
-	userHandler := handlers.NewUserHandler(userService)
+	userHandler := handlers.NewUserHandler(user)
 
-	repoUserRole := implementsRoleRepo.NewRoleRepository(driver.DB)
-	repoUserRoleClient := implementsRoleRepo.NewRoleClientRepository(driver.DB)
-	interactAssign := implementsRoleAssignInteract.NewRoleAssignment(repoUserRoleClient, repoUserRole, roleAssignmentRepository)
+	repoUserRole := roleRepo.NewRoleRepository(driver.DB)
+	repoUserRoleClient := roleRepo.NewRoleClientRepository(driver.DB)
+	interactAssign := roleAssignInteract.NewRoleAssignment(repoUserRoleClient, repoUserRole, roleAssignmentRepository)
 
-	userClientService := implementsInteract.NewUserClient(
+	userClient := userInteract.NewUserClient(
 		userRepository,
 		userActionCodeRepository,
 		userInvitationRepository,
@@ -56,7 +56,7 @@ func RegisterFeature(app *fiber.App) {
 		repoUserRoleClient,
 		interactAssign,
 	)
-	userClientHandler := handlers.NewUserClientHandler(userClientService)
+	userClientHandler := handlers.NewUserClientHandler(userClient)
 
 	var routesInitTenant = ApiRoute{}
 

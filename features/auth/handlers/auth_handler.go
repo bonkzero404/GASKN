@@ -22,14 +22,14 @@ func NewAuthHandler(authService interactors.UserAuth) *AuthHandler {
 }
 
 // Authentication /*
-func (service *AuthHandler) Authentication(c *fiber.Ctx) error {
+func (interact *AuthHandler) Authentication(c *fiber.Ctx) error {
 	var request dto.UserAuthRequest
 
 	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
 		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := service.AuthService.Authenticate(c, &request)
+	response, err := interact.AuthService.Authenticate(c, &request)
 
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
@@ -44,12 +44,12 @@ func (service *AuthHandler) Authentication(c *fiber.Ctx) error {
 }
 
 // GetProfile /*
-func (service *AuthHandler) GetProfile(c *fiber.Ctx) error {
+func (interact *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 	claims := token.Claims.(jwt.MapClaims)
 	id := claims["id"].(string)
 
-	response, err := service.AuthService.GetProfile(c, id)
+	response, err := interact.AuthService.GetProfile(c, id)
 
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)
@@ -64,10 +64,10 @@ func (service *AuthHandler) GetProfile(c *fiber.Ctx) error {
 }
 
 // RefreshToken /*
-func (service *AuthHandler) RefreshToken(c *fiber.Ctx) error {
+func (interact *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 
-	response, err := service.AuthService.RefreshToken(c, token)
+	response, err := interact.AuthService.RefreshToken(c, token)
 
 	if err != nil {
 		re := err.(*responseDto.ApiErrorResponse)

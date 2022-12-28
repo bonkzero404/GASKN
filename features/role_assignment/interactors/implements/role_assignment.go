@@ -5,11 +5,11 @@ import (
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
 	"github.com/bonkzero404/gaskn/driver"
-	responseDto "github.com/bonkzero404/gaskn/dto"
-	"github.com/bonkzero404/gaskn/features/role/repositories"
+	globalDto "github.com/bonkzero404/gaskn/dto"
+	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories"
 	"github.com/bonkzero404/gaskn/features/role_assignment/dto"
 	"github.com/bonkzero404/gaskn/features/role_assignment/interactors"
-	repositories2 "github.com/bonkzero404/gaskn/features/role_assignment/repositories"
+	roleAssignmentRepo "github.com/bonkzero404/gaskn/features/role_assignment/repositories"
 	"github.com/bonkzero404/gaskn/utils"
 	"strings"
 
@@ -19,15 +19,15 @@ import (
 )
 
 type RoleAssignment struct {
-	RoleClientRepository     repositories.RoleClientRepository
-	RoleRepository           repositories.RoleRepository
-	RoleAssignmentRepository repositories2.RoleAssignmentRepository
+	RoleClientRepository     roleRepo.RoleClientRepository
+	RoleRepository           roleRepo.RoleRepository
+	RoleAssignmentRepository roleAssignmentRepo.RoleAssignmentRepository
 }
 
 func NewRoleAssignment(
-	RoleClientRepository repositories.RoleClientRepository,
-	RoleRepository repositories.RoleRepository,
-	RoleAssignmentRepository repositories2.RoleAssignmentRepository,
+	RoleClientRepository roleRepo.RoleClientRepository,
+	RoleRepository roleRepo.RoleRepository,
+	RoleAssignmentRepository roleAssignmentRepo.RoleAssignmentRepository,
 ) interactors.RoleAssignment {
 	return &RoleAssignment{
 		RoleClientRepository:     RoleClientRepository,
@@ -36,13 +36,13 @@ func NewRoleAssignment(
 	}
 }
 
-func (interact RoleAssignment) CheckExistsRoleAssignment(c *fiber.Ctx, clientIdUuid uuid.UUID, roleIdUuid uuid.UUID) (*stores.RoleClient, error) {
+func (repository RoleAssignment) CheckExistsRoleAssignment(c *fiber.Ctx, clientIdUuid uuid.UUID, roleIdUuid uuid.UUID) (*stores.RoleClient, error) {
 	var clientRole = stores.RoleClient{}
 
-	errRoleClient := interact.RoleClientRepository.GetRoleClientId(&clientRole, roleIdUuid.String(), clientIdUuid.String()).Error
+	errRoleClient := repository.RoleClientRepository.GetRoleClientId(&clientRole, roleIdUuid.String(), clientIdUuid.String()).Error
 
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
@@ -51,17 +51,17 @@ func (interact RoleAssignment) CheckExistsRoleAssignment(c *fiber.Ctx, clientIdU
 	return &clientRole, nil
 }
 
-func (interact RoleAssignment) CheckExistsRoleUserAssignment(c *fiber.Ctx, userId uuid.UUID, clientIdUuid uuid.UUID) (*stores.ClientAssignment, error) {
+func (repository RoleAssignment) CheckExistsRoleUserAssignment(c *fiber.Ctx, userId uuid.UUID, clientIdUuid uuid.UUID) (*stores.ClientAssignment, error) {
 	var clientAssign = stores.ClientAssignment{}
 
-	errRoleUserClient := interact.RoleClientRepository.GetUserHasClient(
+	errRoleUserClient := repository.RoleClientRepository.GetUserHasClient(
 		&clientAssign,
 		userId.String(),
 		clientIdUuid.String(),
 	).Error
 
 	if errors.Is(errRoleUserClient, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
@@ -71,27 +71,27 @@ func (interact RoleAssignment) CheckExistsRoleUserAssignment(c *fiber.Ctx, userI
 }
 
 // CreateRoleAssignment /**
-func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleAssignmentRequest) (*dto.RoleAssignmentResponse, error) {
+func (repository RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleAssignmentRequest) (*dto.RoleAssignmentResponse, error) {
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 	clientIdUuid, errClientIdUuid := uuid.Parse(clientId)
 	roleIdUuid, errRoleUuid := uuid.Parse(req.RoleId)
 
 	if clientId != "" && !strings.Contains(req.RouteFeature, config.Config("API_CLIENT_PARAM")) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrNotAllowed),
 		}
 	}
 
 	if clientId != "" && (errRoleUuid != nil || errClientIdUuid != nil) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
 	}
 
 	if errRoleUuid != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
@@ -99,7 +99,7 @@ func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 
 	if clientId != "" {
 
-		existsResp, errExists := interact.CheckExistsRoleAssignment(c, clientIdUuid, roleIdUuid)
+		existsResp, errExists := repository.CheckExistsRoleAssignment(c, clientIdUuid, roleIdUuid)
 
 		if errExists != nil {
 			return nil, errExists
@@ -117,7 +117,7 @@ func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 			req.RouteName,
 			req.DescriptionKeyLang,
 		); !save {
-			return nil, &responseDto.ApiErrorResponse{
+			return nil, &globalDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    utils.Lang(c, config.RoleAssignErrUnknown),
 			}
@@ -135,10 +135,10 @@ func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 	// Check Role if exists
 	var role = stores.Role{}
 
-	errExistsRole := interact.RoleRepository.GetRoleById(&role, req.RoleId).Error
+	errExistsRole := repository.RoleRepository.GetRoleById(&role, req.RoleId).Error
 
 	if errExistsRole != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
@@ -156,7 +156,7 @@ func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 		req.RouteName,
 		req.DescriptionKeyLang,
 	); !save {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.RoleAssignErrUnknown),
 		}
@@ -171,27 +171,27 @@ func (interact RoleAssignment) CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 	return &saveResponse, nil
 }
 
-func (interact RoleAssignment) RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleAssignmentRequest) (*dto.RoleAssignmentResponse, error) {
+func (repository RoleAssignment) RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleAssignmentRequest) (*dto.RoleAssignmentResponse, error) {
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 	clientIdUuid, errClientIdUuid := uuid.Parse(clientId)
 	roleIdUuid, errRoleUuid := uuid.Parse(req.RoleId)
 
 	if clientId != "" && (errRoleUuid != nil || errClientIdUuid != nil) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
 	}
 
 	if errRoleUuid != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
 	}
 
 	if clientId != "" {
-		res, errExists := interact.CheckExistsRoleAssignment(c, clientIdUuid, roleIdUuid)
+		res, errExists := repository.CheckExistsRoleAssignment(c, clientIdUuid, roleIdUuid)
 
 		if errExists != nil {
 			return nil, errExists
@@ -203,7 +203,7 @@ func (interact RoleAssignment) RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 			req.RouteFeature,
 			req.MethodFeature,
 		); !remove {
-			return nil, &responseDto.ApiErrorResponse{
+			return nil, &globalDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    utils.Lang(c, config.RoleAssignErrRemovePermit),
 			}
@@ -221,10 +221,10 @@ func (interact RoleAssignment) RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 	// Check Role if exists
 	var role = stores.Role{}
 
-	errExistsRole := interact.RoleRepository.GetRoleById(&role, req.RoleId).Error
+	errExistsRole := repository.RoleRepository.GetRoleById(&role, req.RoleId).Error
 
 	if errExistsRole != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
@@ -236,7 +236,7 @@ func (interact RoleAssignment) RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 		req.RouteFeature,
 		req.MethodFeature,
 	); !remove {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.RoleAssignErrRemovePermit),
 		}
@@ -251,21 +251,21 @@ func (interact RoleAssignment) RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleA
 	return &saveResponse, nil
 }
 
-func (interact RoleAssignment) AssignUserPermission(c *fiber.Ctx, req *dto.RoleUserAssignment) (*dto.RoleAssignmentResponse, error) {
+func (repository RoleAssignment) AssignUserPermission(c *fiber.Ctx, req *dto.RoleUserAssignment) (*dto.RoleAssignmentResponse, error) {
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 	clientIdUuid, errClientIdUuid := uuid.Parse(clientId)
 	userIdUuid, errUserUuid := uuid.Parse(req.UserId)
 	roleIdUuid, errRoleUuid := uuid.Parse(req.RoleId)
 
 	if clientId != "" && (errRoleUuid != nil || errClientIdUuid != nil || errUserUuid != nil) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
 	}
 
 	if errRoleUuid != nil || errUserUuid != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
@@ -273,21 +273,21 @@ func (interact RoleAssignment) AssignUserPermission(c *fiber.Ctx, req *dto.RoleU
 
 	// Check if role has available
 	var role = stores.Role{}
-	errRole := interact.RoleRepository.GetRoleById(&role, roleIdUuid.String()).Error
+	errRole := repository.RoleRepository.GetRoleById(&role, roleIdUuid.String()).Error
 
 	if errRole != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
 	var roleUser = stores.RoleUser{}
-	errRoleUser := interact.RoleClientRepository.GetRoleUser(&roleUser, req.UserId, req.RoleId).Error
+	errRoleUser := repository.RoleClientRepository.GetRoleUser(&roleUser, req.UserId, req.RoleId).Error
 
 	// Check if role user is already exists
 	if errRoleUser == nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.RoleAssignErrAlreadyExists),
 		}
@@ -295,16 +295,16 @@ func (interact RoleAssignment) AssignUserPermission(c *fiber.Ctx, req *dto.RoleU
 
 	// Check if user has client
 	if clientId != "" {
-		existsResp, errExists := interact.CheckExistsRoleUserAssignment(c, userIdUuid, clientIdUuid)
+		existsResp, errExists := repository.CheckExistsRoleUserAssignment(c, userIdUuid, clientIdUuid)
 
 		if errExists != nil {
 			return nil, errExists
 		}
 
-		saveUserRoleClient := interact.RoleClientRepository.CreateUserClientRole(userIdUuid, roleIdUuid, clientIdUuid)
+		saveUserRoleClient := repository.RoleClientRepository.CreateUserClientRole(userIdUuid, roleIdUuid, clientIdUuid)
 
 		if !saveUserRoleClient {
-			return nil, &responseDto.ApiErrorResponse{
+			return nil, &globalDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    utils.Lang(c, config.RoleAssignErrFailed),
 			}
@@ -318,7 +318,7 @@ func (interact RoleAssignment) AssignUserPermission(c *fiber.Ctx, req *dto.RoleU
 			role.RoleName,
 			existsResp.Client.ClientName,
 		); !save {
-			return nil, &responseDto.ApiErrorResponse{
+			return nil, &globalDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    utils.Lang(c, config.RoleAssignErrUnknown),
 			}
@@ -333,17 +333,17 @@ func (interact RoleAssignment) AssignUserPermission(c *fiber.Ctx, req *dto.RoleU
 		return &saveResponse, nil
 	}
 
-	saveUserRoleClient := interact.RoleClientRepository.CreateUserClientRole(userIdUuid, roleIdUuid, clientIdUuid)
+	saveUserRoleClient := repository.RoleClientRepository.CreateUserClientRole(userIdUuid, roleIdUuid, clientIdUuid)
 
 	if !saveUserRoleClient {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.RoleAssignErrFailed),
 		}
 	}
 
 	var roleUserGet = stores.RoleUser{}
-	interact.RoleClientRepository.GetRoleUser(&roleUserGet, req.UserId, req.RoleId)
+	repository.RoleClientRepository.GetRoleUser(&roleUserGet, req.UserId, req.RoleId)
 
 	if save, _ := driver.AddGroupingPolicy(
 		userIdUuid.String(),
@@ -353,7 +353,7 @@ func (interact RoleAssignment) AssignUserPermission(c *fiber.Ctx, req *dto.RoleU
 		role.RoleName,
 		"",
 	); !save {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.RoleAssignErrUnknown),
 		}
@@ -368,14 +368,14 @@ func (interact RoleAssignment) AssignUserPermission(c *fiber.Ctx, req *dto.RoleU
 	return &saveResponse, nil
 }
 
-func (interact RoleAssignment) GetPermissionListByRole(c *fiber.Ctx) (*[]dto.RoleAssignmentListResponse, error) {
+func (repository RoleAssignment) GetPermissionListByRole(c *fiber.Ctx) (*[]dto.RoleAssignmentListResponse, error) {
 	var clientId = c.Params(config.Config("API_CLIENT_PARAM"))
 	var roleId = c.Params("RoleId")
 	var permissionRule []stores.PermissionRuleDetail
 	var resp []dto.RoleAssignmentListResponse
 
 	if roleId == "" {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrInvalidFormat),
 		}
@@ -385,10 +385,10 @@ func (interact RoleAssignment) GetPermissionListByRole(c *fiber.Ctx) (*[]dto.Rol
 		clientId = "*"
 	}
 
-	err := interact.RoleAssignmentRepository.GetPermissionByRole(&permissionRule, roleId, clientId).Error
+	err := repository.RoleAssignmentRepository.GetPermissionByRole(&permissionRule, roleId, clientId).Error
 
 	if err != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.RoleAssignErrLoad),
 		}

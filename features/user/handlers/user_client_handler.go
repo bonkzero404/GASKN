@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"github.com/bonkzero404/gaskn/config"
-	responseDto "github.com/bonkzero404/gaskn/dto"
+	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/user/dto"
 	"github.com/bonkzero404/gaskn/features/user/interactors"
 	"github.com/bonkzero404/gaskn/utils"
@@ -21,7 +21,7 @@ func NewUserClientHandler(UserClientService interactors.UserClient) *UserClientH
 	}
 }
 
-func (service *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
+func (interact *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 	var request dto.UserInvitationRequest
 
 	token := c.Locals("user").(*jwt.Token)
@@ -32,11 +32,11 @@ func (service *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := service.UserClientService.CreateUserInvitation(c, &request, userIdInvitationBy)
+	response, err := interact.UserClientService.CreateUserInvitation(c, &request, userIdInvitationBy)
 
 	if err != nil {
-		re := err.(*responseDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
+		re := err.(*globalDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
 			Message: utils.Lang(c, config.UserErrCreateActivation),
 			Cause:   err.Error(),
 			Inputs:  nil,
@@ -46,7 +46,7 @@ func (service *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 	return utils.ApiCreated(c, &response)
 }
 
-func (service *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
+func (interact *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
 	var request dto.UserInvitationApprovalRequest
 
 	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
@@ -54,11 +54,11 @@ func (service *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
 	}
 
 	var req = &request
-	response, err := service.UserClientService.UserInviteAcceptance(c, req.Code, req.Status)
+	response, err := interact.UserClientService.UserInviteAcceptance(c, req.Code, req.Status)
 
 	if err != nil {
-		re := err.(*responseDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
+		re := err.(*globalDto.ApiErrorResponse)
+		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
 			Message: utils.Lang(c, config.UserErrActivationFailed),
 			Cause:   err.Error(),
 			Inputs:  nil,

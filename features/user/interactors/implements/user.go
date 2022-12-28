@@ -14,7 +14,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/bonkzero404/gaskn/database/stores"
-	responseDto "github.com/bonkzero404/gaskn/dto"
+	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/user/dto"
 	"github.com/bonkzero404/gaskn/utils"
 )
@@ -43,7 +43,7 @@ func NewUser(
 	}
 }
 
-func (interact User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isInternalRegister bool) (*dto.UserCreateResponse, error) {
+func (repository User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isInternalRegister bool) (*dto.UserCreateResponse, error) {
 	hashPassword, _ := utils.HashPassword(user.Password)
 
 	userData := stores.User{
@@ -68,17 +68,17 @@ func (interact User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isInt
 		userData.IsActive = true
 	}
 
-	result, err := interact.RepositoryAggregate.CreateUser(&userData, &userActionCode)
+	result, err := repository.RepositoryAggregate.CreateUser(&userData, &userActionCode)
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key") {
-			return nil, &responseDto.ApiErrorResponse{
+			return nil, &globalDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    utils.Lang(c, config.UserErrRegister),
 			}
 		}
 
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
@@ -96,13 +96,13 @@ func (interact User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isInt
 			IsActive: true,
 		}
 
-		interact.UserInvitationRepository.CreateClientAssignment(&clientAssign)
+		repository.UserInvitationRepository.CreateClientAssignment(&clientAssign)
 	}
 
-	var sendMail = responseDto.Mail{}
+	var sendMail = globalDto.Mail{}
 
 	if isInternalRegister {
-		sendMail = responseDto.Mail{
+		sendMail = globalDto.Mail{
 			To:           []string{user.Email},
 			Subject:      "User Invitation",
 			TemplateHtml: "user_creation.html",
@@ -114,7 +114,7 @@ func (interact User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isInt
 			},
 		}
 	} else {
-		sendMail = responseDto.Mail{
+		sendMail = globalDto.Mail{
 			To:           []string{user.Email},
 			Subject:      "User Activation",
 			TemplateHtml: "user_activation.html",
@@ -138,30 +138,30 @@ func (interact User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isInt
 	return &response, nil
 }
 
-func (interact User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateResponse, error) {
+func (repository User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateResponse, error) {
 	var user stores.User
 	var userAct stores.UserActionCode
 
-	errAct := interact.UserActionCodeRepository.FindActionCode(&userAct, code).Error
+	errAct := repository.UserActionCodeRepository.FindActionCode(&userAct, code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.UserErrActivationNotFound),
 		}
 	}
 
-	errUser := interact.UserRepository.FindUserById(&user, userAct.UserId.String()).Error
+	errUser := repository.UserRepository.FindUserById(&user, userAct.UserId.String()).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
 	}
 
 	if user.IsActive {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.UserErrAlreadyActive),
 		}
@@ -170,22 +170,22 @@ func (interact User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateR
 	t := time.Now()
 
 	if userAct.ExpiredAt.Before(t) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
 			Message:    utils.Lang(c, config.UserErrActivationExpired),
 		}
 	}
 
-	userNew, errUserNew := interact.RepositoryAggregate.UpdateUserActivation(user.ID.String(), true)
+	userNew, errUserNew := repository.RepositoryAggregate.UpdateUserActivation(user.ID.String(), true)
 
 	if errUserNew != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    errUserNew.Error(),
 		}
 	}
 
-	_, err := interact.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), code)
+	_, err := repository.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), code)
 	if err != nil {
 		return nil, err
 	}
@@ -201,26 +201,26 @@ func (interact User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateR
 	return &response, nil
 }
 
-func (interact User) CreateUserActivation(c *fiber.Ctx, email string, actType stores.ActCodeType) (any, error) {
+func (repository User) CreateUserActivation(c *fiber.Ctx, email string, actType stores.ActCodeType) (any, error) {
 	var user stores.User
 
-	errUser := interact.UserRepository.FindUserByEmail(&user, email).Error
+	errUser := repository.UserRepository.FindUserByEmail(&user, email).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
 	}
 
 	if user.IsActive && actType == stores.ACTIVATION_CODE {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.UserErrAlreadyActive),
 		}
 	}
 
-	_, errActFactory := interact.ActionFactory.CreateActivation(&user)
+	_, errActFactory := repository.ActionFactory.CreateActivation(&user)
 
 	if errActFactory != nil {
 		return nil, errActFactory
@@ -229,37 +229,37 @@ func (interact User) CreateUserActivation(c *fiber.Ctx, email string, actType st
 	return nil, nil
 }
 
-func (interact User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotPassActRequest) (any, error) {
+func (repository User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotPassActRequest) (any, error) {
 	var user stores.User
 	var userAct stores.UserActionCode
 
 	if forgotPassReq.Password != forgotPassReq.RepeatPassword {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.UserErrPassMatch),
 		}
 	}
 
-	errUser := interact.UserRepository.FindUserByEmail(&user, forgotPassReq.Email).Error
+	errUser := repository.UserRepository.FindUserByEmail(&user, forgotPassReq.Email).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.UserErrNotFound),
 		}
 	}
 
-	errAct := interact.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), forgotPassReq.Code).Error
+	errAct := repository.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), forgotPassReq.Code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
 			Message:    utils.Lang(c, config.UserErrActivationNotFound),
 		}
 	}
 
 	if userAct.IsUsed {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.UserErrCodeAlreadyUsed),
 		}
@@ -268,7 +268,7 @@ func (interact User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotP
 	t := time.Now()
 
 	if userAct.ExpiredAt.Before(t) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusGone,
 			Message:    utils.Lang(c, config.UserErrActivationExpired),
 		}
@@ -284,8 +284,8 @@ func (interact User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotP
 			Password: hashPassword,
 		}
 
-		interact.UserRepository.UpdatePassword(&userData)
-		_, err := interact.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), forgotPassReq.Code)
+		repository.UserRepository.UpdatePassword(&userData)
+		_, err := repository.RepositoryAggregate.UpdateActionCodeUsed(user.ID.String(), forgotPassReq.Code)
 		if err != nil {
 			return
 		}

@@ -4,8 +4,8 @@ import (
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/driver"
 	"github.com/bonkzero404/gaskn/features/role/handlers"
-	implements2 "github.com/bonkzero404/gaskn/features/role/interactors/implements"
-	"github.com/bonkzero404/gaskn/features/role/repositories/implements"
+	roleInteract "github.com/bonkzero404/gaskn/features/role/interactors/implements"
+	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories/implements"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,13 +13,13 @@ import (
 // RegisterFeature /*
 func RegisterFeature(app *fiber.App) {
 
-	roleRepository := implements.NewRoleRepository(driver.DB)
-	roleService := implements2.NewRole(roleRepository)
-	RoleHandler := handlers.NewRoleHandler(roleService)
+	roleRepository := roleRepo.NewRoleRepository(driver.DB)
+	role := roleInteract.NewRole(roleRepository)
+	RoleHandler := handlers.NewRoleHandler(role)
 
-	roleClientRepository := implements.NewRoleClientRepository(driver.DB)
-	roleClientService := implements2.NewRoleClient(roleClientRepository, roleRepository)
-	RoleClientHandler := handlers.NewRoleClientHandler(roleClientService)
+	roleClientRepository := roleRepo.NewRoleClientRepository(driver.DB)
+	roleClient := roleInteract.NewRoleClient(roleClientRepository, roleRepository)
+	RoleClientHandler := handlers.NewRoleClientHandler(roleClient)
 
 	var routesInitTenant = ApiRouteClient{}
 
@@ -36,6 +36,6 @@ func RegisterFeature(app *fiber.App) {
 		routesInitTenant = ApiRouteClient{
 			RoleClientHandler: *RoleClientHandler,
 		}
-		routesInitTenant.Route(app)
+		routesInitTenant.RouteClient(app)
 	}
 }

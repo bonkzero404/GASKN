@@ -3,7 +3,7 @@ package implements
 import (
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
-	responseDto "github.com/bonkzero404/gaskn/dto"
+	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/menu/dto"
 	"github.com/bonkzero404/gaskn/features/menu/interactors"
 	"github.com/bonkzero404/gaskn/features/menu/repositories"
@@ -24,7 +24,7 @@ func NewMenu(
 	}
 }
 
-func (interact Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.MenuResponse, error) {
+func (repository Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.MenuResponse, error) {
 	var menu = stores.Menu{
 		MenuName:        req.MenuName,
 		MenuDescription: req.MenuDescription,
@@ -38,10 +38,10 @@ func (interact Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.MenuRe
 		var getMenu = stores.Menu{}
 
 		// Check menu if exists
-		errGetMenu := interact.MenuRepository.GetMenuById(&getMenu, req.ParentId).Error
+		errGetMenu := repository.MenuRepository.GetMenuById(&getMenu, req.ParentId).Error
 
 		if errGetMenu != nil {
-			return nil, &responseDto.ApiErrorResponse{
+			return nil, &globalDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    utils.Lang(c, config.MenuErrNotFound),
 			}
@@ -51,10 +51,10 @@ func (interact Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.MenuRe
 		menu.ParentID = parentId
 	}
 
-	errSaveMenu := interact.MenuRepository.CreateMenu(&menu).Error
+	errSaveMenu := repository.MenuRepository.CreateMenu(&menu).Error
 
 	if errSaveMenu != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
@@ -72,12 +72,12 @@ func (interact Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.MenuRe
 	return &resp, nil
 }
 
-func (interact Menu) GetTreeView(elements []dto.MenuListResponse, parentId uuid.UUID) []dto.MenuListResponse {
+func (repository Menu) GetTreeView(elements []dto.MenuListResponse, parentId uuid.UUID) []dto.MenuListResponse {
 	var data []dto.MenuListResponse
 
 	for _, element := range elements {
 		if element.ParentId == parentId {
-			children := interact.GetTreeView(elements, element.ID)
+			children := repository.GetTreeView(elements, element.ID)
 
 			if children != nil {
 				element.Children = &children
@@ -90,7 +90,7 @@ func (interact Menu) GetTreeView(elements []dto.MenuListResponse, parentId uuid.
 	return data
 }
 
-func (interact Menu) ValidationMenuMode(c *fiber.Ctx) string {
+func (repository Menu) ValidationMenuMode(c *fiber.Ctx) string {
 	mode := c.Query("mode")
 
 	if mode == interactors.ModeList {
@@ -104,7 +104,7 @@ func (interact Menu) ValidationMenuMode(c *fiber.Ctx) string {
 	return interactors.ModeTree
 }
 
-func (interact Menu) ValidationMenuSort(c *fiber.Ctx) string {
+func (repository Menu) ValidationMenuSort(c *fiber.Ctx) string {
 	sort := c.Query("sort")
 
 	if sort == interactors.SortAsc {
@@ -118,14 +118,14 @@ func (interact Menu) ValidationMenuSort(c *fiber.Ctx) string {
 	return interactors.SortAsc
 }
 
-func (interact Menu) GetMenuAllByType(t stores.MenuType, mode string, sort string) ([]dto.MenuListResponse, error) {
+func (repository Menu) GetMenuAllByType(t stores.MenuType, mode string, sort string) ([]dto.MenuListResponse, error) {
 	var menuLists []stores.Menu
 	var resp []dto.MenuListResponse
 
-	errResult := interact.MenuRepository.GetMenuAllByType(&menuLists, t, sort).Error
+	errResult := repository.MenuRepository.GetMenuAllByType(&menuLists, t, sort).Error
 
 	if errResult != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    "blabla",
 		}
@@ -144,7 +144,7 @@ func (interact Menu) GetMenuAllByType(t stores.MenuType, mode string, sort strin
 	}
 
 	if mode == interactors.ModeTree {
-		list := interact.GetTreeView(resp, uuid.Nil)
+		list := repository.GetTreeView(resp, uuid.Nil)
 		return list, nil
 	}
 

@@ -73,8 +73,8 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 
 }
 
-// Route /**
-func (handler *ApiRouteClient) Route(app fiber.Router) {
+// RouteClient /**
+func (handler *ApiRouteClient) RouteClient(app fiber.Router) {
 	const endpointGroup string = "/role"
 
 	var roleClient = utils.GasknRouter{}

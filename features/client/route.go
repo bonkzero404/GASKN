@@ -39,7 +39,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 
 }
 
-func (handler *ApiRouteClient) Route(app fiber.Router) {
+func (handler *ApiRouteClient) RouteClient(app fiber.Router) {
 	clientAcc := utils.GasknRouter{}
 	clientAcc.Set(app).Group(utils.SetupSubApiGroup()).SetGroupName("Client") //app.Group(utils.SetupSubApiGroup())
 

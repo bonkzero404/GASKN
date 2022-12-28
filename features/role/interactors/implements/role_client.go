@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
-	responseDto "github.com/bonkzero404/gaskn/dto"
+	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/role/dto"
 	"github.com/bonkzero404/gaskn/features/role/interactors"
 	"github.com/bonkzero404/gaskn/features/role/repositories"
@@ -29,14 +29,14 @@ func NewRoleClient(
 	}
 }
 
-func (interact RoleClient) CreateRoleClient(c *fiber.Ctx, roleDto *dto.RoleRequest) (*dto.RoleResponse, error) {
+func (repository RoleClient) CreateRoleClient(c *fiber.Ctx, roleDto *dto.RoleRequest) (*dto.RoleResponse, error) {
 	var roleClient stores.RoleClient
 
 	// Get client id from param url
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
 	// Check role if inserted
-	errRoleClient := interact.RoleClientRepository.GetRoleClientByName(&roleClient, roleDto.RoleName, clientId).Error
+	errRoleClient := repository.RoleClientRepository.GetRoleClientByName(&roleClient, roleDto.RoleName, clientId).Error
 
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
 		roleData := stores.Role{
@@ -46,10 +46,10 @@ func (interact RoleClient) CreateRoleClient(c *fiber.Ctx, roleDto *dto.RoleReque
 			RoleType:        stores.CL,
 		}
 
-		r, err := interact.RoleClientRepository.CreateRoleClient(&roleData, clientId)
+		r, err := repository.RoleClientRepository.CreateRoleClient(&roleData, clientId)
 
 		if err != nil {
-			return nil, &responseDto.ApiErrorResponse{
+			return nil, &globalDto.ApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
 				Message:    utils.Lang(c, config.GlobalErrUnknown),
 			}
@@ -65,23 +65,23 @@ func (interact RoleClient) CreateRoleClient(c *fiber.Ctx, roleDto *dto.RoleReque
 		return &roleResponse, nil
 	}
 
-	return nil, &responseDto.ApiErrorResponse{
+	return nil, &globalDto.ApiErrorResponse{
 		StatusCode: fiber.StatusUnprocessableEntity,
 		Message:    utils.Lang(c, config.RoleErrAlreadyExists),
 	}
 }
 
-func (interact RoleClient) GetRoleClientList(c *fiber.Ctx) (*utils.Pagination, error) {
+func (repository RoleClient) GetRoleClientList(c *fiber.Ctx) (*utils.Pagination, error) {
 	var roles []stores.Role
 	var resp []dto.RoleResponse
 
 	// Get client id from param url
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
-	res, err := interact.RoleClientRepository.GetRoleClientList(&roles, c, clientId)
+	res, err := repository.RoleClientRepository.GetRoleClientList(&roles, c, clientId)
 
 	if err != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}
@@ -101,7 +101,7 @@ func (interact RoleClient) GetRoleClientList(c *fiber.Ctx) (*utils.Pagination, e
 	return res, nil
 }
 
-func (interact RoleClient) UpdateRoleClient(c *fiber.Ctx, id string) (*dto.RoleResponse, error) {
+func (repository RoleClient) UpdateRoleClient(c *fiber.Ctx, id string) (*dto.RoleResponse, error) {
 	var roleStore stores.Role
 
 	var roleClient stores.RoleClient
@@ -110,10 +110,10 @@ func (interact RoleClient) UpdateRoleClient(c *fiber.Ctx, id string) (*dto.RoleR
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
 	// Check role if inserted
-	errRoleClient := interact.RoleClientRepository.GetRoleClientById(&roleClient, id, clientId).Error
+	errRoleClient := repository.RoleClientRepository.GetRoleClientById(&roleClient, id, clientId).Error
 
 	if errRoleClient != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
@@ -124,10 +124,10 @@ func (interact RoleClient) UpdateRoleClient(c *fiber.Ctx, id string) (*dto.RoleR
 	roleStore.RoleDescription = roleClient.Role.RoleDescription
 	roleStore.IsActive = true
 
-	err := interact.RoleRepository.UpdateRoleById(&roleStore).Error
+	err := repository.RoleRepository.UpdateRoleById(&roleStore).Error
 
 	if err != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}
@@ -143,7 +143,7 @@ func (interact RoleClient) UpdateRoleClient(c *fiber.Ctx, id string) (*dto.RoleR
 	return &roleResponse, nil
 }
 
-func (interact RoleClient) DeleteRoleClientById(c *fiber.Ctx, id string) (*dto.RoleResponse, error) {
+func (repository RoleClient) DeleteRoleClientById(c *fiber.Ctx, id string) (*dto.RoleResponse, error) {
 	var roleStore stores.Role
 
 	var roleClient stores.RoleClient
@@ -152,10 +152,10 @@ func (interact RoleClient) DeleteRoleClientById(c *fiber.Ctx, id string) (*dto.R
 	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
 	// Check role if inserted
-	errRoleClient := interact.RoleClientRepository.GetRoleClientId(&roleClient, id, clientId).Error
+	errRoleClient := repository.RoleClientRepository.GetRoleClientId(&roleClient, id, clientId).Error
 
 	if errRoleClient != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.RoleErrNotExists),
 		}
@@ -166,10 +166,10 @@ func (interact RoleClient) DeleteRoleClientById(c *fiber.Ctx, id string) (*dto.R
 	roleStore.RoleDescription = roleClient.Role.RoleDescription
 	roleStore.IsActive = true
 
-	err := interact.RoleRepository.DeleteRoleById(&roleStore).Error
+	err := repository.RoleRepository.DeleteRoleById(&roleStore).Error
 
 	if err != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &globalDto.ApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    utils.Lang(c, config.GlobalErrUnknown),
 		}

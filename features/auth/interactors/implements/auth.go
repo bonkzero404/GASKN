@@ -7,8 +7,8 @@ import (
 	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/auth/dto"
 	"github.com/bonkzero404/gaskn/features/auth/interactors"
-	roleRepository "github.com/bonkzero404/gaskn/features/role/repositories"
-	userInterface "github.com/bonkzero404/gaskn/features/user/repositories"
+	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories"
+	userRepo "github.com/bonkzero404/gaskn/features/user/repositories"
 	"github.com/bonkzero404/gaskn/utils"
 
 	"github.com/gofiber/fiber/v2"
@@ -17,13 +17,13 @@ import (
 )
 
 type Auth struct {
-	UserRepository userInterface.UserRepository
-	RoleRepository roleRepository.RoleRepository
+	UserRepository userRepo.UserRepository
+	RoleRepository roleRepo.RoleRepository
 }
 
 func NewAuth(
-	userRepository userInterface.UserRepository,
-	roleRepository roleRepository.RoleRepository,
+	userRepository userRepo.UserRepository,
+	roleRepository roleRepo.RoleRepository,
 ) interactors.UserAuth {
 	return &Auth{
 		UserRepository: userRepository,
@@ -31,7 +31,7 @@ func NewAuth(
 	}
 }
 
-func (service Auth) SetTokenResponse(c *fiber.Ctx, user *stores.User) (*dto.UserAuthResponse, error) {
+func (repository Auth) SetTokenResponse(c *fiber.Ctx, user *stores.User) (*dto.UserAuthResponse, error) {
 	token, exp, errToken := utils.CreateToken(user.ID.String(), user.FullName)
 
 	if errToken != nil {
@@ -56,11 +56,11 @@ func (service Auth) SetTokenResponse(c *fiber.Ctx, user *stores.User) (*dto.User
 }
 
 // Authenticate /*
-func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error) {
+func (repository Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error) {
 	var user stores.User
 
 	// Get user by email
-	errUser := service.UserRepository.FindUserByEmail(&user, auth.Email).Error
+	errUser := repository.UserRepository.FindUserByEmail(&user, auth.Email).Error
 
 	// Check if the user is not found
 	// then display an error message
@@ -98,7 +98,7 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 		}
 	}
 
-	response, errResp := service.SetTokenResponse(c, &user)
+	response, errResp := repository.SetTokenResponse(c, &user)
 
 	if errResp != nil {
 		return nil, errResp
@@ -108,12 +108,12 @@ func (service Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.
 }
 
 // GetProfile /*
-func (service Auth) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileResponse, error) {
+func (repository Auth) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileResponse, error) {
 	var user stores.User
 	// var roleUser []stores.RoleUser
 
 	// Get user from database
-	errUser := service.UserRepository.FindUserById(&user, id).Error
+	errUser := repository.UserRepository.FindUserById(&user, id).Error
 
 	// Check if there is a query error
 	if errUser != nil {
@@ -136,7 +136,7 @@ func (service Auth) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileRes
 }
 
 // RefreshToken /*
-func (service Auth) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserAuthResponse, error) {
+func (repository Auth) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserAuthResponse, error) {
 	var user stores.User
 
 	// Get data from token then convert to string
@@ -144,7 +144,7 @@ func (service Auth) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserA
 	id := beforeClaims["id"].(string)
 
 	// Get user data
-	errUser := service.UserRepository.FindUserById(&user, id).Error
+	errUser := repository.UserRepository.FindUserById(&user, id).Error
 
 	// Check if something went wrong with query
 	if errUser != nil {
@@ -154,7 +154,7 @@ func (service Auth) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserA
 		}
 	}
 
-	response, errResp := service.SetTokenResponse(c, &user)
+	response, errResp := repository.SetTokenResponse(c, &user)
 
 	if errResp != nil {
 		return nil, errResp

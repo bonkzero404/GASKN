@@ -3,21 +3,21 @@ package role_assignment
 import (
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/driver"
-	"github.com/bonkzero404/gaskn/features/role/repositories/implements"
+	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories/implements"
 	"github.com/bonkzero404/gaskn/features/role_assignment/handlers"
-	implements2 "github.com/bonkzero404/gaskn/features/role_assignment/interactors/implements"
-	repository "github.com/bonkzero404/gaskn/features/role_assignment/repositories/implements"
+	roleAssignInteract "github.com/bonkzero404/gaskn/features/role_assignment/interactors/implements"
+	roleAssignRepo "github.com/bonkzero404/gaskn/features/role_assignment/repositories/implements"
 	"github.com/gofiber/fiber/v2"
 )
 
 // RegisterFeature /*
 func RegisterFeature(app *fiber.App) {
-	roleRepository := implements.NewRoleRepository(driver.DB)
-	roleClientRepository := implements.NewRoleClientRepository(driver.DB)
-	roleAssignmentRepository := repository.NewRoleAssignmentRepository(driver.DB)
+	roleRepository := roleRepo.NewRoleRepository(driver.DB)
+	roleClientRepository := roleRepo.NewRoleClientRepository(driver.DB)
+	roleAssignmentRepository := roleAssignRepo.NewRoleAssignmentRepository(driver.DB)
 
-	roleAssignmentService := implements2.NewRoleAssignment(roleClientRepository, roleRepository, roleAssignmentRepository)
-	RoleAssignmentHandler := handlers.NewRoleAssignmentHandler(roleAssignmentService)
+	roleAssignment := roleAssignInteract.NewRoleAssignment(roleClientRepository, roleRepository, roleAssignmentRepository)
+	RoleAssignmentHandler := handlers.NewRoleAssignmentHandler(roleAssignment)
 
 	var routesInitTenant = ApiRoute{}
 

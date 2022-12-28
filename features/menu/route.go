@@ -72,7 +72,7 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 
 }
 
-func (handler *ApiRouteClient) Route(app fiber.Router) {
+func (handler *ApiRouteClient) RouteClient(app fiber.Router) {
 	const endpointGroup string = "/menu"
 
 	var menuClient = utils.GasknRouter{}
