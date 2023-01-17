@@ -201,7 +201,7 @@ func (repository User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreat
 	return &response, nil
 }
 
-func (repository User) CreateUserActivation(c *fiber.Ctx, email string, actType stores.ActCodeType) (any, error) {
+func (repository User) CreateUserAction(c *fiber.Ctx, email string, actType stores.ActCodeType) (any, error) {
 	var user stores.User
 
 	errUser := repository.UserRepository.FindUserByEmail(&user, email).Error
@@ -220,6 +220,14 @@ func (repository User) CreateUserActivation(c *fiber.Ctx, email string, actType 
 		}
 	}
 
+	if actType == stores.FORGOT_PASSWORD {
+		_, errActFactory := repository.ActionFactory.CreateForgotPassword(&user)
+		if errActFactory != nil {
+			return nil, errActFactory
+		}
+
+		return nil, nil
+	}
 	_, errActFactory := repository.ActionFactory.CreateActivation(&user)
 
 	if errActFactory != nil {

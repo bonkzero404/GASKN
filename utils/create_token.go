@@ -9,7 +9,7 @@ import (
 
 func CreateToken(id string, name string) (string, int64, error) {
 	// Recreate token
-	exp := time.Now().Add(time.Hour * 72).Unix()
+	exp := time.Now().Add(time.Hour * 2).Unix()
 	claims := jwt.MapClaims{
 		"id":   id,
 		"name": name,

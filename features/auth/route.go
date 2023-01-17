@@ -28,14 +28,14 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 	user.Get(
 		"/me",
 		middleware.Authenticate(),
-		middleware.RateLimiter(5, 30),
+		middleware.RateLimiter(200, 30),
 		handler.AuthHandler.GetProfile,
 	)
 
 	user.Get(
 		"/refresh-token",
 		middleware.Authenticate(),
-		middleware.RateLimiter(5, 30),
+		middleware.RateLimiter(200, 30),
 		handler.AuthHandler.RefreshToken,
 	)
 }

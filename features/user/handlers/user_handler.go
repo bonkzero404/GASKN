@@ -74,7 +74,7 @@ func (interact *UserHandler) ReCreateUserActivation(c *fiber.Ctx) error {
 		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := interact.UserService.CreateUserActivation(c, request.Email, stores.ACTIVATION_CODE)
+	response, err := interact.UserService.CreateUserAction(c, request.Email, stores.ACTIVATION_CODE)
 
 	if err != nil {
 		re := err.(*globalDto.ApiErrorResponse)
@@ -95,7 +95,7 @@ func (interact *UserHandler) CreateActivationForgotPassword(c *fiber.Ctx) error 
 		return utils.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := interact.UserService.CreateUserActivation(c, request.Email, stores.FORGOT_PASSWORD)
+	response, err := interact.UserService.CreateUserAction(c, request.Email, stores.FORGOT_PASSWORD)
 
 	if err != nil {
 		re := err.(*globalDto.ApiErrorResponse)

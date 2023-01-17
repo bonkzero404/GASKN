@@ -12,7 +12,7 @@ type User interface {
 
 	UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateResponse, error)
 
-	CreateUserActivation(c *fiber.Ctx, email string, actType stores.ActCodeType) (any, error)
+	CreateUserAction(c *fiber.Ctx, email string, actType stores.ActCodeType) (any, error)
 
 	UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotPassActRequest) (any, error)
 }
