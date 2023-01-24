@@ -1,9 +1,9 @@
 package utils
 
 import (
-	"github.com/bonkzero404/gaskn/config"
 	"time"
 
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/golang-jwt/jwt/v4"
 )
 

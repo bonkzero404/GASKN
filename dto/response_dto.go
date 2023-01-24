@@ -35,7 +35,8 @@ type ApiErrorResponse struct {
 }
 
 func (r *ApiErrorResponse) Error() string {
-	return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Message)
+	// return fmt.Sprintf("status %d: err %v", r.StatusCode, r.Message)
+	return fmt.Sprintf("%v", r.Message)
 }
 
 func (r *ApiErrorResponse) GetStatusCode() int {
