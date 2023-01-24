@@ -10,5 +10,5 @@ type MenuRepository interface {
 
 	GetMenuById(menu *stores.Menu, id string) *gorm.DB
 
-	GetMenuAllByType(menu *[]stores.Menu, menuType stores.MenuType, sort string) *gorm.DB
+	GetMenuAllByType(menu *[]stores.Menu, lang string, menuType stores.MenuType, sort string) *gorm.DB
 }

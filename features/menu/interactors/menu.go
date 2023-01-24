@@ -24,5 +24,5 @@ type Menu interface {
 
 	ValidationMenuSort(c *fiber.Ctx) string
 
-	GetMenuAllByType(t stores.MenuType, mode string, sort string) ([]dto.MenuListResponse, error)
+	GetMenuAllByType(c *fiber.Ctx, t stores.MenuType, mode string, sort string) ([]dto.MenuListResponse, error)
 }

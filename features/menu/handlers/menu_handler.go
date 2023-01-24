@@ -44,7 +44,7 @@ func (interact *MenuHandler) CreateMenu(c *fiber.Ctx) error {
 func (interact *MenuHandler) GetMenuAll(c *fiber.Ctx) error {
 	mode := interact.Menu.ValidationMenuMode(c)
 	sort := interact.Menu.ValidationMenuSort(c)
-	response, err := interact.Menu.GetMenuAllByType("", mode, sort)
+	response, err := interact.Menu.GetMenuAllByType(c, "", mode, sort)
 
 	if err != nil {
 		re := err.(*globalDto.ApiErrorResponse)
@@ -61,7 +61,7 @@ func (interact *MenuHandler) GetMenuAll(c *fiber.Ctx) error {
 func (interact *MenuHandler) GetMenuSa(c *fiber.Ctx) error {
 	mode := interact.Menu.ValidationMenuMode(c)
 	sort := interact.Menu.ValidationMenuSort(c)
-	response, err := interact.Menu.GetMenuAllByType(stores.MenuBO, mode, sort)
+	response, err := interact.Menu.GetMenuAllByType(c, stores.MenuBO, mode, sort)
 
 	if err != nil {
 		re := err.(*globalDto.ApiErrorResponse)
@@ -78,7 +78,7 @@ func (interact *MenuHandler) GetMenuSa(c *fiber.Ctx) error {
 func (interact *MenuHandler) GetMenuClient(c *fiber.Ctx) error {
 	mode := interact.Menu.ValidationMenuMode(c)
 	sort := interact.Menu.ValidationMenuSort(c)
-	response, err := interact.Menu.GetMenuAllByType(stores.MenuCL, mode, sort)
+	response, err := interact.Menu.GetMenuAllByType(c, stores.MenuCL, mode, sort)
 
 	if err != nil {
 		re := err.(*globalDto.ApiErrorResponse)

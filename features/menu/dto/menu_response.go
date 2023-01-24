@@ -6,10 +6,11 @@ import (
 )
 
 type MenuResponse struct {
-	ID              uuid.UUID       `json:"id"`
-	MenuName        string          `json:"menu_name"`
-	MenuDescription string          `json:"menu_description"`
-	ParentId        string          `json:"parent_id"`
-	MenuUrl         string          `json:"menu_url"`
-	MenuType        stores.MenuType `json:"menu_type"`
+	ID              uuid.UUID            `json:"id"`
+	MenuName        stores.LangAttribute `json:"menu_name"`
+	MenuDescription stores.LangAttribute `json:"menu_description"`
+	ParentId        string               `json:"parent_id"`
+	MenuUrl         string               `json:"menu_url"`
+	MenuIcon        string               `json:"menu_icon"`
+	MenuType        stores.MenuType      `json:"menu_type"`
 }

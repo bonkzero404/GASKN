@@ -2,6 +2,8 @@ package utils
 
 import (
 	"github.com/bonkzero404/gaskn/config"
+	"github.com/bonkzero404/gaskn/database/stores"
+	"gorm.io/datatypes"
 	"log"
 
 	"github.com/go-playground/locales/en"
@@ -38,4 +40,18 @@ func Lang(ctx *fiber.Ctx, key string, params ...string) string {
 	parseLang, _ := lng.T(key, params...)
 
 	return parseLang
+}
+
+func LangFromJsonParse(ctx *fiber.Ctx, attribute datatypes.JSONType[stores.LangAttribute]) string {
+	var lng = ctx.Query("lang")
+
+	if lng == "en" || config.Config("LANG") == "en" {
+		return attribute.Data.En
+	}
+
+	if lng == "id" || config.Config("LANG") == "id" {
+		return attribute.Data.Id
+	}
+
+	return attribute.Data.En
 }

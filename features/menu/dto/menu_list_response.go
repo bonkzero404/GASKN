@@ -11,6 +11,7 @@ type MenuListResponse struct {
 	MenuDescription string              `json:"menu_description"`
 	ParentId        uuid.UUID           `json:"parent_id"`
 	MenuUrl         string              `json:"menu_url"`
+	MenuIcon        string              `json:"menu_icon"`
 	MenuType        stores.MenuType     `json:"menu_type"`
 	Sort            int                 `json:"sort"`
 	Children        *[]MenuListResponse `json:"children"`

@@ -2,10 +2,16 @@ package stores
 
 import (
 	"github.com/google/uuid"
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 )
 
 type MenuType string
+
+type LangAttribute struct {
+	En string `json:"en"`
+	Id string `json:"id"`
+}
 
 //goland:noinspection GoUnusedConst,GoUnusedConst
 const (
@@ -18,10 +24,11 @@ type Menu struct {
 	gorm.Model
 	ID              uuid.UUID `gorm:"type:char(36);primary_key"`
 	ParentID        uuid.UUID `gorm:"type:char(36);index"`
-	MenuName        string    `gorm:"type:varchar(100);index;not null"`
-	MenuDescription string    `gorm:"type:text"`
-	MenuUrl         string    `gorm:"type:text"`
-	MenuType        MenuType  `gorm:"type:char(2);index"`
+	MenuName        datatypes.JSONType[LangAttribute]
+	MenuDescription datatypes.JSONType[LangAttribute]
+	MenuUrl         string   `gorm:"type:text"`
+	MenuIcon        string   `gorm:"menu_icon"`
+	MenuType        MenuType `gorm:"type:char(2);index"`
 	Sort            int
 	IsActive        bool
 }

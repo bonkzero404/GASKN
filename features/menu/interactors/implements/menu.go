@@ -10,6 +10,7 @@ import (
 	"github.com/bonkzero404/gaskn/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"gorm.io/datatypes"
 )
 
 type Menu struct {
@@ -26,12 +27,19 @@ func NewMenu(
 
 func (repository Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.MenuResponse, error) {
 	var menu = stores.Menu{
-		MenuName:        req.MenuName,
-		MenuDescription: req.MenuDescription,
-		MenuUrl:         req.MenuUrl,
-		MenuType:        req.MenuType,
-		Sort:            req.Sort,
-		IsActive:        true,
+		MenuName: datatypes.JSONType[stores.LangAttribute]{Data: stores.LangAttribute{
+			En: req.MenuName.En,
+			Id: req.MenuName.Id,
+		}},
+		MenuDescription: datatypes.JSONType[stores.LangAttribute]{Data: stores.LangAttribute{
+			En: req.MenuDescription.En,
+			Id: req.MenuDescription.Id,
+		}},
+		MenuUrl:  req.MenuUrl,
+		MenuIcon: req.MenuIcon,
+		MenuType: req.MenuType,
+		Sort:     req.Sort,
+		IsActive: true,
 	}
 
 	if req.ParentId != "" {
@@ -66,6 +74,7 @@ func (repository Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.Menu
 		MenuDescription: req.MenuDescription,
 		ParentId:        menu.ParentID.String(),
 		MenuUrl:         req.MenuUrl,
+		MenuIcon:        req.MenuIcon,
 		MenuType:        req.MenuType,
 	}
 
@@ -118,11 +127,11 @@ func (repository Menu) ValidationMenuSort(c *fiber.Ctx) string {
 	return interactors.SortAsc
 }
 
-func (repository Menu) GetMenuAllByType(t stores.MenuType, mode string, sort string) ([]dto.MenuListResponse, error) {
+func (repository Menu) GetMenuAllByType(c *fiber.Ctx, t stores.MenuType, mode string, sort string) ([]dto.MenuListResponse, error) {
 	var menuLists []stores.Menu
 	var resp []dto.MenuListResponse
 
-	errResult := repository.MenuRepository.GetMenuAllByType(&menuLists, t, sort).Error
+	errResult := repository.MenuRepository.GetMenuAllByType(&menuLists, c.Query("lang"), t, sort).Error
 
 	if errResult != nil {
 		return nil, &globalDto.ApiErrorResponse{
@@ -134,10 +143,11 @@ func (repository Menu) GetMenuAllByType(t stores.MenuType, mode string, sort str
 	for _, item := range menuLists {
 		resp = append(resp, dto.MenuListResponse{
 			ID:              item.ID,
-			MenuName:        item.MenuName,
-			MenuDescription: item.MenuDescription,
+			MenuName:        utils.LangFromJsonParse(c, item.MenuName),
+			MenuDescription: utils.LangFromJsonParse(c, item.MenuDescription),
 			ParentId:        item.ParentID,
 			MenuUrl:         item.MenuUrl,
+			MenuIcon:        item.MenuIcon,
 			Sort:            item.Sort,
 			MenuType:        item.MenuType,
 		})
