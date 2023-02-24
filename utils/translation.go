@@ -45,11 +45,11 @@ func Lang(ctx *fiber.Ctx, key string, params ...string) string {
 func LangFromJsonParse(ctx *fiber.Ctx, attribute datatypes.JSONType[stores.LangAttribute]) string {
 	var lng = ctx.Query("lang")
 
-	if lng == "en" || config.Config("LANG") == "en" {
+	if lng == "en" {
 		return attribute.Data.En
 	}
 
-	if lng == "id" || config.Config("LANG") == "id" {
+	if lng == "id" {
 		return attribute.Data.Id
 	}
 
