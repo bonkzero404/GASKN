@@ -8,6 +8,7 @@ import (
 	driver2 "github.com/bonkzero404/gaskn/driver"
 	"github.com/bonkzero404/gaskn/seeders"
 	"github.com/bonkzero404/gaskn/utils"
+	"github.com/gofiber/fiber/v2/middleware/etag"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -40,6 +41,11 @@ func main() {
 
 	// Securing with helmet
 	app.Use(helmet.New())
+
+	// Etag
+	app.Use(etag.New(etag.Config{
+		Weak: true,
+	}))
 
 	// Call bootstrap all module
 	appRoute.Bootstrap(app)
