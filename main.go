@@ -48,7 +48,7 @@ func main() {
 		Weak: true,
 	}))
 
-	// Call bootstrap all module
+	// Call all module
 	appRoute.RouteInit(app)
 
 	// Run Seeder
