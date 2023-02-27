@@ -4,10 +4,10 @@ import (
 	"errors"
 	"github.com/bonkzero404/gaskn/app/http"
 	"github.com/bonkzero404/gaskn/app/http/response"
-	utils2 "github.com/bonkzero404/gaskn/app/translation"
+	"github.com/bonkzero404/gaskn/app/translation"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
-	driver2 "github.com/bonkzero404/gaskn/infrastructures"
+	"github.com/bonkzero404/gaskn/infrastructures"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"gorm.io/gorm"
@@ -15,7 +15,7 @@ import (
 
 func Permission() func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		enforcer := driver2.Enforcer
+		enforcer := infrastructures.Enforcer
 
 		var roleUser stores.RoleUser
 		var roleUserClient stores.RoleUserClient
@@ -28,11 +28,11 @@ func Permission() func(c *fiber.Ctx) error {
 
 		clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
-		err := driver2.DB.Take(&roleUser, "user_id = ?", userId).Error
+		err := infrastructures.DB.Take(&roleUser, "user_id = ?", userId).Error
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return response.ApiForbidden(c, http.SetErrors{
-				Message: utils2.Lang(c, "middleware:err:unauthorized"),
+				Message: translation.Lang(c, "middleware:err:unauthorized"),
 				Cause:   "Forbidden access",
 				Inputs:  nil,
 			})
@@ -40,7 +40,7 @@ func Permission() func(c *fiber.Ctx) error {
 			permit = "*"
 		}
 
-		errUserClient := driver2.DB.Take(&roleUserClient, "role_user_id = ? AND client_id = ?", roleUser.ID, clientId).Error
+		errUserClient := infrastructures.DB.Take(&roleUserClient, "role_user_id = ? AND client_id = ?", roleUser.ID, clientId).Error
 
 		if errors.Is(errUserClient, gorm.ErrRecordNotFound) {
 			permit = "*"
@@ -50,7 +50,7 @@ func Permission() func(c *fiber.Ctx) error {
 
 		if ok, _ := enforcer.Enforce(userId, permit, c.Path(), c.Method()); !ok {
 			return response.ApiForbidden(c, http.SetErrors{
-				Message: utils2.Lang(c, "middleware:err:unauthorized"),
+				Message: translation.Lang(c, "middleware:err:unauthorized"),
 				Cause:   "Forbidden access",
 				Inputs:  nil,
 			})

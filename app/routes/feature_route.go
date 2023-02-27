@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/bonkzero404/gaskn/app/http/builder"
-	middleware2 "github.com/bonkzero404/gaskn/app/http/middleware"
+	"github.com/bonkzero404/gaskn/app/http/middleware"
 	"github.com/bonkzero404/gaskn/app/http/response"
 	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/config"
@@ -16,8 +16,8 @@ func Feature(app *fiber.App) {
 	// Get feature lists
 	route.Get(
 		"/",
-		middleware2.Authenticate(),
-		middleware2.Permission(),
+		middleware.Authenticate(),
+		middleware.Permission(),
 		func(c *fiber.Ctx) error {
 			return response.ApiOk(c, builder.ExtractRouteAsFeatures(c, false))
 		}).
@@ -28,8 +28,8 @@ func Feature(app *fiber.App) {
 	// Get feature per group
 	route.Get(
 		"/group",
-		middleware2.Authenticate(),
-		middleware2.Permission(),
+		middleware.Authenticate(),
+		middleware.Permission(),
 		func(c *fiber.Ctx) error {
 			return response.ApiOk(c, builder.FeaturesGroupLists(c, false))
 		}).
@@ -43,8 +43,8 @@ func Feature(app *fiber.App) {
 		// Get feature lists Tenant
 		route.Get(
 			"/",
-			middleware2.Authenticate(),
-			middleware2.Permission(),
+			middleware.Authenticate(),
+			middleware.Permission(),
 			func(c *fiber.Ctx) error {
 				return response.ApiOk(c, builder.ExtractRouteAsFeatures(c, true))
 			}).
@@ -56,8 +56,8 @@ func Feature(app *fiber.App) {
 		// Get feature per group tenant
 		route.Get(
 			"/group",
-			middleware2.Authenticate(),
-			middleware2.Permission(),
+			middleware.Authenticate(),
+			middleware.Permission(),
 			func(c *fiber.Ctx) error {
 				return response.ApiOk(c, builder.FeaturesGroupLists(c, true))
 			}).
