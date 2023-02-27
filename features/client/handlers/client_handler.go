@@ -1,12 +1,13 @@
 package handlers
 
 import (
+	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/http/response"
+	"github.com/bonkzero404/gaskn/app/translation"
+	"github.com/bonkzero404/gaskn/app/validations"
 	"github.com/bonkzero404/gaskn/config"
-	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/client/dto"
 	"github.com/bonkzero404/gaskn/features/client/interactors"
-	"github.com/bonkzero404/gaskn/utils"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -28,43 +29,43 @@ func (interact *ClientHandler) CreateClient(c *fiber.Ctx) error {
 
 	var request dto.ClientRequest
 
-	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
-		return utils.ApiUnprocessableEntity(c, errRequest)
+	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
+		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := interact.ClientService.CreateClient(c, &request, userId)
+	responseInteract, err := interact.ClientService.CreateClient(c, &request, userId)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, "client:err:create-failed"),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, "client:err:create-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiCreated(c, response)
+	return response.ApiCreated(c, responseInteract)
 }
 
 func (interact *ClientHandler) UpdateClient(c *fiber.Ctx) error {
 	var request dto.ClientRequest
 
-	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
-		return utils.ApiUnprocessableEntity(c, errRequest)
+	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
+		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := interact.ClientService.UpdateClient(c, &request)
+	responseInteract, err := interact.ClientService.UpdateClient(c, &request)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, config.ClientErrUpdate),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, config.ClientErrUpdate),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiOk(c, response)
+	return response.ApiOk(c, responseInteract)
 }
 
 func (interact *ClientHandler) GetClientByUser(c *fiber.Ctx) error {
@@ -72,16 +73,16 @@ func (interact *ClientHandler) GetClientByUser(c *fiber.Ctx) error {
 	claims := token.Claims.(jwt.MapClaims)
 	userId := claims["id"].(string)
 
-	response, err := interact.ClientService.GetClientByUser(c, userId)
+	responseInteract, err := interact.ClientService.GetClientByUser(c, userId)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, config.ClientErrGet),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, config.ClientErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiOk(c, response)
+	return response.ApiOk(c, responseInteract)
 }

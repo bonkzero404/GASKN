@@ -1,12 +1,13 @@
 package user
 
 import (
+	"github.com/bonkzero404/gaskn/app/http/builder"
+	"github.com/bonkzero404/gaskn/app/http/middleware"
+	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/bonkzero404/gaskn/app/middleware"
 	"github.com/bonkzero404/gaskn/features/user/handlers"
-	"github.com/bonkzero404/gaskn/utils"
 )
 
 type ApiRoute struct {
@@ -17,8 +18,8 @@ type ApiRoute struct {
 func (handler *ApiRoute) Route(app fiber.Router) {
 	const endpointGroup string = "/user"
 
-	user := utils.GasknRouter{}
-	user.Set(app).Group(utils.SetupApiGroup() + endpointGroup).SetGroupName("User")
+	user := builder.RouteBuilder{}
+	user.Set(app).Group(utils.ApiBasePath() + endpointGroup).SetGroupName("User")
 
 	user.Post(
 		"/register",
@@ -66,10 +67,10 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 func (handler *ApiRoute) RouteClient(app fiber.Router) {
 	const endpointGroup string = "/user"
 
-	userClient := utils.GasknRouter{}
+	userClient := builder.RouteBuilder{}
 	userClient.Set(app).
-		Group(utils.SetupSubApiGroup() + endpointGroup).
-		SetGroupName("Client/UserInvitation") // app.Group(utils.SetupSubApiGroup() + endpointGroup)
+		Group(utils.ApiClientBasePath() + endpointGroup).
+		SetGroupName("Client/UserInvitation") // app.Group(utils.ApiClientBasePath() + endpointGroup)
 
 	userClient.Post(
 		"/:CreateUser",

@@ -1,9 +1,8 @@
 package repositories
 
 import (
+	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/database/stores"
-	"github.com/bonkzero404/gaskn/utils"
-
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )

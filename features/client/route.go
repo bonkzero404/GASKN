@@ -1,12 +1,13 @@
 package role
 
 import (
+	"github.com/bonkzero404/gaskn/app/http/builder"
+	"github.com/bonkzero404/gaskn/app/http/middleware"
+	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/bonkzero404/gaskn/app/middleware"
 	"github.com/bonkzero404/gaskn/features/client/handlers"
-	"github.com/bonkzero404/gaskn/utils"
 )
 
 type ApiRoute struct {
@@ -20,8 +21,8 @@ type ApiRouteClient struct {
 func (handler *ApiRoute) Route(app fiber.Router) {
 	var endpointGroup = "/" + config.Config("API_CLIENT")
 
-	client := utils.GasknRouter{}
-	client.Set(app).Group(utils.SetupApiGroup() + endpointGroup)
+	client := builder.RouteBuilder{}
+	client.Set(app).Group(utils.ApiBasePath() + endpointGroup)
 
 	client.Post(
 		"/",
@@ -40,8 +41,8 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 }
 
 func (handler *ApiRouteClient) RouteClient(app fiber.Router) {
-	clientAcc := utils.GasknRouter{}
-	clientAcc.Set(app).Group(utils.SetupSubApiGroup()).SetGroupName("Client") //app.Group(utils.SetupSubApiGroup())
+	clientAcc := builder.RouteBuilder{}
+	clientAcc.Set(app).Group(utils.ApiClientBasePath()).SetGroupName("Client") //app.Group(utils.ApiClientBasePath())
 
 	clientAcc.Put(
 		"/update",

@@ -3,11 +3,12 @@ package main
 import (
 	"fmt"
 	appRoute "github.com/bonkzero404/gaskn/app"
+	"github.com/bonkzero404/gaskn/app/translation"
+	utils2 "github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database"
-	driver2 "github.com/bonkzero404/gaskn/driver"
-	"github.com/bonkzero404/gaskn/seeders"
-	"github.com/bonkzero404/gaskn/utils"
+	"github.com/bonkzero404/gaskn/database/seeders"
+	driver2 "github.com/bonkzero404/gaskn/infrastructures"
 	"github.com/gofiber/fiber/v2/middleware/etag"
 	"log"
 
@@ -18,9 +19,9 @@ import (
 
 func main() {
 	// Fiber app
-	app := fiber.New(utils.FiberConf())
+	app := fiber.New(utils2.FiberConf())
 
-	utils.SetupLang()
+	translation.SetupLang()
 
 	// Setup Logs
 	appRoute.SetupLogs()
@@ -48,7 +49,7 @@ func main() {
 	}))
 
 	// Call bootstrap all module
-	appRoute.Bootstrap(app)
+	appRoute.RouteInit(app)
 
 	// Run Seeder
 	for _, seed := range seeders.All() {
@@ -61,7 +62,7 @@ func main() {
 	appPort := fmt.Sprintf("%s:%s", config.Config("APP_HOST"), config.Config("APP_PORT"))
 
 	// Print banner
-	utils.PrintBanner()
+	utils2.PrintBanner()
 
 	// Listen app
 	err := app.Listen(appPort)

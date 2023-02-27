@@ -1,12 +1,13 @@
 package handlers
 
 import (
+	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/http/response"
+	"github.com/bonkzero404/gaskn/app/translation"
+	"github.com/bonkzero404/gaskn/app/validations"
 	"github.com/bonkzero404/gaskn/config"
-	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/user/dto"
 	"github.com/bonkzero404/gaskn/features/user/interactors"
-	"github.com/bonkzero404/gaskn/utils"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -28,42 +29,42 @@ func (interact *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 	claims := token.Claims.(jwt.MapClaims)
 	userIdInvitationBy := claims["id"].(string)
 
-	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
-		return utils.ApiUnprocessableEntity(c, errRequest)
+	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
+		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := interact.UserClientService.CreateUserInvitation(c, &request, userIdInvitationBy)
+	responseInteract, err := interact.UserClientService.CreateUserInvitation(c, &request, userIdInvitationBy)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, config.UserErrCreateActivation),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, config.UserErrCreateActivation),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiCreated(c, &response)
+	return response.ApiCreated(c, responseInteract)
 }
 
 func (interact *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
 	var request dto.UserInvitationApprovalRequest
 
-	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
-		return utils.ApiUnprocessableEntity(c, errRequest)
+	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
+		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	var req = &request
-	response, err := interact.UserClientService.UserInviteAcceptance(c, req.Code, req.Status)
+	responseInteract, err := interact.UserClientService.UserInviteAcceptance(c, req.Code, req.Status)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, config.UserErrActivationFailed),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, config.UserErrActivationFailed),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiCreated(c, &response)
+	return response.ApiCreated(c, responseInteract)
 }

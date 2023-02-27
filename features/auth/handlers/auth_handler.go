@@ -1,12 +1,13 @@
 package handlers
 
 import (
+	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/http/response"
+	"github.com/bonkzero404/gaskn/app/translation"
+	utils2 "github.com/bonkzero404/gaskn/app/validations"
 	"github.com/bonkzero404/gaskn/config"
-	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/auth/dto"
 	"github.com/bonkzero404/gaskn/features/auth/interactors"
-	"github.com/bonkzero404/gaskn/utils"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -25,22 +26,22 @@ func NewAuthHandler(authService interactors.UserAuth) *AuthHandler {
 func (interact *AuthHandler) Authentication(c *fiber.Ctx) error {
 	var request dto.UserAuthRequest
 
-	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
-		return utils.ApiUnprocessableEntity(c, errRequest)
+	if stat, errRequest := utils2.ValidateRequest(c, &request); stat {
+		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := interact.AuthService.Authenticate(c, &request)
+	responseInteract, err := interact.AuthService.Authenticate(c, &request)
 
 	if err != nil {
-		re := err.(*responseDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, config.GlobalErrAuthFailed),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, config.GlobalErrAuthFailed),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiOk(c, response)
+	return response.ApiOk(c, responseInteract)
 }
 
 // GetProfile /*
@@ -49,34 +50,34 @@ func (interact *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	claims := token.Claims.(jwt.MapClaims)
 	id := claims["id"].(string)
 
-	response, err := interact.AuthService.GetProfile(c, id)
+	responseInteract, err := interact.AuthService.GetProfile(c, id)
 
 	if err != nil {
-		re := err.(*responseDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, config.GlobalErrUnknown),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, config.GlobalErrUnknown),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiOk(c, response)
+	return response.ApiOk(c, responseInteract)
 }
 
 // RefreshToken /*
 func (interact *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 
-	response, err := interact.AuthService.RefreshToken(c, token)
+	responseInteract, err := interact.AuthService.RefreshToken(c, token)
 
 	if err != nil {
-		re := err.(*responseDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, responseDto.Errors{
-			Message: utils.Lang(c, config.AuthErruserNotActive),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, config.AuthErruserNotActive),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiOk(c, response)
+	return response.ApiOk(c, responseInteract)
 }

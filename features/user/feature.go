@@ -1,7 +1,6 @@
 package user
 
 import (
-	"github.com/bonkzero404/gaskn/driver"
 	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories/implements"
 	roleAssignInteract "github.com/bonkzero404/gaskn/features/role_assignment/interactors/implements"
 	roleAssignRepo "github.com/bonkzero404/gaskn/features/role_assignment/repositories/implements"
@@ -10,6 +9,7 @@ import (
 	userInteract "github.com/bonkzero404/gaskn/features/user/interactors/implements"
 	"github.com/bonkzero404/gaskn/features/user/repositories"
 	"github.com/bonkzero404/gaskn/features/user/repositories/implements"
+	"github.com/bonkzero404/gaskn/infrastructures"
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/bonkzero404/gaskn/config"
@@ -26,11 +26,11 @@ func registerActionCodeFactory(userActionCodeRepository repositories.UserActionC
 
 func RegisterFeature(app *fiber.App) {
 
-	userRepository := implements.NewUserRepository(driver.DB)
-	userActionCodeRepository := implements.NewUserActionCodeRepository(driver.DB)
+	userRepository := implements.NewUserRepository(infrastructures.DB)
+	userActionCodeRepository := implements.NewUserActionCodeRepository(infrastructures.DB)
 	aggregateRepository := implements.NewRepositoryAggregate(userRepository, userActionCodeRepository)
-	userInvitationRepository := implements.NewUserInvitationRepository(driver.DB)
-	roleAssignmentRepository := roleAssignRepo.NewRoleAssignmentRepository(driver.DB)
+	userInvitationRepository := implements.NewUserInvitationRepository(infrastructures.DB)
+	roleAssignmentRepository := roleAssignRepo.NewRoleAssignmentRepository(infrastructures.DB)
 	userActionFactory := registerActionCodeFactory(userActionCodeRepository)
 
 	user := userInteract.NewUser(
@@ -43,8 +43,8 @@ func RegisterFeature(app *fiber.App) {
 
 	userHandler := handlers.NewUserHandler(user)
 
-	repoUserRole := roleRepo.NewRoleRepository(driver.DB)
-	repoUserRoleClient := roleRepo.NewRoleClientRepository(driver.DB)
+	repoUserRole := roleRepo.NewRoleRepository(infrastructures.DB)
+	repoUserRoleClient := roleRepo.NewRoleClientRepository(infrastructures.DB)
 	interactAssign := roleAssignInteract.NewRoleAssignment(repoUserRoleClient, repoUserRole, roleAssignmentRepository)
 
 	userClient := userInteract.NewUserClient(

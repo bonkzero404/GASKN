@@ -1,12 +1,14 @@
 package handlers
 
 import (
+	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/http/response"
+	"github.com/bonkzero404/gaskn/app/translation"
+	"github.com/bonkzero404/gaskn/app/validations"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
-	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/menu/dto"
 	"github.com/bonkzero404/gaskn/features/menu/interactors"
-	"github.com/bonkzero404/gaskn/utils"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -23,71 +25,71 @@ func NewMenuHandler(Menu interactors.Menu) *MenuHandler {
 func (interact *MenuHandler) CreateMenu(c *fiber.Ctx) error {
 	var request dto.MenuRequest
 
-	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
-		return utils.ApiUnprocessableEntity(c, errRequest)
+	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
+		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := interact.Menu.CreateMenu(c, &request)
+	responseInteract, err := interact.Menu.CreateMenu(c, &request)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, config.MenuErrCreate),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, config.MenuErrCreate),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiCreated(c, response)
+	return response.ApiCreated(c, responseInteract)
 }
 
 func (interact *MenuHandler) GetMenuAll(c *fiber.Ctx) error {
 	mode := interact.Menu.ValidationMenuMode(c)
 	sort := interact.Menu.ValidationMenuSort(c)
-	response, err := interact.Menu.GetMenuAllByType(c, "", mode, sort)
+	responseInteract, err := interact.Menu.GetMenuAllByType(c, "", mode, sort)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, config.MenuErrGet),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, config.MenuErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiOk(c, response)
+	return response.ApiOk(c, responseInteract)
 }
 
 func (interact *MenuHandler) GetMenuSa(c *fiber.Ctx) error {
 	mode := interact.Menu.ValidationMenuMode(c)
 	sort := interact.Menu.ValidationMenuSort(c)
-	response, err := interact.Menu.GetMenuAllByType(c, stores.MenuBO, mode, sort)
+	responseInteract, err := interact.Menu.GetMenuAllByType(c, stores.MenuBO, mode, sort)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, config.MenuErrGet),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, config.MenuErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiOk(c, response)
+	return response.ApiOk(c, responseInteract)
 }
 
 func (interact *MenuHandler) GetMenuClient(c *fiber.Ctx) error {
 	mode := interact.Menu.ValidationMenuMode(c)
 	sort := interact.Menu.ValidationMenuSort(c)
-	response, err := interact.Menu.GetMenuAllByType(c, stores.MenuCL, mode, sort)
+	responseInteract, err := interact.Menu.GetMenuAllByType(c, stores.MenuCL, mode, sort)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, config.MenuErrGet),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, config.MenuErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiOk(c, response)
+	return response.ApiOk(c, responseInteract)
 }
