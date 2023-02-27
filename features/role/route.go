@@ -1,12 +1,13 @@
 package role
 
 import (
+	"github.com/bonkzero404/gaskn/app/http/builder"
+	"github.com/bonkzero404/gaskn/app/http/middleware"
+	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/bonkzero404/gaskn/app/middleware"
 	"github.com/bonkzero404/gaskn/features/role/handlers"
-	"github.com/bonkzero404/gaskn/utils"
 )
 
 type ApiRoute struct {
@@ -21,10 +22,10 @@ type ApiRouteClient struct {
 func (handler *ApiRoute) Route(app fiber.Router) {
 	const endpointGroup string = "/role"
 
-	var role = utils.GasknRouter{}
+	var role = builder.RouteBuilder{}
 
 	role.Set(app).
-		Group(utils.SetupApiGroup() + endpointGroup).
+		Group(utils.ApiBasePath() + endpointGroup).
 		SetGroupName("Role")
 
 	role.Post(
@@ -77,10 +78,10 @@ func (handler *ApiRoute) Route(app fiber.Router) {
 func (handler *ApiRouteClient) RouteClient(app fiber.Router) {
 	const endpointGroup string = "/role"
 
-	var roleClient = utils.GasknRouter{}
+	var roleClient = builder.RouteBuilder{}
 
 	roleClient.Set(app).
-		Group(utils.SetupSubApiGroup() + endpointGroup).
+		Group(utils.ApiClientBasePath() + endpointGroup).
 		SetGroupName("Client/Role")
 
 	roleClient.Post(

@@ -1,10 +1,13 @@
 package implements
 
 import (
-	"github.com/bonkzero404/gaskn/driver"
+	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/translation"
+	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/features/client/interactors"
 	"github.com/bonkzero404/gaskn/features/client/repositories"
 	userRepo "github.com/bonkzero404/gaskn/features/user/repositories"
+	"github.com/bonkzero404/gaskn/infrastructures"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,9 +16,7 @@ import (
 
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
-	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/client/dto"
-	"github.com/bonkzero404/gaskn/utils"
 )
 
 type Client struct {
@@ -50,15 +51,15 @@ func (repository Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, u
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key") {
-			return nil, &globalDto.ApiErrorResponse{
+			return nil, &http.SetApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, config.ClientErrDuplicate),
+				Message:    translation.Lang(c, config.ClientErrDuplicate),
 			}
 		}
 
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, err.Error()),
+			Message:    translation.Lang(c, err.Error()),
 		}
 	}
 
@@ -67,7 +68,7 @@ func (repository Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, u
 	repository.UserRepository.FindUserById(&user, pUuid.String())
 
 	// Crete group policy
-	if g, err := driver.AddGroupingPolicy(
+	if g, err := infrastructures.AddGroupingPolicy(
 		pUuid.String(),
 		role.ID.String(),
 		clientStore.ID.String(),
@@ -75,14 +76,14 @@ func (repository Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, u
 		role.RoleName,
 		clientStore.ClientName,
 	); !g {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, err.Error()),
+			Message:    translation.Lang(c, err.Error()),
 		}
 	}
 
 	// Create permission user to group
-	if p, err := driver.AddPolicy(
+	if p, err := infrastructures.AddPolicy(
 		role.ID.String(),
 		clientStore.ID.String(),
 		"/"+clientRoute+"/*",
@@ -94,9 +95,9 @@ func (repository Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, u
 		"",
 		"",
 	); !p {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, err.Error()),
+			Message:    translation.Lang(c, err.Error()),
 		}
 	}
 
@@ -120,9 +121,9 @@ func (repository Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (
 	errCheckClient := repository.ClientRepository.GetClientById(&clientStore, clientId).Error
 
 	if errCheckClient != nil {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, config.ClientErrAlreadyExists),
+			Message:    translation.Lang(c, config.ClientErrAlreadyExists),
 		}
 	}
 
@@ -134,9 +135,9 @@ func (repository Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (
 	err := repository.ClientRepository.UpdateClientById(&clientStore).Error
 
 	if err != nil {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 
@@ -158,7 +159,7 @@ func (repository Client) GetClientByUser(c *fiber.Ctx, userId string) (*utils.Pa
 	res, err := repository.ClientRepository.GetClientListByUser(&clientAssignment, c, userId)
 
 	if err != nil {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}

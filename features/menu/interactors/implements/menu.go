@@ -1,13 +1,13 @@
 package implements
 
 import (
+	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/translation"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
-	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/menu/dto"
 	"github.com/bonkzero404/gaskn/features/menu/interactors"
 	"github.com/bonkzero404/gaskn/features/menu/repositories"
-	"github.com/bonkzero404/gaskn/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/datatypes"
@@ -49,9 +49,9 @@ func (repository Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.Menu
 		errGetMenu := repository.MenuRepository.GetMenuById(&getMenu, req.ParentId).Error
 
 		if errGetMenu != nil {
-			return nil, &globalDto.ApiErrorResponse{
+			return nil, &http.SetApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, config.MenuErrNotFound),
+				Message:    translation.Lang(c, config.MenuErrNotFound),
 			}
 		}
 
@@ -62,9 +62,9 @@ func (repository Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.Menu
 	errSaveMenu := repository.MenuRepository.CreateMenu(&menu).Error
 
 	if errSaveMenu != nil {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 
@@ -134,17 +134,17 @@ func (repository Menu) GetMenuAllByType(c *fiber.Ctx, t stores.MenuType, mode st
 	errResult := repository.MenuRepository.GetMenuAllByType(&menuLists, c.Query("lang"), t, sort).Error
 
 	if errResult != nil {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    "blabla",
+			Message:    translation.Lang(c, config.MenuErrNotFound),
 		}
 	}
 
 	for _, item := range menuLists {
 		resp = append(resp, dto.MenuListResponse{
 			ID:              item.ID,
-			MenuName:        utils.LangFromJsonParse(c, item.MenuName),
-			MenuDescription: utils.LangFromJsonParse(c, item.MenuDescription),
+			MenuName:        translation.LangFromJsonParse(c, item.MenuName),
+			MenuDescription: translation.LangFromJsonParse(c, item.MenuDescription),
 			ParentId:        item.ParentID,
 			MenuUrl:         item.MenuUrl,
 			MenuIcon:        item.MenuIcon,

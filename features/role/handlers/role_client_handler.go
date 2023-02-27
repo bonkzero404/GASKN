@@ -1,11 +1,12 @@
 package handlers
 
 import (
-	globalDto "github.com/bonkzero404/gaskn/dto"
+	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/http/response"
+	"github.com/bonkzero404/gaskn/app/translation"
+	"github.com/bonkzero404/gaskn/app/validations"
 	"github.com/bonkzero404/gaskn/features/role/dto"
 	"github.com/bonkzero404/gaskn/features/role/interactors"
-	"github.com/bonkzero404/gaskn/utils"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -22,75 +23,75 @@ func NewRoleClientHandler(roleClientService interactors.RoleClient) *RoleClientH
 func (interact *RoleClientHandler) CreateClientRole(c *fiber.Ctx) error {
 	var request dto.RoleRequest
 
-	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
-		return utils.ApiUnprocessableEntity(c, errRequest)
+	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
+		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	response, err := interact.RoleClientService.CreateRoleClient(c, &request)
+	responseInteract, err := interact.RoleClientService.CreateRoleClient(c, &request)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, "role:err:create-failed"),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, "role:err:create-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiCreated(c, response)
+	return response.ApiCreated(c, responseInteract)
 }
 
 func (interact *RoleClientHandler) GetRoleClientList(c *fiber.Ctx) error {
-	response, err := interact.RoleClientService.GetRoleClientList(c)
+	responseInteract, err := interact.RoleClientService.GetRoleClientList(c)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, "role:err:read-failed"),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, "role:err:read-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiOk(c, response)
+	return response.ApiOk(c, responseInteract)
 }
 
 func (interact *RoleClientHandler) UpdateRoleClient(c *fiber.Ctx) error {
 	var request dto.RoleRequest
 
-	if stat, errRequest := utils.ValidateRequest(c, &request); stat {
-		return utils.ApiUnprocessableEntity(c, errRequest)
+	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
+		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	roleId := c.Params("id")
 
-	response, err := interact.RoleClientService.UpdateRoleClient(c, roleId)
+	responseInteract, err := interact.RoleClientService.UpdateRoleClient(c, roleId)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, "role:err:update-failed"),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, "role:err:update-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiOk(c, response)
+	return response.ApiOk(c, responseInteract)
 }
 
 func (interact *RoleClientHandler) DeleteRoleClient(c *fiber.Ctx) error {
 	roleId := c.Params("id")
 
-	response, err := interact.RoleClientService.DeleteRoleClientById(c, roleId)
+	responseInteract, err := interact.RoleClientService.DeleteRoleClientById(c, roleId)
 
 	if err != nil {
-		re := err.(*globalDto.ApiErrorResponse)
-		return utils.ApiResponseError(c, re.StatusCode, globalDto.Errors{
-			Message: utils.Lang(c, "role:err:delete-failed"),
+		re := err.(*http.SetApiErrorResponse)
+		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
+			Message: translation.Lang(c, "role:err:delete-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
 	}
 
-	return utils.ApiOk(c, response)
+	return response.ApiOk(c, responseInteract)
 }

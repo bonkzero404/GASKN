@@ -2,15 +2,15 @@ package implements
 
 import (
 	"errors"
+	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/translation"
+	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
-	responseDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/auth/dto"
 	"github.com/bonkzero404/gaskn/features/auth/interactors"
 	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories"
 	userRepo "github.com/bonkzero404/gaskn/features/user/repositories"
-	"github.com/bonkzero404/gaskn/utils"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"gorm.io/gorm"
@@ -35,9 +35,9 @@ func (repository Auth) SetTokenResponse(c *fiber.Ctx, user *stores.User) (*dto.U
 	token, exp, errToken := utils.CreateToken(user.ID.String(), user.FullName)
 
 	if errToken != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, config.AuthErrToken),
+			Message:    translation.Lang(c, config.AuthErrToken),
 		}
 	}
 
@@ -65,25 +65,25 @@ func (repository Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*d
 	// Check if the user is not found
 	// then display an error message
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
-			Message:    utils.Lang(c, config.AuthErrGetProfile),
+			Message:    translation.Lang(c, config.AuthErrGetProfile),
 		}
 	}
 
 	// Check if a query operation error occurs
 	if errUser != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, config.AuthErrRefreshToken),
+			Message:    translation.Lang(c, config.AuthErrRefreshToken),
 		}
 	}
 
 	// Check if the user status is not active
 	if !user.IsActive {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
-			Message:    utils.Lang(c, config.AuthErruserNotActive),
+			Message:    translation.Lang(c, config.AuthErruserNotActive),
 		}
 	}
 
@@ -92,9 +92,9 @@ func (repository Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*d
 
 	// Check if it doesn't match, show an error message
 	if !match {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
-			Message:    utils.Lang(c, config.AuthErrInvalid),
+			Message:    translation.Lang(c, config.AuthErrInvalid),
 		}
 	}
 
@@ -117,9 +117,9 @@ func (repository Auth) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfile
 
 	// Check if there is a query error
 	if errUser != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 
@@ -148,9 +148,9 @@ func (repository Auth) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.Us
 
 	// Check if something went wrong with query
 	if errUser != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 

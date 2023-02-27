@@ -1,14 +1,15 @@
 package implements
 
 import (
+	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/mailer"
+	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/features/user/factories"
 	"github.com/bonkzero404/gaskn/features/user/repositories"
 
 	"github.com/gofiber/fiber/v2"
 
 	"github.com/bonkzero404/gaskn/database/stores"
-	responseDto "github.com/bonkzero404/gaskn/dto"
-	"github.com/bonkzero404/gaskn/utils"
 )
 
 type UserForgotPassFactory struct {
@@ -31,13 +32,13 @@ func (service UserForgotPassFactory) CreateUserForgotPass(user *stores.User) (*s
 	}
 
 	if err := service.UserForgotPassRepository.CreateUserActionCode(&userActivate).Error; err != nil {
-		return nil, &responseDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}
 	}
 
-	sendMail := responseDto.Mail{
+	sendMail := mailer.Mail{
 		To:           []string{user.Email},
 		Subject:      "Forgot Password",
 		TemplateHtml: "user_forgot_password.html",
@@ -47,7 +48,7 @@ func (service UserForgotPassFactory) CreateUserForgotPass(user *stores.User) (*s
 		},
 	}
 
-	utils.SendMail(&sendMail)
+	mailer.SendMail(&sendMail)
 
 	return &userActivate, nil
 }

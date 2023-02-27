@@ -2,10 +2,10 @@ package role
 
 import (
 	"github.com/bonkzero404/gaskn/config"
-	"github.com/bonkzero404/gaskn/driver"
 	"github.com/bonkzero404/gaskn/features/role/handlers"
 	roleInteract "github.com/bonkzero404/gaskn/features/role/interactors/implements"
 	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories/implements"
+	"github.com/bonkzero404/gaskn/infrastructures"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,11 +13,11 @@ import (
 // RegisterFeature /*
 func RegisterFeature(app *fiber.App) {
 
-	roleRepository := roleRepo.NewRoleRepository(driver.DB)
+	roleRepository := roleRepo.NewRoleRepository(infrastructures.DB)
 	role := roleInteract.NewRole(roleRepository)
 	RoleHandler := handlers.NewRoleHandler(role)
 
-	roleClientRepository := roleRepo.NewRoleClientRepository(driver.DB)
+	roleClientRepository := roleRepo.NewRoleClientRepository(infrastructures.DB)
 	roleClient := roleInteract.NewRoleClient(roleClientRepository, roleRepository)
 	RoleClientHandler := handlers.NewRoleClientHandler(roleClient)
 

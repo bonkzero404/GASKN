@@ -2,14 +2,14 @@ package implements
 
 import (
 	"errors"
+	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/translation"
+	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
-	globalDto "github.com/bonkzero404/gaskn/dto"
 	"github.com/bonkzero404/gaskn/features/role/dto"
 	"github.com/bonkzero404/gaskn/features/role/interactors"
 	"github.com/bonkzero404/gaskn/features/role/repositories"
-	"github.com/bonkzero404/gaskn/utils"
-
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -49,9 +49,9 @@ func (repository RoleClient) CreateRoleClient(c *fiber.Ctx, roleDto *dto.RoleReq
 		r, err := repository.RoleClientRepository.CreateRoleClient(&roleData, clientId)
 
 		if err != nil {
-			return nil, &globalDto.ApiErrorResponse{
+			return nil, &http.SetApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    utils.Lang(c, config.GlobalErrUnknown),
+				Message:    translation.Lang(c, config.GlobalErrUnknown),
 			}
 		}
 
@@ -65,9 +65,9 @@ func (repository RoleClient) CreateRoleClient(c *fiber.Ctx, roleDto *dto.RoleReq
 		return &roleResponse, nil
 	}
 
-	return nil, &globalDto.ApiErrorResponse{
+	return nil, &http.SetApiErrorResponse{
 		StatusCode: fiber.StatusUnprocessableEntity,
-		Message:    utils.Lang(c, config.RoleErrAlreadyExists),
+		Message:    translation.Lang(c, config.RoleErrAlreadyExists),
 	}
 }
 
@@ -81,7 +81,7 @@ func (repository RoleClient) GetRoleClientList(c *fiber.Ctx) (*utils.Pagination,
 	res, err := repository.RoleClientRepository.GetRoleClientList(&roles, c, clientId)
 
 	if err != nil {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
 			Message:    err.Error(),
 		}
@@ -113,9 +113,9 @@ func (repository RoleClient) UpdateRoleClient(c *fiber.Ctx, id string) (*dto.Rol
 	errRoleClient := repository.RoleClientRepository.GetRoleClientById(&roleClient, id, clientId).Error
 
 	if errRoleClient != nil {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, config.RoleErrNotExists),
+			Message:    translation.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -127,9 +127,9 @@ func (repository RoleClient) UpdateRoleClient(c *fiber.Ctx, id string) (*dto.Rol
 	err := repository.RoleRepository.UpdateRoleById(&roleStore).Error
 
 	if err != nil {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 
@@ -155,9 +155,9 @@ func (repository RoleClient) DeleteRoleClientById(c *fiber.Ctx, id string) (*dto
 	errRoleClient := repository.RoleClientRepository.GetRoleClientId(&roleClient, id, clientId).Error
 
 	if errRoleClient != nil {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, config.RoleErrNotExists),
+			Message:    translation.Lang(c, config.RoleErrNotExists),
 		}
 	}
 
@@ -169,9 +169,9 @@ func (repository RoleClient) DeleteRoleClientById(c *fiber.Ctx, id string) (*dto
 	err := repository.RoleRepository.DeleteRoleById(&roleStore).Error
 
 	if err != nil {
-		return nil, &globalDto.ApiErrorResponse{
+		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    utils.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(c, config.GlobalErrUnknown),
 		}
 	}
 

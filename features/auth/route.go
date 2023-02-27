@@ -1,10 +1,10 @@
 package auth
 
 import (
-	"github.com/bonkzero404/gaskn/app/middleware"
+	"github.com/bonkzero404/gaskn/app/http/builder"
+	"github.com/bonkzero404/gaskn/app/http/middleware"
+	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/features/auth/handlers"
-	"github.com/bonkzero404/gaskn/utils"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -15,9 +15,9 @@ type ApiRoute struct {
 func (handler *ApiRoute) Route(app fiber.Router) {
 	const endpointGroup string = "/auth"
 
-	user := utils.GasknRouter{}
+	user := builder.RouteBuilder{}
 
-	user.Set(app).Group(utils.SetupApiGroup() + endpointGroup)
+	user.Set(app).Group(utils.ApiBasePath() + endpointGroup)
 
 	user.Post(
 		"/",

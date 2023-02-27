@@ -2,13 +2,13 @@ package database
 
 import (
 	"github.com/bonkzero404/gaskn/database/stores"
-	"github.com/bonkzero404/gaskn/driver"
+	"github.com/bonkzero404/gaskn/infrastructures"
 	"log"
 )
 
 // MigrateDB /*
 func MigrateDB() {
-	err := driver.DB.AutoMigrate(
+	err := infrastructures.DB.AutoMigrate(
 		&stores.User{},
 		&stores.UserActionCode{},
 		&stores.Client{},
