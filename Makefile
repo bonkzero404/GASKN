@@ -8,8 +8,8 @@ build:
 	mkdir dist/storages || true
 	mkdir dist/config || true
 	cp .env.example dist/.env
-	cp -r lang dist/config/lang
-	cp casbin_rbac_model.conf dist/config
+	cp -r config/lang dist/config/lang
+	cp config/casbin_rbac_model.conf dist/config
 	rm -rf dist/vendor
 
 vendor:
