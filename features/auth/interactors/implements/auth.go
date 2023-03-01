@@ -66,7 +66,7 @@ func (repository Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*d
 	// then display an error message
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusForbidden,
+			StatusCode: fiber.StatusNotFound,
 			Message:    translation.Lang(c, config.AuthErrGetProfile),
 		}
 	}
