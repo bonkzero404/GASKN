@@ -4,7 +4,7 @@ import (
 	"github.com/bonkzero404/gaskn/app/http"
 	"github.com/bonkzero404/gaskn/app/http/response"
 	"github.com/bonkzero404/gaskn/app/translation"
-	utils2 "github.com/bonkzero404/gaskn/app/validations"
+	"github.com/bonkzero404/gaskn/app/validations"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/features/auth/dto"
 	"github.com/bonkzero404/gaskn/features/auth/interactors"
@@ -26,7 +26,7 @@ func NewAuthHandler(authService interactors.UserAuth) *AuthHandler {
 func (interact *AuthHandler) Authentication(c *fiber.Ctx) error {
 	var request dto.UserAuthRequest
 
-	if stat, errRequest := utils2.ValidateRequest(c, &request); stat {
+	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
