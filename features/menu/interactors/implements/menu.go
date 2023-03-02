@@ -1,14 +1,13 @@
 package implements
 
 import (
-	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/facades"
 	"github.com/bonkzero404/gaskn/app/translation"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
 	"github.com/bonkzero404/gaskn/features/menu/dto"
 	"github.com/bonkzero404/gaskn/features/menu/interactors"
 	"github.com/bonkzero404/gaskn/features/menu/repositories"
-	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/datatypes"
 )
@@ -49,8 +48,8 @@ func (repository Menu) CreateMenu(req *dto.MenuRequest) (*dto.MenuResponse, erro
 		errGetMenu := repository.MenuRepository.GetMenuById(&getMenu, req.ParentId).Error
 
 		if errGetMenu != nil {
-			return nil, &http.SetApiErrorResponse{
-				StatusCode: fiber.StatusUnprocessableEntity,
+			return nil, &facades.ResponseError{
+				StatusCode: facades.AppErrUnprocessable,
 				Message:    translation.Lang(config.MenuErrNotFound),
 			}
 		}
@@ -62,8 +61,8 @@ func (repository Menu) CreateMenu(req *dto.MenuRequest) (*dto.MenuResponse, erro
 	errSaveMenu := repository.MenuRepository.CreateMenu(&menu).Error
 
 	if errSaveMenu != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
@@ -131,8 +130,8 @@ func (repository Menu) GetMenuAllByType(t stores.MenuType, mode string, sort str
 	errResult := repository.MenuRepository.GetMenuAllByType(&menuLists, translation.LangContext, t, sort).Error
 
 	if errResult != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.MenuErrNotFound),
 		}
 	}

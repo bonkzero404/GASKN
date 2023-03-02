@@ -2,7 +2,7 @@ package implements
 
 import (
 	"errors"
-	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/facades"
 	"github.com/bonkzero404/gaskn/app/translation"
 	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/database/stores"
@@ -42,8 +42,8 @@ func (repository RoleAssignment) CheckExistsRoleAssignment(clientIdUuid uuid.UUI
 	errRoleClient := repository.RoleClientRepository.GetRoleClientId(&clientRole, roleIdUuid.String(), clientIdUuid.String()).Error
 
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.RoleErrNotExists),
 		}
 	}
@@ -61,8 +61,8 @@ func (repository RoleAssignment) CheckExistsRoleUserAssignment(userId uuid.UUID,
 	).Error
 
 	if errors.Is(errRoleUserClient, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.RoleErrNotExists),
 		}
 	}
@@ -77,22 +77,22 @@ func (repository RoleAssignment) CreateRoleAssignment(clientId string, req *dto.
 	roleIdUuid, errRoleUuid := uuid.Parse(req.RoleId)
 
 	if clientId != "" && !strings.Contains(req.RouteFeature, config.Config("API_CLIENT_PARAM")) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrNotAllowed),
 		}
 	}
 
 	if clientId != "" && (errRoleUuid != nil || errClientIdUuid != nil) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrInvalidFormat),
 		}
 	}
 
 	if errRoleUuid != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrInvalidFormat),
 		}
 	}
@@ -117,8 +117,8 @@ func (repository RoleAssignment) CreateRoleAssignment(clientId string, req *dto.
 			req.RouteName,
 			req.DescriptionKeyLang,
 		); !save {
-			return nil, &http.SetApiErrorResponse{
-				StatusCode: fiber.StatusUnprocessableEntity,
+			return nil, &facades.ResponseError{
+				StatusCode: facades.AppErrUnprocessable,
 				Message:    translation.Lang(config.RoleAssignErrUnknown),
 			}
 		}
@@ -138,8 +138,8 @@ func (repository RoleAssignment) CreateRoleAssignment(clientId string, req *dto.
 	errExistsRole := repository.RoleRepository.GetRoleById(&role, req.RoleId).Error
 
 	if errExistsRole != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.RoleErrNotExists),
 		}
 	}
@@ -156,8 +156,8 @@ func (repository RoleAssignment) CreateRoleAssignment(clientId string, req *dto.
 		req.RouteName,
 		req.DescriptionKeyLang,
 	); !save {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.RoleAssignErrUnknown),
 		}
 	}
@@ -176,15 +176,15 @@ func (repository RoleAssignment) RemoveRoleAssignment(clientId string, req *dto.
 	roleIdUuid, errRoleUuid := uuid.Parse(req.RoleId)
 
 	if clientId != "" && (errRoleUuid != nil || errClientIdUuid != nil) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrInvalidFormat),
 		}
 	}
 
 	if errRoleUuid != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrInvalidFormat),
 		}
 	}
@@ -202,8 +202,8 @@ func (repository RoleAssignment) RemoveRoleAssignment(clientId string, req *dto.
 			req.RouteFeature,
 			req.MethodFeature,
 		); !remove {
-			return nil, &http.SetApiErrorResponse{
-				StatusCode: fiber.StatusUnprocessableEntity,
+			return nil, &facades.ResponseError{
+				StatusCode: facades.AppErrUnprocessable,
 				Message:    translation.Lang(config.RoleAssignErrRemovePermit),
 			}
 		}
@@ -223,8 +223,8 @@ func (repository RoleAssignment) RemoveRoleAssignment(clientId string, req *dto.
 	errExistsRole := repository.RoleRepository.GetRoleById(&role, req.RoleId).Error
 
 	if errExistsRole != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.RoleErrNotExists),
 		}
 	}
@@ -235,8 +235,8 @@ func (repository RoleAssignment) RemoveRoleAssignment(clientId string, req *dto.
 		req.RouteFeature,
 		req.MethodFeature,
 	); !remove {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.RoleAssignErrRemovePermit),
 		}
 	}
@@ -256,15 +256,15 @@ func (repository RoleAssignment) AssignUserPermission(clientId string, req *dto.
 	roleIdUuid, errRoleUuid := uuid.Parse(req.RoleId)
 
 	if clientId != "" && (errRoleUuid != nil || errClientIdUuid != nil || errUserUuid != nil) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrInvalidFormat),
 		}
 	}
 
 	if errRoleUuid != nil || errUserUuid != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrInvalidFormat),
 		}
 	}
@@ -274,8 +274,8 @@ func (repository RoleAssignment) AssignUserPermission(clientId string, req *dto.
 	errRole := repository.RoleRepository.GetRoleById(&role, roleIdUuid.String()).Error
 
 	if errRole != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.RoleErrNotExists),
 		}
 	}
@@ -285,8 +285,8 @@ func (repository RoleAssignment) AssignUserPermission(clientId string, req *dto.
 
 	// Check if role user is already exists
 	if errRoleUser == nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.RoleAssignErrAlreadyExists),
 		}
 	}
@@ -302,8 +302,8 @@ func (repository RoleAssignment) AssignUserPermission(clientId string, req *dto.
 		saveUserRoleClient := repository.RoleClientRepository.CreateUserClientRole(userIdUuid, roleIdUuid, clientIdUuid)
 
 		if !saveUserRoleClient {
-			return nil, &http.SetApiErrorResponse{
-				StatusCode: fiber.StatusUnprocessableEntity,
+			return nil, &facades.ResponseError{
+				StatusCode: facades.AppErrUnprocessable,
 				Message:    translation.Lang(config.RoleAssignErrFailed),
 			}
 		}
@@ -316,8 +316,8 @@ func (repository RoleAssignment) AssignUserPermission(clientId string, req *dto.
 			role.RoleName,
 			existsResp.Client.ClientName,
 		); !save {
-			return nil, &http.SetApiErrorResponse{
-				StatusCode: fiber.StatusUnprocessableEntity,
+			return nil, &facades.ResponseError{
+				StatusCode: facades.AppErrUnprocessable,
 				Message:    translation.Lang(config.RoleAssignErrUnknown),
 			}
 		}
@@ -334,8 +334,8 @@ func (repository RoleAssignment) AssignUserPermission(clientId string, req *dto.
 	saveUserRoleClient := repository.RoleClientRepository.CreateUserClientRole(userIdUuid, roleIdUuid, clientIdUuid)
 
 	if !saveUserRoleClient {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.RoleAssignErrFailed),
 		}
 	}
@@ -351,8 +351,8 @@ func (repository RoleAssignment) AssignUserPermission(clientId string, req *dto.
 		role.RoleName,
 		"",
 	); !save {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.RoleAssignErrUnknown),
 		}
 	}
@@ -373,8 +373,8 @@ func (repository RoleAssignment) GetPermissionListByRole(c *fiber.Ctx) (*[]dto.R
 	var resp []dto.RoleAssignmentListResponse
 
 	if roleId == "" {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrInvalidFormat),
 		}
 	}
@@ -386,8 +386,8 @@ func (repository RoleAssignment) GetPermissionListByRole(c *fiber.Ctx) (*[]dto.R
 	err := repository.RoleAssignmentRepository.GetPermissionByRole(&permissionRule, roleId, clientId).Error
 
 	if err != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.RoleAssignErrLoad),
 		}
 	}

@@ -2,7 +2,7 @@ package implements
 
 import (
 	"errors"
-	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/facades"
 	"github.com/bonkzero404/gaskn/app/translation"
 	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/config"
@@ -11,7 +11,6 @@ import (
 	"github.com/bonkzero404/gaskn/features/auth/interactors"
 	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories"
 	userRepo "github.com/bonkzero404/gaskn/features/user/repositories"
-	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"gorm.io/gorm"
 )
@@ -35,13 +34,13 @@ func (repository Auth) SetTokenResponse(user *stores.User) (*dto.UserAuthRespons
 	token, exp, errToken := utils.CreateToken(user.ID.String(), user.FullName)
 
 	if errToken != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.AuthErrToken),
 		}
 	}
 
-	// Set response message to succeed
+	// Set facades message to succeed
 	response := dto.UserAuthResponse{
 		ID:       user.ID.String(),
 		FullName: user.FullName,
@@ -65,24 +64,24 @@ func (repository Auth) Authenticate(auth *dto.UserAuthRequest) (*dto.UserAuthRes
 	// Check if the user is not found
 	// then display an error message
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.AuthErrGetProfile),
 		}
 	}
 
 	// Check if a query operation error occurs
 	if errUser != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.AuthErrRefreshToken),
 		}
 	}
 
 	// Check if the user status is not active
 	if !user.IsActive {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusForbidden,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrForbidden,
 			Message:    translation.Lang(config.AuthErruserNotActive),
 		}
 	}
@@ -92,8 +91,8 @@ func (repository Auth) Authenticate(auth *dto.UserAuthRequest) (*dto.UserAuthRes
 
 	// Check if it doesn't match, show an error message
 	if !match {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusForbidden,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrForbidden,
 			Message:    translation.Lang(config.AuthErrInvalid),
 		}
 	}
@@ -117,13 +116,13 @@ func (repository Auth) GetProfile(id string) (*dto.UserAuthProfileResponse, erro
 
 	// Check if there is a query error
 	if errUser != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
 
-	// Set response message
+	// Set facades message
 	response := dto.UserAuthProfileResponse{
 		ID:       user.ID.String(),
 		FullName: user.FullName,
@@ -148,8 +147,8 @@ func (repository Auth) RefreshToken(tokenUser *jwt.Token) (*dto.UserAuthResponse
 
 	// Check if something went wrong with query
 	if errUser != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
