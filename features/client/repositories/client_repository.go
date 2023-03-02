@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"github.com/bonkzero404/gaskn/app/utils"
-	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
 	"github.com/bonkzero404/gaskn/database/stores"
@@ -21,7 +20,7 @@ type ClientRepository interface {
 
 	GetClientBySlug(client *stores.Client, slug string) *gorm.DB
 
-	GetClientList(client *[]stores.Client, c *fiber.Ctx) (*utils.Pagination, error)
+	GetClientList(client *[]stores.Client, page int, limit int, sort string) (*utils.Pagination, error)
 
-	GetClientListByUser(client *[]stores.ClientAssignment, c *fiber.Ctx, userId string) (*utils.Pagination, error)
+	GetClientListByUser(client *[]stores.ClientAssignment, userId string, page int, limit int, sort string) (*utils.Pagination, error)
 }

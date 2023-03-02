@@ -12,6 +12,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+var LangContext = config.Config("LANG")
+
 var Trans *ut.UniversalTranslator
 
 func FilterParamContext(val string, locales ...string) string {
@@ -44,10 +46,10 @@ func SetupLang() {
 	}
 }
 
-func Lang(ctx *fiber.Ctx, key string, params ...string) string {
+func Lang(key string, params ...string) string {
 	var lng ut.Translator
 
-	var locale = FilterParamContext(ctx.Query("lang"), "en", "id")
+	var locale = FilterParamContext(LangContext, "en", "id")
 
 	lng, _ = Trans.GetTranslator(locale)
 
@@ -56,16 +58,27 @@ func Lang(ctx *fiber.Ctx, key string, params ...string) string {
 	return parseLang
 }
 
-func LangFromJsonParse(ctx *fiber.Ctx, attribute datatypes.JSONType[stores.LangAttribute]) string {
-	var lng = ctx.Query("lang")
+func LangFromJsonParse(attribute datatypes.JSONType[stores.LangAttribute]) string {
 
-	if lng == "en" {
+	if LangContext == "en" {
 		return attribute.Data.En
 	}
 
-	if lng == "id" {
+	if LangContext == "id" {
 		return attribute.Data.Id
 	}
 
 	return attribute.Data.En
+}
+
+func LangMiddleware(ctx *fiber.Ctx) error {
+	var lng = ctx.Query("lang")
+
+	if lng == "en" || lng == "id" {
+		LangContext = lng
+	} else {
+		LangContext = config.Config("lang")
+	}
+
+	return ctx.Next()
 }

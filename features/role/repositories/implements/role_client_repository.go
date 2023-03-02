@@ -4,7 +4,6 @@ import (
 	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/database/stores"
 	"github.com/bonkzero404/gaskn/features/role/repositories"
-	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -119,10 +118,11 @@ func (repository RoleClientRepository) GetRoleClientByName(roleClient *stores.Ro
 		First(&roleClient, "roles.role_name = ? and role_clients.client_id = ?", roleName, clientId)
 }
 
-func (repository RoleClientRepository) GetRoleClientList(role *[]stores.Role, c *fiber.Ctx, clientId string) (*utils.Pagination, error) {
+func (repository RoleClientRepository) GetRoleClientList(role *[]stores.Role, clientId string, page int, limit int, sort string) (*utils.Pagination, error) {
 	var pagination utils.Pagination
+	var paginate = pagination.SetLimit(limit).SetPage(page).SetSort(sort).Paginate(role, repository.DB)
 
-	err := repository.DB.Scopes(utils.Paginate(role, &pagination, repository.DB, c)).
+	err := repository.DB.Scopes(paginate).
 		Joins("left join role_clients on role_clients.role_id = roles.id").
 		Find(&role, "role_clients.client_id = ? AND roles.is_active = ?", clientId, true).Error
 

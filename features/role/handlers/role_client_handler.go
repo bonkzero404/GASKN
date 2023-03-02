@@ -5,6 +5,7 @@ import (
 	"github.com/bonkzero404/gaskn/app/http/response"
 	"github.com/bonkzero404/gaskn/app/translation"
 	"github.com/bonkzero404/gaskn/app/validations"
+	"github.com/bonkzero404/gaskn/config"
 	"github.com/bonkzero404/gaskn/features/role/dto"
 	"github.com/bonkzero404/gaskn/features/role/interactors"
 	"github.com/gofiber/fiber/v2"
@@ -22,17 +23,18 @@ func NewRoleClientHandler(roleClientService interactors.RoleClient) *RoleClientH
 
 func (interact *RoleClientHandler) CreateClientRole(c *fiber.Ctx) error {
 	var request dto.RoleRequest
+	var clientId = c.Params(config.Config("API_CLIENT_PARAM"))
 
 	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	responseInteract, err := interact.RoleClientService.CreateRoleClient(c, &request)
+	responseInteract, err := interact.RoleClientService.CreateRoleClient(clientId, &request)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, "role:err:create-failed"),
+			Message: translation.Lang("role:err:create-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -42,12 +44,13 @@ func (interact *RoleClientHandler) CreateClientRole(c *fiber.Ctx) error {
 }
 
 func (interact *RoleClientHandler) GetRoleClientList(c *fiber.Ctx) error {
-	responseInteract, err := interact.RoleClientService.GetRoleClientList(c)
+	var clientId = c.Params(config.Config("API_CLIENT_PARAM"))
+	responseInteract, err := interact.RoleClientService.GetRoleClientList(clientId, c.Query("page"), c.Query("limit"), c.Query("sort"))
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, "role:err:read-failed"),
+			Message: translation.Lang("role:err:read-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -58,6 +61,7 @@ func (interact *RoleClientHandler) GetRoleClientList(c *fiber.Ctx) error {
 
 func (interact *RoleClientHandler) UpdateRoleClient(c *fiber.Ctx) error {
 	var request dto.RoleRequest
+	var clientId = c.Params(config.Config("API_CLIENT_PARAM"))
 
 	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
 		return response.ApiUnprocessableEntity(c, errRequest)
@@ -65,12 +69,12 @@ func (interact *RoleClientHandler) UpdateRoleClient(c *fiber.Ctx) error {
 
 	roleId := c.Params("id")
 
-	responseInteract, err := interact.RoleClientService.UpdateRoleClient(c, roleId)
+	responseInteract, err := interact.RoleClientService.UpdateRoleClient(clientId, roleId)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, "role:err:update-failed"),
+			Message: translation.Lang("role:err:update-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -81,13 +85,14 @@ func (interact *RoleClientHandler) UpdateRoleClient(c *fiber.Ctx) error {
 
 func (interact *RoleClientHandler) DeleteRoleClient(c *fiber.Ctx) error {
 	roleId := c.Params("id")
+	var clientId = c.Params(config.Config("API_CLIENT_PARAM"))
 
-	responseInteract, err := interact.RoleClientService.DeleteRoleClientById(c, roleId)
+	responseInteract, err := interact.RoleClientService.DeleteRoleClientById(clientId, roleId)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, "role:err:delete-failed"),
+			Message: translation.Lang("role:err:delete-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

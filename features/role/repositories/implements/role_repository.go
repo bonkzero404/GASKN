@@ -4,7 +4,6 @@ import (
 	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/database/stores"
 	"github.com/bonkzero404/gaskn/features/role/repositories"
-	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -34,10 +33,11 @@ func (repository RoleRepository) GetRoleById(role *stores.Role, id string) *gorm
 	return repository.DB.Take(&role, "id = ?", id)
 }
 
-func (repository RoleRepository) GetRoleList(role *[]stores.Role, c *fiber.Ctx) (*utils.Pagination, error) {
+func (repository RoleRepository) GetRoleList(role *[]stores.Role, page int, limit int, sort string) (*utils.Pagination, error) {
 	var pagination utils.Pagination
+	var paginate = pagination.SetLimit(limit).SetPage(page).SetSort(sort).Paginate(role, repository.DB)
 
-	err := repository.DB.Scopes(utils.Paginate(role, &pagination, repository.DB, c)).Find(&role).Error
+	err := repository.DB.Scopes(paginate).Find(&role).Error
 
 	return &pagination, err
 }

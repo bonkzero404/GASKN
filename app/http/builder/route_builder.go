@@ -121,7 +121,7 @@ func (f *RouteBuilder) SetRouteDescriptionKeyLang(keyLang string) *RouteBuilder 
 
 func (f *RouteBuilder) ImplementDescriptionLang() func(c *fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
-		f.RouterOptions.Description = translation.Lang(c, f.RouterOptions.DescriptionKey)
+		f.RouterOptions.Description = translation.Lang(f.RouterOptions.DescriptionKey)
 		return c.Next()
 	}
 }
@@ -219,7 +219,7 @@ func ExtractRouteAsFeatures(c *fiber.Ctx, isTenant bool) []FeatureLists {
 				var desc = ""
 
 				if descLang != "" {
-					desc = translation.Lang(c, nameInfo["description_key"].(string))
+					desc = translation.Lang(nameInfo["description_key"].(string))
 				} else {
 					desc = nameInfo["description"].(string)
 				}

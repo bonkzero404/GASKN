@@ -32,7 +32,7 @@ func Permission() func(c *fiber.Ctx) error {
 
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return response.ApiForbidden(c, http.SetErrors{
-				Message: translation.Lang(c, "middleware:err:unauthorized"),
+				Message: translation.Lang("middleware:err:unauthorized"),
 				Cause:   "Forbidden access",
 				Inputs:  nil,
 			})
@@ -50,7 +50,7 @@ func Permission() func(c *fiber.Ctx) error {
 
 		if ok, _ := enforcer.Enforce(userId, permit, c.Path(), c.Method()); !ok {
 			return response.ApiForbidden(c, http.SetErrors{
-				Message: translation.Lang(c, "middleware:err:unauthorized"),
+				Message: translation.Lang("middleware:err:unauthorized"),
 				Cause:   "Forbidden access",
 				Inputs:  nil,
 			})

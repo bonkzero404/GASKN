@@ -48,6 +48,8 @@ func main() {
 		Weak: true,
 	}))
 
+	app.Use(translation.LangMiddleware)
+
 	// Call all module
 	appRoute.RouteInit(app)
 

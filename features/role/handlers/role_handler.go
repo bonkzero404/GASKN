@@ -27,12 +27,12 @@ func (interact *RoleHandler) CreateRole(c *fiber.Ctx) error {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	responseInteract, err := interact.Role.CreateRole(c, &request)
+	responseInteract, err := interact.Role.CreateRole(&request)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, "role:err:create-failed"),
+			Message: translation.Lang("role:err:create-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -42,12 +42,12 @@ func (interact *RoleHandler) CreateRole(c *fiber.Ctx) error {
 }
 
 func (interact *RoleHandler) GetRoleList(c *fiber.Ctx) error {
-	responseInteract, err := interact.Role.GetRoleList(c)
+	responseInteract, err := interact.Role.GetRoleList(c.Query("page"), c.Query("limit"), c.Query("page"))
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, "role:err:read-failed"),
+			Message: translation.Lang("role:err:read-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -65,12 +65,12 @@ func (interact *RoleHandler) UpdateRole(c *fiber.Ctx) error {
 
 	roleId := c.Params("id")
 
-	responseInteract, err := interact.Role.UpdateRole(c, roleId, &request)
+	responseInteract, err := interact.Role.UpdateRole(roleId, &request)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, "role:err:update-failed"),
+			Message: translation.Lang("role:err:update-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -82,12 +82,12 @@ func (interact *RoleHandler) UpdateRole(c *fiber.Ctx) error {
 func (interact *RoleHandler) DeleteRole(c *fiber.Ctx) error {
 	roleId := c.Params("id")
 
-	responseInteract, err := interact.Role.DeleteRoleById(c, roleId)
+	responseInteract, err := interact.Role.DeleteRoleById(roleId)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, "role:err:delete-failed"),
+			Message: translation.Lang("role:err:delete-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

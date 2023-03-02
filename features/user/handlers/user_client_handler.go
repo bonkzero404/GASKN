@@ -24,21 +24,22 @@ func NewUserClientHandler(UserClientService interactors.UserClient) *UserClientH
 
 func (interact *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 	var request dto.UserInvitationRequest
+	var clientId = c.Params(config.Config("API_CLIENT_PARAM"))
 
-	token := c.Locals("user").(*jwt.Token)
-	claims := token.Claims.(jwt.MapClaims)
-	userIdInvitationBy := claims["id"].(string)
+	var token = c.Locals("user").(*jwt.Token)
+	var claims = token.Claims.(jwt.MapClaims)
+	var userIdInvitationBy = claims["id"].(string)
 
 	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	responseInteract, err := interact.UserClientService.CreateUserInvitation(c, &request, userIdInvitationBy)
+	responseInteract, err := interact.UserClientService.CreateUserInvitation(clientId, &request, userIdInvitationBy)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.UserErrCreateActivation),
+			Message: translation.Lang(config.UserErrCreateActivation),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -49,18 +50,23 @@ func (interact *UserClientHandler) CreateUserInvitation(c *fiber.Ctx) error {
 
 func (interact *UserClientHandler) UserInvitationAcceptance(c *fiber.Ctx) error {
 	var request dto.UserInvitationApprovalRequest
+	var clientId = c.Params(config.Config("API_CLIENT_PARAM"))
+
+	var token = c.Locals("user").(*jwt.Token)
+	var claims = token.Claims.(jwt.MapClaims)
+	var userId = claims["id"].(string)
 
 	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
 	var req = &request
-	responseInteract, err := interact.UserClientService.UserInviteAcceptance(c, req.Code, req.Status)
+	responseInteract, err := interact.UserClientService.UserInviteAcceptance(clientId, userId, req.Code, req.Status)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.UserErrActivationFailed),
+			Message: translation.Lang(config.UserErrActivationFailed),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

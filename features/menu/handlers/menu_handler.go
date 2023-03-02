@@ -29,12 +29,12 @@ func (interact *MenuHandler) CreateMenu(c *fiber.Ctx) error {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	responseInteract, err := interact.Menu.CreateMenu(c, &request)
+	responseInteract, err := interact.Menu.CreateMenu(&request)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.MenuErrCreate),
+			Message: translation.Lang(config.MenuErrCreate),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -44,14 +44,14 @@ func (interact *MenuHandler) CreateMenu(c *fiber.Ctx) error {
 }
 
 func (interact *MenuHandler) GetMenuAll(c *fiber.Ctx) error {
-	mode := interact.Menu.ValidationMenuMode(c)
-	sort := interact.Menu.ValidationMenuSort(c)
-	responseInteract, err := interact.Menu.GetMenuAllByType(c, "", mode, sort)
+	mode := interact.Menu.ValidationMenuMode(c.Query("mode"))
+	sort := interact.Menu.ValidationMenuSort(c.Query("sort"))
+	responseInteract, err := interact.Menu.GetMenuAllByType("", mode, sort)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.MenuErrGet),
+			Message: translation.Lang(config.MenuErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -61,14 +61,14 @@ func (interact *MenuHandler) GetMenuAll(c *fiber.Ctx) error {
 }
 
 func (interact *MenuHandler) GetMenuSa(c *fiber.Ctx) error {
-	mode := interact.Menu.ValidationMenuMode(c)
-	sort := interact.Menu.ValidationMenuSort(c)
-	responseInteract, err := interact.Menu.GetMenuAllByType(c, stores.MenuBO, mode, sort)
+	mode := interact.Menu.ValidationMenuMode(c.Query("mode"))
+	sort := interact.Menu.ValidationMenuSort(c.Query("sort"))
+	responseInteract, err := interact.Menu.GetMenuAllByType(stores.MenuBO, mode, sort)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.MenuErrGet),
+			Message: translation.Lang(config.MenuErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -78,14 +78,14 @@ func (interact *MenuHandler) GetMenuSa(c *fiber.Ctx) error {
 }
 
 func (interact *MenuHandler) GetMenuClient(c *fiber.Ctx) error {
-	mode := interact.Menu.ValidationMenuMode(c)
-	sort := interact.Menu.ValidationMenuSort(c)
-	responseInteract, err := interact.Menu.GetMenuAllByType(c, stores.MenuCL, mode, sort)
+	mode := interact.Menu.ValidationMenuMode(c.Query("mode"))
+	sort := interact.Menu.ValidationMenuSort(c.Query("sort"))
+	responseInteract, err := interact.Menu.GetMenuAllByType(stores.MenuCL, mode, sort)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.MenuErrGet),
+			Message: translation.Lang(config.MenuErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

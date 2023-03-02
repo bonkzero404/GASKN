@@ -33,12 +33,12 @@ func (interact *ClientHandler) CreateClient(c *fiber.Ctx) error {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	responseInteract, err := interact.ClientService.CreateClient(c, &request, userId)
+	responseInteract, err := interact.ClientService.CreateClient(&request, userId)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, "client:err:create-failed"),
+			Message: translation.Lang("client:err:create-failed"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -49,17 +49,18 @@ func (interact *ClientHandler) CreateClient(c *fiber.Ctx) error {
 
 func (interact *ClientHandler) UpdateClient(c *fiber.Ctx) error {
 	var request dto.ClientRequest
+	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
 	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	responseInteract, err := interact.ClientService.UpdateClient(c, &request)
+	responseInteract, err := interact.ClientService.UpdateClient(clientId, &request)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.ClientErrUpdate),
+			Message: translation.Lang(config.ClientErrUpdate),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -73,12 +74,12 @@ func (interact *ClientHandler) GetClientByUser(c *fiber.Ctx) error {
 	claims := token.Claims.(jwt.MapClaims)
 	userId := claims["id"].(string)
 
-	responseInteract, err := interact.ClientService.GetClientByUser(c, userId)
+	responseInteract, err := interact.ClientService.GetClientByUser(userId, c.Query("page"), c.Query("limit"), c.Query("sort"))
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.ClientErrGet),
+			Message: translation.Lang(config.ClientErrGet),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
