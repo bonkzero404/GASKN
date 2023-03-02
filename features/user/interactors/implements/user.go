@@ -86,10 +86,6 @@ func (repository User) CreateUser(clientId string, user *dto.UserCreateRequest, 
 		}
 	}
 
-	// Check if create user from Client
-	// Get ClientId if it's client
-	// clientId := c.Params(config.Config("API_CLIENT_PARAM"))
-
 	if clientId != "" {
 		cUuid, _ := uuid.Parse(clientId)
 		clientAssign := stores.ClientAssignment{
