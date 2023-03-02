@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	"github.com/bonkzero404/gaskn/app/facades"
 	"github.com/bonkzero404/gaskn/app/http"
 	"github.com/bonkzero404/gaskn/app/http/response"
 	"github.com/bonkzero404/gaskn/app/translation"
@@ -27,8 +27,6 @@ func NewAuthHandler(authService interactors.UserAuth) *AuthHandler {
 func (interact *AuthHandler) Authentication(c *fiber.Ctx) error {
 	var request dto.UserAuthRequest
 
-	fmt.Println(translation.LangContext)
-
 	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
@@ -36,7 +34,9 @@ func (interact *AuthHandler) Authentication(c *fiber.Ctx) error {
 	responseInteract, err := interact.AuthService.Authenticate(&request)
 
 	if err != nil {
-		re := err.(*http.SetApiErrorResponse)
+		appErr := err.(*facades.ResponseError)
+		re := facades.ConvertToHttpError(appErr)
+
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
 			Message: translation.Lang(config.GlobalErrAuthFailed),
 			Cause:   err.Error(),
@@ -56,7 +56,9 @@ func (interact *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	responseInteract, err := interact.AuthService.GetProfile(id)
 
 	if err != nil {
-		re := err.(*http.SetApiErrorResponse)
+		appErr := err.(*facades.ResponseError)
+		re := facades.ConvertToHttpError(appErr)
+
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
 			Message: translation.Lang(config.GlobalErrUnknown),
 			Cause:   err.Error(),
@@ -74,7 +76,9 @@ func (interact *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 	responseInteract, err := interact.AuthService.RefreshToken(token)
 
 	if err != nil {
-		re := err.(*http.SetApiErrorResponse)
+		appErr := err.(*facades.ResponseError)
+		re := facades.ConvertToHttpError(appErr)
+
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
 			Message: translation.Lang(config.AuthErruserNotActive),
 			Cause:   err.Error(),

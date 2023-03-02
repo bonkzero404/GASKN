@@ -2,7 +2,7 @@ package implements
 
 import (
 	"errors"
-	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/facades"
 	"github.com/bonkzero404/gaskn/app/translation"
 	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/config"
@@ -10,7 +10,6 @@ import (
 	"github.com/bonkzero404/gaskn/features/role/dto"
 	"github.com/bonkzero404/gaskn/features/role/interactors"
 	"github.com/bonkzero404/gaskn/features/role/repositories"
-	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -46,8 +45,8 @@ func (repository RoleClient) CreateRoleClient(clientId string, roleDto *dto.Role
 		r, err := repository.RoleClientRepository.CreateRoleClient(&roleData, clientId)
 
 		if err != nil {
-			return nil, &http.SetApiErrorResponse{
-				StatusCode: fiber.StatusUnprocessableEntity,
+			return nil, &facades.ResponseError{
+				StatusCode: facades.AppErrUnprocessable,
 				Message:    translation.Lang(config.GlobalErrUnknown),
 			}
 		}
@@ -62,8 +61,8 @@ func (repository RoleClient) CreateRoleClient(clientId string, roleDto *dto.Role
 		return &roleResponse, nil
 	}
 
-	return nil, &http.SetApiErrorResponse{
-		StatusCode: fiber.StatusUnprocessableEntity,
+	return nil, &facades.ResponseError{
+		StatusCode: facades.AppErrUnprocessable,
 		Message:    translation.Lang(config.RoleErrAlreadyExists),
 	}
 }
@@ -83,8 +82,8 @@ func (repository RoleClient) GetRoleClientList(clientId string, page string, lim
 	res, err := repository.RoleClientRepository.GetRoleClientList(&roles, clientId, pPage, pLimit, pSort)
 
 	if err != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    err.Error(),
 		}
 	}
@@ -112,8 +111,8 @@ func (repository RoleClient) UpdateRoleClient(clientId string, id string) (*dto.
 	errRoleClient := repository.RoleClientRepository.GetRoleClientById(&roleClient, id, clientId).Error
 
 	if errRoleClient != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.RoleErrNotExists),
 		}
 	}
@@ -126,8 +125,8 @@ func (repository RoleClient) UpdateRoleClient(clientId string, id string) (*dto.
 	err := repository.RoleRepository.UpdateRoleById(&roleStore).Error
 
 	if err != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
@@ -151,8 +150,8 @@ func (repository RoleClient) DeleteRoleClientById(clientId string, id string) (*
 	errRoleClient := repository.RoleClientRepository.GetRoleClientId(&roleClient, id, clientId).Error
 
 	if errRoleClient != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.RoleErrNotExists),
 		}
 	}
@@ -165,8 +164,8 @@ func (repository RoleClient) DeleteRoleClientById(clientId string, id string) (*
 	err := repository.RoleRepository.DeleteRoleById(&roleStore).Error
 
 	if err != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}

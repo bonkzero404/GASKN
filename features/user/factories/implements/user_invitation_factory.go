@@ -1,13 +1,11 @@
 package implements
 
 import (
-	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/facades"
 	"github.com/bonkzero404/gaskn/app/mailer"
 	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/features/user/factories"
 	"github.com/bonkzero404/gaskn/features/user/repositories"
-
-	"github.com/gofiber/fiber/v2"
 
 	"github.com/bonkzero404/gaskn/database/stores"
 )
@@ -34,8 +32,8 @@ func (service UserInvitationFactory) CreateUserInvitation(user *stores.User, url
 	}
 
 	if err := service.UserInvitationRepository.CreateUserActionCode(&userInvitation).Error; err != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    err.Error(),
 		}
 	}

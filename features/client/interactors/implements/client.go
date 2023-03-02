@@ -1,7 +1,7 @@
 package implements
 
 import (
-	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/facades"
 	"github.com/bonkzero404/gaskn/app/translation"
 	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/features/client/interactors"
@@ -10,7 +10,6 @@ import (
 	"github.com/bonkzero404/gaskn/infrastructures"
 	"strings"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"github.com/gosimple/slug"
 
@@ -51,14 +50,14 @@ func (repository Client) CreateClient(client *dto.ClientRequest, userId string) 
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key") {
-			return nil, &http.SetApiErrorResponse{
-				StatusCode: fiber.StatusUnprocessableEntity,
+			return nil, &facades.ResponseError{
+				StatusCode: facades.AppErrUnprocessable,
 				Message:    translation.Lang(config.ClientErrDuplicate),
 			}
 		}
 
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(err.Error()),
 		}
 	}
@@ -76,8 +75,8 @@ func (repository Client) CreateClient(client *dto.ClientRequest, userId string) 
 		role.RoleName,
 		clientStore.ClientName,
 	); !g {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(err.Error()),
 		}
 	}
@@ -95,8 +94,8 @@ func (repository Client) CreateClient(client *dto.ClientRequest, userId string) 
 		"",
 		"",
 	); !p {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(err.Error()),
 		}
 	}
@@ -119,8 +118,8 @@ func (repository Client) UpdateClient(clientId string, client *dto.ClientRequest
 	errCheckClient := repository.ClientRepository.GetClientById(&clientStore, clientId).Error
 
 	if errCheckClient != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.ClientErrAlreadyExists),
 		}
 	}
@@ -133,8 +132,8 @@ func (repository Client) UpdateClient(clientId string, client *dto.ClientRequest
 	err := repository.ClientRepository.UpdateClientById(&clientStore).Error
 
 	if err != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
@@ -164,8 +163,8 @@ func (repository Client) GetClientByUser(userId string, page string, limit strin
 	res, err := repository.ClientRepository.GetClientListByUser(&clientAssignment, userId, pPage, pLimit, pSort)
 
 	if err != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    err.Error(),
 		}
 	}

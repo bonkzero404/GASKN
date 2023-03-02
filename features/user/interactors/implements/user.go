@@ -2,7 +2,7 @@ package implements
 
 import (
 	"errors"
-	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/facades"
 	"github.com/bonkzero404/gaskn/app/mailer"
 	"github.com/bonkzero404/gaskn/app/translation"
 	"github.com/bonkzero404/gaskn/app/utils"
@@ -14,7 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
 	"github.com/bonkzero404/gaskn/database/stores"
@@ -74,14 +73,14 @@ func (repository User) CreateUser(clientId string, user *dto.UserCreateRequest, 
 
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key") {
-			return nil, &http.SetApiErrorResponse{
-				StatusCode: fiber.StatusUnprocessableEntity,
+			return nil, &facades.ResponseError{
+				StatusCode: facades.AppErrUnprocessable,
 				Message:    translation.Lang(config.UserErrRegister),
 			}
 		}
 
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
@@ -143,8 +142,8 @@ func (repository User) UserActivation(code string) (*dto.UserCreateResponse, err
 	errAct := repository.UserActionCodeRepository.FindActionCode(&userAct, code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.UserErrActivationNotFound),
 		}
 	}
@@ -152,15 +151,15 @@ func (repository User) UserActivation(code string) (*dto.UserCreateResponse, err
 	errUser := repository.UserRepository.FindUserById(&user, userAct.UserId.String()).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.UserErrNotFound),
 		}
 	}
 
 	if user.IsActive {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.UserErrAlreadyActive),
 		}
 	}
@@ -168,8 +167,8 @@ func (repository User) UserActivation(code string) (*dto.UserCreateResponse, err
 	t := time.Now()
 
 	if userAct.ExpiredAt.Before(t) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusGone,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrExpire,
 			Message:    translation.Lang(config.UserErrActivationExpired),
 		}
 	}
@@ -177,8 +176,8 @@ func (repository User) UserActivation(code string) (*dto.UserCreateResponse, err
 	userNew, errUserNew := repository.RepositoryAggregate.UpdateUserActivation(user.ID.String(), true)
 
 	if errUserNew != nil {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    errUserNew.Error(),
 		}
 	}
@@ -205,15 +204,15 @@ func (repository User) CreateUserAction(email string, actType stores.ActCodeType
 	errUser := repository.UserRepository.FindUserByEmail(&user, email).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.UserErrNotFound),
 		}
 	}
 
 	if user.IsActive && actType == stores.ACTIVATION_CODE {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.UserErrAlreadyActive),
 		}
 	}
@@ -240,8 +239,8 @@ func (repository User) UpdatePassword(forgotPassReq *dto.UserForgotPassActReques
 	var userAct stores.UserActionCode
 
 	if forgotPassReq.Password != forgotPassReq.RepeatPassword {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.UserErrPassMatch),
 		}
 	}
@@ -249,8 +248,8 @@ func (repository User) UpdatePassword(forgotPassReq *dto.UserForgotPassActReques
 	errUser := repository.UserRepository.FindUserByEmail(&user, forgotPassReq.Email).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.UserErrNotFound),
 		}
 	}
@@ -258,15 +257,15 @@ func (repository User) UpdatePassword(forgotPassReq *dto.UserForgotPassActReques
 	errAct := repository.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), forgotPassReq.Code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.UserErrActivationNotFound),
 		}
 	}
 
 	if userAct.IsUsed {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.UserErrCodeAlreadyUsed),
 		}
 	}
@@ -274,8 +273,8 @@ func (repository User) UpdatePassword(forgotPassReq *dto.UserForgotPassActReques
 	t := time.Now()
 
 	if userAct.ExpiredAt.Before(t) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusGone,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrExpire,
 			Message:    translation.Lang(config.UserErrActivationExpired),
 		}
 	}

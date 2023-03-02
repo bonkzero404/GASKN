@@ -2,7 +2,7 @@ package implements
 
 import (
 	"errors"
-	"github.com/bonkzero404/gaskn/app/http"
+	"github.com/bonkzero404/gaskn/app/facades"
 	"github.com/bonkzero404/gaskn/app/translation"
 	roleRepo "github.com/bonkzero404/gaskn/features/role/repositories"
 	roleAssignInteract "github.com/bonkzero404/gaskn/features/role_assignment/interactors"
@@ -11,7 +11,6 @@ import (
 	"github.com/bonkzero404/gaskn/features/user/repositories"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 
@@ -66,16 +65,16 @@ func (repository UserClient) CreateUserInvitation(clientId string, req *dto.User
 	errUser := repository.UserRepository.FindUserByEmail(&user, req.Email).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.UserErrNotFound),
 		}
 	}
 
 	// Check user if not active
 	if !user.IsActive {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.UserErrNotActive),
 		}
 	}
@@ -84,8 +83,8 @@ func (repository UserClient) CreateUserInvitation(clientId string, req *dto.User
 	errUserInvitedBy := repository.UserRepository.FindUserById(&userInviteBy, invitedByUser).Error
 
 	if errors.Is(errUserInvitedBy, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.UserErrNotFound),
 		}
 	}
@@ -94,8 +93,8 @@ func (repository UserClient) CreateUserInvitation(clientId string, req *dto.User
 	errRoleClient := repository.RoleClientRepository.GetRoleClientId(&roleClient, req.RoleId, clientId).Error
 
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.RoleErrNotExists),
 		}
 	}
@@ -174,8 +173,8 @@ func (repository UserClient) CreateUserInvitation(clientId string, req *dto.User
 		return &resp, nil
 	}
 
-	return nil, &http.SetApiErrorResponse{
-		StatusCode: fiber.StatusUnprocessableEntity,
+	return nil, &facades.ResponseError{
+		StatusCode: facades.AppErrUnprocessable,
 		Message:    translation.Lang(config.UserErrInvited),
 	}
 }
@@ -189,15 +188,15 @@ func (repository UserClient) UserInviteAcceptance(clientId string, userId string
 	errUser := repository.UserRepository.FindUserById(&user, userId).Error
 
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.UserErrNotFound),
 		}
 	}
 
 	if !user.IsActive {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.UserErrAlreadyActive),
 		}
 	}
@@ -205,8 +204,8 @@ func (repository UserClient) UserInviteAcceptance(clientId string, userId string
 	errAct := repository.UserActionCodeRepository.FindUserActionCode(&userAct, user.ID.String(), code).Error
 
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.UserErrActivationNotFound),
 		}
 	}
@@ -214,8 +213,8 @@ func (repository UserClient) UserInviteAcceptance(clientId string, userId string
 	t := time.Now()
 
 	if userAct.ExpiredAt.Before(t) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusGone,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrExpire,
 			Message:    translation.Lang(config.UserErrActivationExpired),
 		}
 	}
@@ -223,8 +222,8 @@ func (repository UserClient) UserInviteAcceptance(clientId string, userId string
 	errInvitation := repository.UserInvitationRepository.FindInvitationByActId(&userInvitation, userAct.ID.String()).Error
 
 	if errors.Is(errInvitation, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.UserErrActivationNotFound),
 		}
 	}
@@ -233,8 +232,8 @@ func (repository UserClient) UserInviteAcceptance(clientId string, userId string
 	errRoleClient := repository.RoleClientRepository.GetRoleClientById(&roleClient, userInvitation.RoleClientId.String(), clientId).Error
 
 	if errors.Is(errRoleClient, gorm.ErrRecordNotFound) {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusNotFound,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrNotFound,
 			Message:    translation.Lang(config.RoleErrNotExists),
 		}
 	}
@@ -256,8 +255,8 @@ func (repository UserClient) UserInviteAcceptance(clientId string, userId string
 		errUserInvite := repository.UserInvitationRepository.UpdateUserInvitation(&userInvitationUpdate).Error
 
 		if errUserInvite != nil {
-			return nil, &http.SetApiErrorResponse{
-				StatusCode: fiber.StatusUnprocessableEntity,
+			return nil, &facades.ResponseError{
+				StatusCode: facades.AppErrUnprocessable,
 				Message:    errUserInvite.Error(),
 			}
 		}
@@ -285,8 +284,8 @@ func (repository UserClient) UserInviteAcceptance(clientId string, userId string
 			_, errAssignPermit := repository.RoleAssignment.AssignUserPermission(clientId, assignPermit)
 
 			if errAssignPermit != nil {
-				return nil, &http.SetApiErrorResponse{
-					StatusCode: fiber.StatusUnprocessableEntity,
+				return nil, &facades.ResponseError{
+					StatusCode: facades.AppErrUnprocessable,
 					Message:    errAssignPermit.Error(),
 				}
 			}
@@ -302,8 +301,8 @@ func (repository UserClient) UserInviteAcceptance(clientId string, userId string
 		return &resp, nil
 
 	} else {
-		return nil, &http.SetApiErrorResponse{
-			StatusCode: fiber.StatusUnprocessableEntity,
+		return nil, &facades.ResponseError{
+			StatusCode: facades.AppErrUnprocessable,
 			Message:    translation.Lang(config.UserErrActivationNotFound),
 		}
 	}
