@@ -181,16 +181,10 @@ func (repository UserClient) CreateUserInvitation(clientId string, req *dto.User
 }
 
 func (repository UserClient) UserInviteAcceptance(clientId string, userId string, code string, accept stores.StatusInvitationType) (*dto.UserInvitationResponse, error) {
-	//token := c.Locals("user").(*jwt.Token)
-	//claims := token.Claims.(jwt.MapClaims)
-	//userId := claims["id"].(string)
-
 	var user stores.User
 	var userAct stores.UserActionCode
 	var userInvitation stores.UserInvitation
 	var roleClient stores.RoleClient
-
-	// clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
 	errUser := repository.UserRepository.FindUserById(&user, userId).Error
 
