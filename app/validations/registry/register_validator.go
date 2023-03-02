@@ -5,10 +5,9 @@ import (
 	"github.com/bonkzero404/gaskn/app/validations/custom_validator"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
-	"github.com/gofiber/fiber/v2"
 )
 
-func RegisterValidator(ctx *fiber.Ctx, validate *validator.Validate, translator ut.Translator) {
+func RegisterValidator(validate *validator.Validate, translator ut.Translator) {
 	// Add your custom validation rule
 	validators := builder.Validators{
 		Validator: []builder.ValidationItems{
@@ -19,5 +18,5 @@ func RegisterValidator(ctx *fiber.Ctx, validate *validator.Validate, translator 
 		},
 	}
 
-	validators.RegisterValidatorInit(ctx, validate, translator)
+	validators.RegisterValidatorInit(validate, translator)
 }

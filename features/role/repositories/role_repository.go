@@ -3,7 +3,6 @@ package repositories
 import (
 	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/database/stores"
-	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -16,5 +15,5 @@ type RoleRepository interface {
 
 	GetRoleById(role *stores.Role, id string) *gorm.DB
 
-	GetRoleList(role *[]stores.Role, c *fiber.Ctx) (*utils.Pagination, error)
+	GetRoleList(role *[]stores.Role, page int, limit int, sort string) (*utils.Pagination, error)
 }

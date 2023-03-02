@@ -24,7 +24,7 @@ func NewRole(
 	}
 }
 
-func (repository Role) CreateRole(c *fiber.Ctx, role *dto.RoleRequest) (*dto.RoleResponse, error) {
+func (repository Role) CreateRole(role *dto.RoleRequest) (*dto.RoleResponse, error) {
 
 	roleData := stores.Role{
 		RoleName:        role.RoleName,
@@ -37,7 +37,7 @@ func (repository Role) CreateRole(c *fiber.Ctx, role *dto.RoleRequest) (*dto.Rol
 	if err != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
 
@@ -51,11 +51,19 @@ func (repository Role) CreateRole(c *fiber.Ctx, role *dto.RoleRequest) (*dto.Rol
 	return &roleResponse, nil
 }
 
-func (repository Role) GetRoleList(c *fiber.Ctx) (*utils.Pagination, error) {
+func (repository Role) GetRoleList(page string, limit string, sort string) (*utils.Pagination, error) {
 	var roles []stores.Role
 	var resp []dto.RoleResponse
 
-	res, err := repository.RoleRepository.GetRoleList(&roles, c)
+	paginateRequest := utils.PaginationRequest{
+		Page:  page,
+		Limit: limit,
+		Sort:  sort,
+	}
+
+	pPage, pLimit, pSort := paginateRequest.SetPagination()
+
+	res, err := repository.RoleRepository.GetRoleList(&roles, pPage, pLimit, pSort)
 
 	if err != nil {
 		return nil, &http.SetApiErrorResponse{
@@ -78,7 +86,7 @@ func (repository Role) GetRoleList(c *fiber.Ctx) (*utils.Pagination, error) {
 	return res, nil
 }
 
-func (repository Role) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleRequest) (*dto.RoleResponse, error) {
+func (repository Role) UpdateRole(id string, role *dto.RoleRequest) (*dto.RoleResponse, error) {
 	// Check role if exists
 	var roleStore stores.Role
 
@@ -87,7 +95,7 @@ func (repository Role) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleRequest
 	if errCheckRole != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.RoleErrNotExists),
+			Message:    translation.Lang(config.RoleErrNotExists),
 		}
 	}
 
@@ -100,7 +108,7 @@ func (repository Role) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleRequest
 	if err != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
 
@@ -114,7 +122,7 @@ func (repository Role) UpdateRole(c *fiber.Ctx, id string, role *dto.RoleRequest
 	return &roleResponse, nil
 }
 
-func (repository Role) DeleteRoleById(c *fiber.Ctx, id string) (*dto.RoleResponse, error) {
+func (repository Role) DeleteRoleById(id string) (*dto.RoleResponse, error) {
 	// Check role if exists
 	var roleStore stores.Role
 
@@ -123,7 +131,7 @@ func (repository Role) DeleteRoleById(c *fiber.Ctx, id string) (*dto.RoleRespons
 	if errCheckRole != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.RoleErrNotExists),
+			Message:    translation.Lang(config.RoleErrNotExists),
 		}
 	}
 
@@ -132,7 +140,7 @@ func (repository Role) DeleteRoleById(c *fiber.Ctx, id string) (*dto.RoleRespons
 	if err != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
 

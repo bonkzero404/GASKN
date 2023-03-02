@@ -23,17 +23,18 @@ func NewRoleAssignmentHandler(RoleAssignmentService interactors.RoleAssignment) 
 
 func (interact *RoleAssignmentHandler) CreateRoleAssignment(c *fiber.Ctx) error {
 	var request dto.RoleAssignmentRequest
+	var clientId = c.Params(config.Config("API_CLIENT_PARAM"))
 
 	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	responseInteract, err := interact.RoleAssignmentService.CreateRoleAssignment(c, &request)
+	responseInteract, err := interact.RoleAssignmentService.CreateRoleAssignment(clientId, &request)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.RoleAssignErrFailed),
+			Message: translation.Lang(config.RoleAssignErrFailed),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -44,17 +45,18 @@ func (interact *RoleAssignmentHandler) CreateRoleAssignment(c *fiber.Ctx) error 
 
 func (interact *RoleAssignmentHandler) RemoveRoleAssignment(c *fiber.Ctx) error {
 	var request dto.RoleAssignmentRequest
+	var clientId = c.Params(config.Config("API_CLIENT_PARAM"))
 
 	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	responseInteract, err := interact.RoleAssignmentService.RemoveRoleAssignment(c, &request)
+	responseInteract, err := interact.RoleAssignmentService.RemoveRoleAssignment(clientId, &request)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.RoleAssignErrRemovePermit),
+			Message: translation.Lang(config.RoleAssignErrRemovePermit),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -65,17 +67,18 @@ func (interact *RoleAssignmentHandler) RemoveRoleAssignment(c *fiber.Ctx) error 
 
 func (interact *RoleAssignmentHandler) AssignUserPermission(c *fiber.Ctx) error {
 	var request dto.RoleUserAssignment
+	var clientId = c.Params(config.Config("API_CLIENT_PARAM"))
 
 	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	responseInteract, err := interact.RoleAssignmentService.AssignUserPermission(c, &request)
+	responseInteract, err := interact.RoleAssignmentService.AssignUserPermission(clientId, &request)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.RoleAssignErrFailed),
+			Message: translation.Lang(config.RoleAssignErrFailed),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -91,7 +94,7 @@ func (interact *RoleAssignmentHandler) GetPermissionByRole(c *fiber.Ctx) error {
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.RoleAssignErrLoad),
+			Message: translation.Lang(config.RoleAssignErrLoad),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

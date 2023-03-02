@@ -3,7 +3,6 @@ package implements
 import (
 	"github.com/bonkzero404/gaskn/app/utils"
 	"github.com/bonkzero404/gaskn/features/client/repositories"
-	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 
 	"github.com/bonkzero404/gaskn/database/stores"
@@ -120,18 +119,20 @@ func (repository ClientRepository) GetClientBySlug(client *stores.Client, slug s
 	return repository.DB.Take(&client, "client_slug = ? AND is_active = ?", slug, true)
 }
 
-func (repository ClientRepository) GetClientList(client *[]stores.Client, c *fiber.Ctx) (*utils.Pagination, error) {
+func (repository ClientRepository) GetClientList(client *[]stores.Client, page int, limit int, sort string) (*utils.Pagination, error) {
 	var pagination utils.Pagination
+	var paginate = pagination.SetLimit(limit).SetPage(page).SetSort(sort).Paginate(client, repository.DB)
 
-	err := repository.DB.Scopes(utils.Paginate(client, &pagination, repository.DB, c)).Find(&client).Error
+	err := repository.DB.Scopes(paginate).Find(&client).Error
 
 	return &pagination, err
 }
 
-func (repository ClientRepository) GetClientListByUser(clientAssignment *[]stores.ClientAssignment, c *fiber.Ctx, userId string) (*utils.Pagination, error) {
-	var pagination utils.Pagination
+func (repository ClientRepository) GetClientListByUser(clientAssignment *[]stores.ClientAssignment, userId string, page int, limit int, sort string) (*utils.Pagination, error) {
+	var pagination = utils.Pagination{}
+	var paginate = pagination.SetLimit(limit).SetPage(page).SetSort(sort).Paginate(clientAssignment, repository.DB)
 
-	err := repository.DB.Scopes(utils.Paginate(clientAssignment, &pagination, repository.DB, c)).Preload("Client", "is_active = ?", true).Find(&clientAssignment, "user_id = ?", userId).Error
+	err := repository.DB.Scopes(paginate).Preload("Client", "is_active = ?", true).Find(&clientAssignment, "user_id = ?", userId).Error
 
 	return &pagination, err
 }

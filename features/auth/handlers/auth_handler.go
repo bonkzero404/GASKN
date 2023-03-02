@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/bonkzero404/gaskn/app/http"
 	"github.com/bonkzero404/gaskn/app/http/response"
 	"github.com/bonkzero404/gaskn/app/translation"
@@ -26,16 +27,18 @@ func NewAuthHandler(authService interactors.UserAuth) *AuthHandler {
 func (interact *AuthHandler) Authentication(c *fiber.Ctx) error {
 	var request dto.UserAuthRequest
 
+	fmt.Println(translation.LangContext)
+
 	if stat, errRequest := validations.ValidateRequest(c, &request); stat {
 		return response.ApiUnprocessableEntity(c, errRequest)
 	}
 
-	responseInteract, err := interact.AuthService.Authenticate(c, &request)
+	responseInteract, err := interact.AuthService.Authenticate(&request)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.GlobalErrAuthFailed),
+			Message: translation.Lang(config.GlobalErrAuthFailed),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -50,12 +53,12 @@ func (interact *AuthHandler) GetProfile(c *fiber.Ctx) error {
 	claims := token.Claims.(jwt.MapClaims)
 	id := claims["id"].(string)
 
-	responseInteract, err := interact.AuthService.GetProfile(c, id)
+	responseInteract, err := interact.AuthService.GetProfile(id)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.GlobalErrUnknown),
+			Message: translation.Lang(config.GlobalErrUnknown),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})
@@ -68,12 +71,12 @@ func (interact *AuthHandler) GetProfile(c *fiber.Ctx) error {
 func (interact *AuthHandler) RefreshToken(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
 
-	responseInteract, err := interact.AuthService.RefreshToken(c, token)
+	responseInteract, err := interact.AuthService.RefreshToken(token)
 
 	if err != nil {
 		re := err.(*http.SetApiErrorResponse)
 		return response.ApiResponseError(c, re.StatusCode, http.SetErrors{
-			Message: translation.Lang(c, config.AuthErruserNotActive),
+			Message: translation.Lang(config.AuthErruserNotActive),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		})

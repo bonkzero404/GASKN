@@ -25,7 +25,7 @@ func NewMenu(
 	}
 }
 
-func (repository Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.MenuResponse, error) {
+func (repository Menu) CreateMenu(req *dto.MenuRequest) (*dto.MenuResponse, error) {
 	var menu = stores.Menu{
 		MenuName: datatypes.JSONType[stores.LangAttribute]{Data: stores.LangAttribute{
 			En: req.MenuName.En,
@@ -51,7 +51,7 @@ func (repository Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.Menu
 		if errGetMenu != nil {
 			return nil, &http.SetApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    translation.Lang(c, config.MenuErrNotFound),
+				Message:    translation.Lang(config.MenuErrNotFound),
 			}
 		}
 
@@ -64,7 +64,7 @@ func (repository Menu) CreateMenu(c *fiber.Ctx, req *dto.MenuRequest) (*dto.Menu
 	if errSaveMenu != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
 
@@ -99,8 +99,7 @@ func (repository Menu) GetTreeView(elements []dto.MenuListResponse, parentId uui
 	return data
 }
 
-func (repository Menu) ValidationMenuMode(c *fiber.Ctx) string {
-	mode := c.Query("mode")
+func (repository Menu) ValidationMenuMode(mode string) string {
 
 	if mode == interactors.ModeList {
 		return interactors.ModeList
@@ -113,9 +112,7 @@ func (repository Menu) ValidationMenuMode(c *fiber.Ctx) string {
 	return interactors.ModeTree
 }
 
-func (repository Menu) ValidationMenuSort(c *fiber.Ctx) string {
-	sort := c.Query("sort")
-
+func (repository Menu) ValidationMenuSort(sort string) string {
 	if sort == interactors.SortAsc {
 		return interactors.SortAsc
 	}
@@ -127,24 +124,24 @@ func (repository Menu) ValidationMenuSort(c *fiber.Ctx) string {
 	return interactors.SortAsc
 }
 
-func (repository Menu) GetMenuAllByType(c *fiber.Ctx, t stores.MenuType, mode string, sort string) ([]dto.MenuListResponse, error) {
+func (repository Menu) GetMenuAllByType(t stores.MenuType, mode string, sort string) ([]dto.MenuListResponse, error) {
 	var menuLists []stores.Menu
 	var resp []dto.MenuListResponse
 
-	errResult := repository.MenuRepository.GetMenuAllByType(&menuLists, c.Query("lang"), t, sort).Error
+	errResult := repository.MenuRepository.GetMenuAllByType(&menuLists, translation.LangContext, t, sort).Error
 
 	if errResult != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.MenuErrNotFound),
+			Message:    translation.Lang(config.MenuErrNotFound),
 		}
 	}
 
 	for _, item := range menuLists {
 		resp = append(resp, dto.MenuListResponse{
 			ID:              item.ID,
-			MenuName:        translation.LangFromJsonParse(c, item.MenuName),
-			MenuDescription: translation.LangFromJsonParse(c, item.MenuDescription),
+			MenuName:        translation.LangFromJsonParse(item.MenuName),
+			MenuDescription: translation.LangFromJsonParse(item.MenuDescription),
 			ParentId:        item.ParentID,
 			MenuUrl:         item.MenuUrl,
 			MenuIcon:        item.MenuIcon,

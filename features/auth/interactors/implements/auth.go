@@ -31,13 +31,13 @@ func NewAuth(
 	}
 }
 
-func (repository Auth) SetTokenResponse(c *fiber.Ctx, user *stores.User) (*dto.UserAuthResponse, error) {
+func (repository Auth) SetTokenResponse(user *stores.User) (*dto.UserAuthResponse, error) {
 	token, exp, errToken := utils.CreateToken(user.ID.String(), user.FullName)
 
 	if errToken != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.AuthErrToken),
+			Message:    translation.Lang(config.AuthErrToken),
 		}
 	}
 
@@ -56,7 +56,7 @@ func (repository Auth) SetTokenResponse(c *fiber.Ctx, user *stores.User) (*dto.U
 }
 
 // Authenticate /*
-func (repository Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error) {
+func (repository Auth) Authenticate(auth *dto.UserAuthRequest) (*dto.UserAuthResponse, error) {
 	var user stores.User
 
 	// Get user by email
@@ -67,7 +67,7 @@ func (repository Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*d
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    translation.Lang(c, config.AuthErrGetProfile),
+			Message:    translation.Lang(config.AuthErrGetProfile),
 		}
 	}
 
@@ -75,7 +75,7 @@ func (repository Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*d
 	if errUser != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.AuthErrRefreshToken),
+			Message:    translation.Lang(config.AuthErrRefreshToken),
 		}
 	}
 
@@ -83,7 +83,7 @@ func (repository Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*d
 	if !user.IsActive {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
-			Message:    translation.Lang(c, config.AuthErruserNotActive),
+			Message:    translation.Lang(config.AuthErruserNotActive),
 		}
 	}
 
@@ -94,11 +94,11 @@ func (repository Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*d
 	if !match {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusForbidden,
-			Message:    translation.Lang(c, config.AuthErrInvalid),
+			Message:    translation.Lang(config.AuthErrInvalid),
 		}
 	}
 
-	response, errResp := repository.SetTokenResponse(c, &user)
+	response, errResp := repository.SetTokenResponse(&user)
 
 	if errResp != nil {
 		return nil, errResp
@@ -108,7 +108,7 @@ func (repository Auth) Authenticate(c *fiber.Ctx, auth *dto.UserAuthRequest) (*d
 }
 
 // GetProfile /*
-func (repository Auth) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfileResponse, error) {
+func (repository Auth) GetProfile(id string) (*dto.UserAuthProfileResponse, error) {
 	var user stores.User
 	// var roleUser []stores.RoleUser
 
@@ -119,7 +119,7 @@ func (repository Auth) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfile
 	if errUser != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
 
@@ -136,7 +136,7 @@ func (repository Auth) GetProfile(c *fiber.Ctx, id string) (*dto.UserAuthProfile
 }
 
 // RefreshToken /*
-func (repository Auth) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.UserAuthResponse, error) {
+func (repository Auth) RefreshToken(tokenUser *jwt.Token) (*dto.UserAuthResponse, error) {
 	var user stores.User
 
 	// Get data from token then convert to string
@@ -150,11 +150,11 @@ func (repository Auth) RefreshToken(c *fiber.Ctx, tokenUser *jwt.Token) (*dto.Us
 	if errUser != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
 
-	response, errResp := repository.SetTokenResponse(c, &user)
+	response, errResp := repository.SetTokenResponse(&user)
 
 	if errResp != nil {
 		return nil, errResp

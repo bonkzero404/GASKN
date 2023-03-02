@@ -34,7 +34,7 @@ func NewClient(
 	}
 }
 
-func (repository Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, userId string) (*dto.ClientResponse, error) {
+func (repository Client) CreateClient(client *dto.ClientRequest, userId string) (*dto.ClientResponse, error) {
 	pUuid, _ := uuid.Parse(userId)
 	clientRoute := config.Config("API_WRAP") + "/" + config.Config("API_VERSION") + "/" + config.Config("API_CLIENT") + "/:" + config.Config("API_CLIENT_PARAM")
 
@@ -53,13 +53,13 @@ func (repository Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, u
 		if strings.Contains(err.Error(), "duplicate key") {
 			return nil, &http.SetApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    translation.Lang(c, config.ClientErrDuplicate),
+				Message:    translation.Lang(config.ClientErrDuplicate),
 			}
 		}
 
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, err.Error()),
+			Message:    translation.Lang(err.Error()),
 		}
 	}
 
@@ -78,7 +78,7 @@ func (repository Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, u
 	); !g {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, err.Error()),
+			Message:    translation.Lang(err.Error()),
 		}
 	}
 
@@ -97,7 +97,7 @@ func (repository Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, u
 	); !p {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, err.Error()),
+			Message:    translation.Lang(err.Error()),
 		}
 	}
 
@@ -112,18 +112,16 @@ func (repository Client) CreateClient(c *fiber.Ctx, client *dto.ClientRequest, u
 	return &roleResponse, nil
 }
 
-func (repository Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (*dto.ClientResponse, error) {
+func (repository Client) UpdateClient(clientId string, client *dto.ClientRequest) (*dto.ClientResponse, error) {
 	// Check role if exists
 	var clientStore stores.Client
-
-	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
 	errCheckClient := repository.ClientRepository.GetClientById(&clientStore, clientId).Error
 
 	if errCheckClient != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.ClientErrAlreadyExists),
+			Message:    translation.Lang(config.ClientErrAlreadyExists),
 		}
 	}
 
@@ -137,7 +135,7 @@ func (repository Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (
 	if err != nil {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
 
@@ -152,11 +150,18 @@ func (repository Client) UpdateClient(c *fiber.Ctx, client *dto.ClientRequest) (
 	return &clientResponse, nil
 }
 
-func (repository Client) GetClientByUser(c *fiber.Ctx, userId string) (*utils.Pagination, error) {
+func (repository Client) GetClientByUser(userId string, page string, limit string, sort string) (*utils.Pagination, error) {
 	var clientAssignment []stores.ClientAssignment
 	var resp []dto.ClientResponse
+	paginateRequest := utils.PaginationRequest{
+		Page:  page,
+		Limit: limit,
+		Sort:  sort,
+	}
 
-	res, err := repository.ClientRepository.GetClientListByUser(&clientAssignment, c, userId)
+	pPage, pLimit, pSort := paginateRequest.SetPagination()
+
+	res, err := repository.ClientRepository.GetClientListByUser(&clientAssignment, userId, pPage, pLimit, pSort)
 
 	if err != nil {
 		return nil, &http.SetApiErrorResponse{

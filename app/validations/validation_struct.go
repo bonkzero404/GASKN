@@ -12,17 +12,17 @@ import (
 func ValidateRequest(ctx *fiber.Ctx, request any) (bool, http.SetErrors) {
 	if err := ctx.BodyParser(&request); err != nil {
 		return true, http.SetErrors{
-			Message: translation.Lang(ctx, "global:err:body-parser"),
+			Message: translation.Lang("global:err:body-parser"),
 			Cause:   err.Error(),
 			Inputs:  nil,
 		}
 	}
 
-	errors := ValidateStruct(request, ctx)
+	errors := ValidateStruct(request)
 	if errors != nil {
 		return true, http.SetErrors{
-			Message: translation.Lang(ctx, "global:err:validate"),
-			Cause:   translation.Lang(ctx, "global:err:validate-cause"),
+			Message: translation.Lang("global:err:validate"),
+			Cause:   translation.Lang("global:err:validate-cause"),
 			Inputs:  errors,
 		}
 	}
@@ -30,15 +30,15 @@ func ValidateRequest(ctx *fiber.Ctx, request any) (bool, http.SetErrors) {
 	return false, http.SetErrors{}
 }
 
-func ValidateStruct(s any, ctx *fiber.Ctx) []*http.SetErrorResponse {
+func ValidateStruct(s any) []*http.SetErrorResponse {
 	var errors []*http.SetErrorResponse
 	var validate = validator.New()
 
-	var trans = builder.SetLanguageValidator(ctx, validate)
+	var trans = builder.SetLanguageValidator(validate)
 
 	// Register custom tags
 	// SetCustomTagLanguageValidator(ctx, validate, trans, "alphanum_extra", validations.ValidateAlphanumExtra)
-	registry.RegisterValidator(ctx, validate, trans)
+	registry.RegisterValidator(validate, trans)
 
 	err := validate.Struct(s)
 

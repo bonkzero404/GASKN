@@ -5,7 +5,6 @@ import (
 	"github.com/bonkzero404/gaskn/database/stores"
 	"github.com/google/uuid"
 
-	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
 
@@ -18,7 +17,7 @@ type RoleClientRepository interface {
 
 	GetRoleClientByName(role *stores.RoleClient, roleName string, clientId string) *gorm.DB
 
-	GetRoleClientList(role *[]stores.Role, c *fiber.Ctx, clientId string) (*utils.Pagination, error)
+	GetRoleClientList(role *[]stores.Role, clientId string, page int, limit int, sort string) (*utils.Pagination, error)
 
 	GetRoleClientId(role *stores.RoleClient, roleId string, clientId string) *gorm.DB
 

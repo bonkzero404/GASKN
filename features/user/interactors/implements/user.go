@@ -45,7 +45,7 @@ func NewUser(
 	}
 }
 
-func (repository User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isInternalRegister bool) (*dto.UserCreateResponse, error) {
+func (repository User) CreateUser(clientId string, user *dto.UserCreateRequest, isInternalRegister bool) (*dto.UserCreateResponse, error) {
 	hashPassword, _ := utils.HashPassword(user.Password)
 
 	userData := stores.User{
@@ -76,19 +76,19 @@ func (repository User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isI
 		if strings.Contains(err.Error(), "duplicate key") {
 			return nil, &http.SetApiErrorResponse{
 				StatusCode: fiber.StatusUnprocessableEntity,
-				Message:    translation.Lang(c, config.UserErrRegister),
+				Message:    translation.Lang(config.UserErrRegister),
 			}
 		}
 
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.GlobalErrUnknown),
+			Message:    translation.Lang(config.GlobalErrUnknown),
 		}
 	}
 
 	// Check if create user from Client
 	// Get ClientId if it's client
-	clientId := c.Params(config.Config("API_CLIENT_PARAM"))
+	// clientId := c.Params(config.Config("API_CLIENT_PARAM"))
 
 	if clientId != "" {
 		cUuid, _ := uuid.Parse(clientId)
@@ -140,7 +140,7 @@ func (repository User) CreateUser(c *fiber.Ctx, user *dto.UserCreateRequest, isI
 	return &response, nil
 }
 
-func (repository User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreateResponse, error) {
+func (repository User) UserActivation(code string) (*dto.UserCreateResponse, error) {
 	var user stores.User
 	var userAct stores.UserActionCode
 
@@ -149,7 +149,7 @@ func (repository User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreat
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    translation.Lang(c, config.UserErrActivationNotFound),
+			Message:    translation.Lang(config.UserErrActivationNotFound),
 		}
 	}
 
@@ -158,14 +158,14 @@ func (repository User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreat
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    translation.Lang(c, config.UserErrNotFound),
+			Message:    translation.Lang(config.UserErrNotFound),
 		}
 	}
 
 	if user.IsActive {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.UserErrAlreadyActive),
+			Message:    translation.Lang(config.UserErrAlreadyActive),
 		}
 	}
 
@@ -174,7 +174,7 @@ func (repository User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreat
 	if userAct.ExpiredAt.Before(t) {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusGone,
-			Message:    translation.Lang(c, config.UserErrActivationExpired),
+			Message:    translation.Lang(config.UserErrActivationExpired),
 		}
 	}
 
@@ -203,7 +203,7 @@ func (repository User) UserActivation(c *fiber.Ctx, code string) (*dto.UserCreat
 	return &response, nil
 }
 
-func (repository User) CreateUserAction(c *fiber.Ctx, email string, actType stores.ActCodeType) (any, error) {
+func (repository User) CreateUserAction(email string, actType stores.ActCodeType) (any, error) {
 	var user stores.User
 
 	errUser := repository.UserRepository.FindUserByEmail(&user, email).Error
@@ -211,14 +211,14 @@ func (repository User) CreateUserAction(c *fiber.Ctx, email string, actType stor
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    translation.Lang(c, config.UserErrNotFound),
+			Message:    translation.Lang(config.UserErrNotFound),
 		}
 	}
 
 	if user.IsActive && actType == stores.ACTIVATION_CODE {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.UserErrAlreadyActive),
+			Message:    translation.Lang(config.UserErrAlreadyActive),
 		}
 	}
 
@@ -239,14 +239,14 @@ func (repository User) CreateUserAction(c *fiber.Ctx, email string, actType stor
 	return nil, nil
 }
 
-func (repository User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgotPassActRequest) (any, error) {
+func (repository User) UpdatePassword(forgotPassReq *dto.UserForgotPassActRequest) (any, error) {
 	var user stores.User
 	var userAct stores.UserActionCode
 
 	if forgotPassReq.Password != forgotPassReq.RepeatPassword {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.UserErrPassMatch),
+			Message:    translation.Lang(config.UserErrPassMatch),
 		}
 	}
 
@@ -255,7 +255,7 @@ func (repository User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgo
 	if errors.Is(errUser, gorm.ErrRecordNotFound) {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    translation.Lang(c, config.UserErrNotFound),
+			Message:    translation.Lang(config.UserErrNotFound),
 		}
 	}
 
@@ -264,14 +264,14 @@ func (repository User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgo
 	if errors.Is(errAct, gorm.ErrRecordNotFound) {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusNotFound,
-			Message:    translation.Lang(c, config.UserErrActivationNotFound),
+			Message:    translation.Lang(config.UserErrActivationNotFound),
 		}
 	}
 
 	if userAct.IsUsed {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusUnprocessableEntity,
-			Message:    translation.Lang(c, config.UserErrCodeAlreadyUsed),
+			Message:    translation.Lang(config.UserErrCodeAlreadyUsed),
 		}
 	}
 
@@ -280,7 +280,7 @@ func (repository User) UpdatePassword(c *fiber.Ctx, forgotPassReq *dto.UserForgo
 	if userAct.ExpiredAt.Before(t) {
 		return nil, &http.SetApiErrorResponse{
 			StatusCode: fiber.StatusGone,
-			Message:    translation.Lang(c, config.UserErrActivationExpired),
+			Message:    translation.Lang(config.UserErrActivationExpired),
 		}
 	}
 

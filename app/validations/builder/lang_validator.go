@@ -7,10 +7,9 @@ import (
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	englishTranslation "github.com/go-playground/validator/v10/translations/en"
-	"github.com/gofiber/fiber/v2"
 )
 
-func SetLanguageValidator(ctx *fiber.Ctx, validate *validator.Validate) ut.Translator {
+func SetLanguageValidator(validate *validator.Validate) ut.Translator {
 	var trans ut.Translator
 
 	enTrans := en.New()
@@ -18,7 +17,7 @@ func SetLanguageValidator(ctx *fiber.Ctx, validate *validator.Validate) ut.Trans
 
 	uni := ut.New(enTrans, enTrans, idTrans)
 
-	var lng = translation.FilterParamContext(ctx.Query("lang"), "en", "id")
+	var lng = translation.LangContext
 	trans, _ = uni.GetTranslator(lng)
 
 	_ = englishTranslation.RegisterDefaultTranslations(validate, trans)
@@ -44,9 +43,9 @@ func RegisterTagLanguageValidator(validate *validator.Validate, translator ut.Tr
 	)
 }
 
-func SetCustomTagLanguageValidator(ctx *fiber.Ctx, validate *validator.Validate, translator ut.Translator, tag string, f validator.Func) {
+func SetCustomTagLanguageValidator(validate *validator.Validate, translator ut.Translator, tag string, f validator.Func) {
 	var s string
-	var lng = translation.FilterParamContext(ctx.Query("lang"), "en", "id")
+	var lng = translation.FilterParamContext(translation.LangContext, "en", "id")
 
 	var t ut.Translator
 	t, _ = translation.Trans.GetTranslator(lng)

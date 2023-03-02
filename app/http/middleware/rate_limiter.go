@@ -15,8 +15,8 @@ func RateLimiter(max int, duration time.Duration) func(ctx *fiber.Ctx) error {
 	return limiter.New(limiter.Config{
 		LimitReached: func(ctx *fiber.Ctx) error {
 			return response.ApiResponseError(ctx, fiber.StatusRequestEntityTooLarge, http.SetErrors{
-				Message: translation.Lang(ctx, "middleware:err:failed"),
-				Cause:   translation.Lang(ctx, "middleware:err:rate-limiter"),
+				Message: translation.Lang("middleware:err:failed"),
+				Cause:   translation.Lang("middleware:err:rate-limiter"),
 				Inputs:  nil,
 			})
 		},

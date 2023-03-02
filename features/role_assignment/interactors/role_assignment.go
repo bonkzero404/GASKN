@@ -8,15 +8,15 @@ import (
 )
 
 type RoleAssignment interface {
-	CheckExistsRoleAssignment(c *fiber.Ctx, clientIdUuid uuid.UUID, roleIdUuid uuid.UUID) (*stores.RoleClient, error)
+	CheckExistsRoleAssignment(clientIdUuid uuid.UUID, roleIdUuid uuid.UUID) (*stores.RoleClient, error)
 
-	CheckExistsRoleUserAssignment(c *fiber.Ctx, userId uuid.UUID, clientIdUuid uuid.UUID) (*stores.ClientAssignment, error)
+	CheckExistsRoleUserAssignment(userId uuid.UUID, clientIdUuid uuid.UUID) (*stores.ClientAssignment, error)
 
-	CreateRoleAssignment(c *fiber.Ctx, req *dto.RoleAssignmentRequest) (*dto.RoleAssignmentResponse, error)
+	CreateRoleAssignment(clientId string, req *dto.RoleAssignmentRequest) (*dto.RoleAssignmentResponse, error)
 
-	RemoveRoleAssignment(c *fiber.Ctx, req *dto.RoleAssignmentRequest) (*dto.RoleAssignmentResponse, error)
+	RemoveRoleAssignment(clientId string, req *dto.RoleAssignmentRequest) (*dto.RoleAssignmentResponse, error)
 
-	AssignUserPermission(c *fiber.Ctx, req *dto.RoleUserAssignment) (*dto.RoleAssignmentResponse, error)
+	AssignUserPermission(clientId string, req *dto.RoleUserAssignment) (*dto.RoleAssignmentResponse, error)
 
 	GetPermissionListByRole(c *fiber.Ctx) (*[]dto.RoleAssignmentListResponse, error)
 }
